@@ -3,7 +3,7 @@ title: eBay - Global Team Expansion
 type: experience
 skills: [team-management, hiring, people-management, cross-functional-leadership, onboarding, sre, documentation]
 company: eBay
-date: 2024-09
+date: 2025-04
 impact: high
 growing_link:
 ---
