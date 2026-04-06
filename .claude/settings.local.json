@@ -5,7 +5,8 @@
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(read d:*)",
-      "Bash(find skills/ -name \".gitkeep\" -delete)"
+      "Bash(find skills/ -name \".gitkeep\" -delete)",
+      "Bash(git:*)"
     ]
   }
 }

@@ -1,0 +1,28 @@
+---
+title: LLM Inference Optimization
+category: tech/ai-infra
+tags: [inference, serving, vllm, tensorrt, quantization, batching, kv-cache]
+status: stub
+priority: medium
+last_updated: 2026-04-06
+created_from_jd: [[positions/Sample AI Infra Manager - Test Co]]
+---
+
+# LLM Inference Optimization
+
+## Knowledge Map
+- 前置知识：[[LLM Fundamentals]], [[GPU Cluster Management]]
+- 延伸话题：[[Quantization]], [[KV Cache]], [[Speculative Decoding]], [[vLLM]]
+- 管理关联：[[Capacity Planning]]
+
+## Core Concepts
+<!-- To be filled by raw-material-processor skill after you find learning materials -->
+
+## Key Questions
+<!-- To be filled by raw-material-processor skill -->
+
+## Summary
+<!-- To be filled by raw-material-processor skill -->
+
+## Raw Material
+<!-- Save source articles to raw_material/tech/ai-infra/ then link here -->
