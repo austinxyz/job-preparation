@@ -64,27 +64,32 @@ Nice to have:
 
 ## Prep Checklist
 
-- [ ] **[high]** Learn GPU Cluster Management (A100/H100 architecture, CUDA, NVLink) — find learning material (`stub`) → [[skills/tech/ai-infra/GPU Cluster Management]]
-- [ ] **[high]** Learn NCCL and Collective Communication (AllReduce, ring-allreduce, bandwidth) — find learning material (`stub`) → [[skills/tech/ai-infra/NCCL and Collective Communication]]
-- [ ] **[high]** Learn Distributed Training Frameworks (PyTorch DDP, DeepSpeed ZeRO, Megatron) — find learning material (`stub`) → [[skills/tech/ai-infra/Distributed Training Frameworks]]
-- [ ] **[high]** Deepen Kubernetes knowledge for ML workloads (GPU scheduling, device plugins, MIG) — find learning material (`stub`) → [[skills/tech/infra/Kubernetes]]
-- [ ] **[high]** Learn InfiniBand and High-Speed Networking (RDMA, RoCE, topology) — find learning material (`stub`) → [[skills/tech/infra/InfiniBand and High-Speed Networking]]
-- [ ] **[high]** Prepare Engineering Team Management stories (managing 8–15 engineers, hiring, performance) — write STAR experience notes (`stub`) → [[skills/management/people/Engineering Team Management]]
-- [ ] **[high]** Prepare cross-functional project leadership stories — write STAR experience notes (`stub`) → [[skills/management/project/Technical Roadmap]]
-- [ ] **[medium]** Learn LLM Inference Optimization (vLLM, TensorRT-LLM, KV cache) — find learning material (`stub`) → [[skills/tech/ai-infra/LLM Inference Optimization]]
-- [ ] **[medium]** Learn GPU Fleet Cost Optimization (utilization, chargeback, spot) — find learning material (`stub`) → [[skills/tech/ai-infra/GPU Fleet Cost Optimization]]
-- [ ] **[medium]** Learn Hybrid Cloud Deployment patterns — find learning material (`stub`) → [[skills/tech/infra/Hybrid Cloud Deployment]]
+**Tech — 需要学习（stub，最优先）**
+- [ ] **[high]** Learn GPU Cluster Management (A100/H100 architecture, CUDA, NVLink) → [[skills/tech/ai-infra/GPU Cluster Management]]
+- [ ] **[high]** Learn NCCL and Collective Communication (AllReduce, ring-allreduce, bandwidth) → [[skills/tech/ai-infra/NCCL and Collective Communication]]
+- [ ] **[high]** Learn Distributed Training Frameworks (PyTorch DDP, DeepSpeed ZeRO, Megatron) → [[skills/tech/ai-infra/Distributed Training Frameworks]]
+- [ ] **[high]** Deepen Kubernetes for ML workloads (GPU scheduling, device plugins, MIG partitioning) → [[skills/tech/infra/Kubernetes]]
+- [ ] **[high]** Learn InfiniBand and High-Speed Networking (RDMA, RoCE, fat-tree topology) → [[skills/tech/infra/InfiniBand and High-Speed Networking]]
+- [ ] **[medium]** Learn LLM Inference Optimization (vLLM, TensorRT-LLM, KV cache, continuous batching) → [[skills/tech/ai-infra/LLM Inference Optimization]]
+- [ ] **[medium]** Learn GPU Fleet Cost Optimization (utilization, chargeback, spot instances) → [[skills/tech/ai-infra/GPU Fleet Cost Optimization]]
+- [ ] **[medium]** Learn Hybrid Cloud Deployment patterns → [[skills/tech/infra/Hybrid Cloud Deployment]]
+
+**Management — 经验 notes 已写，练习讲述即可**
+- [x] **[high]** Engineering Team Management stories — ✅ [[experience/eBay - Global Team Expansion]], [[experience/eBay - AI-Augmented Engineering Management]]
+- [x] **[high]** Cross-functional project leadership stories — ✅ [[experience/eBay - DoJ and Jade Programs]], [[experience/eBay - Platform Engineering at Scale]]
 
 ## Experience Match
 
-No experience notes yet. Suggested experience notes to write based on your resume:
+**强相关（直接回答 JD 要求）**
 
-- **eBay K8s Platform Migration** — highly relevant for Kubernetes + cross-functional leadership (5,000+ apps, 100+ clusters, 2M+ pods)
-- **Global Team Expansion (Europe & India)** — relevant for "managing 8–15 engineers", hiring, team building
-- **DoJ & Jade Programs** — relevant for cross-functional technical project leadership under tight deadline
-- **OpenStack → Kubernetes Migration (2017–2023)** — relevant for large-scale infra migration ownership
+- [[experience/eBay - Platform Engineering at Scale]] — Kubernetes at scale (200+ clusters, 2M instances), CRDs/admission webhooks, 2-engineer team maintaining entire fleet with zero incidents; directly addresses "Kubernetes for ML workloads" and "cross-functional technical projects"
+- [[experience/eBay - Global Team Expansion]] — built and managed 8+ engineers across Europe & India within 3 months; directly addresses "managing a team of 8–15 infrastructure engineers"
+- [[experience/eBay - DoJ and Jade Programs]] — high-stakes cross-functional war room, zero-downtime infra cutover, Kubernetes cluster provisioning at scale; directly addresses "cross-functional technical projects" and K8s ops
 
-Write these as STAR notes in `experience/` and link back here.
+**补充相关（展示管理深度）**
+
+- [[experience/eBay - AI-Augmented Engineering Management]] — people management systems (hiring, performance, onboarding), OKR 50%→80%, hiring cycle 3月→4–6周; relevant for "managing a team" and operational excellence
+- [[experience/eBay - AI Innovation]] — SRE metrics (incidents 50%↓, MTTD/MTTR), triage automation 70%; relevant for operational excellence and infra reliability culture
 
 ## Resume Tailoring
 
