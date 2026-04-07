@@ -1,6 +1,6 @@
 # 面试准备方法论
 
-这套系统以 Obsidian 知识库为核心，结合 AI 辅助工具，帮助系统化地准备 AI Infra Manager 方向的技术面试。整个准备分三个阶段：**建立知识库 → 巩固知识 → 针对 JD 冲刺**。
+这套系统以 Obsidian 知识库为核心，结合 AI 辅助工具，帮助系统化地准备技术面试。整个准备分三个阶段：**建立知识库 → 巩固知识 → 针对 JD 冲刺**。
 
 ---
 
@@ -114,11 +114,11 @@ stub（空架子）→ draft（有内容）→ in-progress（持续完善）→ 
 | **Hello Interview** | 系统设计 + Behavior | 有 AI 面试官模式，支持计时练习 |
 | **Growing** | 以上两个的日程管理 | 用 Growing 与 LeetCode / Hello Interview 联动，建立每日练习计划 |
 
-建议节奏：算法题每周 3 题，系统设计每周 1 题，Behavior 每周梳理 1 个故事。
+建议节奏：算法题每日 3 题，系统设计每周 2-3 题，Behavior 每周梳理 2-3 个故事。
 
 ### 4. 提升英文表达
 
-AI Infra Manager 面试以英文为主，流利表达和专业词汇同样重要。
+面试以英文为主，流利表达和专业词汇同样重要。
 
 **日常积累：**
 - 每次用 raw-material-processor 处理材料时，**留意英文原文的表述方式**，特别是技术动词和短语（e.g. "horizontally partition", "evict stale entries", "back-pressure mechanism"）
