@@ -11,9 +11,9 @@ created_from_jd:
 # GPU Cluster Management
 
 ## Knowledge Map
-- 前置知识：[[Linux Basics]], [[Networking Fundamentals]]
-- 延伸话题：[[NCCL Collective Communication]], [[RDMA and InfiniBand]], [[Kubernetes GPU Scheduling]]
-- 管理关联：[[Capacity Planning]]
+- Prerequisites（前置知识）：[[Linux Basics]], [[Networking Fundamentals]]
+- Related Topics（延伸话题）：[[NCCL Collective Communication]], [[RDMA and InfiniBand]], [[Kubernetes GPU Scheduling]]
+- Management（管理关联）：[[Capacity Planning]]
 
 ## Core Concepts
 <!-- To be filled by raw-material-processor skill -->

@@ -11,9 +11,9 @@ created_from_jd: [[positions/Sample AI Infra Manager - Test Co]]
 # NCCL and Collective Communication
 
 ## Knowledge Map
-- 前置知识：[[GPU Cluster Management]], [[Networking Fundamentals]]
-- 延伸话题：[[RDMA and InfiniBand]], [[Distributed Training Frameworks]], [[GPU Cluster Management]]
-- 管理关联：[[Capacity Planning]]
+- Prerequisites（前置知识）：[[GPU Cluster Management]], [[Networking Fundamentals]]
+- Related Topics（延伸话题）：[[RDMA and InfiniBand]], [[Distributed Training Frameworks]], [[GPU Cluster Management]]
+- Management（管理关联）：[[Capacity Planning]]
 
 ## Core Concepts
 <!-- To be filled by raw-material-processor skill after you find learning materials -->

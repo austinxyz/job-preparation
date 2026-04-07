@@ -11,9 +11,9 @@ created_from_jd:
 # Design Patterns
 
 ## Knowledge Map
-- 前置知識：[[OOP Principles]]
-- 延伸话题：[[System Design Patterns]], [[API Design]]
-- 管理关联：
+- Prerequisites（前置知识）：[[OOP Principles]]
+- Related Topics（延伸话题）：[[System Design Patterns]], [[API Design]]
+- Management（管理关联）：
 
 ## Core Concepts
 <!-- To be filled by raw-material-processor skill -->

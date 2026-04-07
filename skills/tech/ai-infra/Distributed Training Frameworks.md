@@ -11,9 +11,9 @@ created_from_jd: [[positions/Sample AI Infra Manager - Test Co]]
 # Distributed Training Frameworks
 
 ## Knowledge Map
-- 前置知识：[[GPU Cluster Management]], [[NCCL and Collective Communication]]
-- 延伸话题：[[Model Parallelism]], [[Pipeline Parallelism]], [[LLM Fundamentals]]
-- 管理关联：[[AI Research Team Structure]]
+- Prerequisites（前置知识）：[[GPU Cluster Management]], [[NCCL and Collective Communication]]
+- Related Topics（延伸话题）：[[Model Parallelism]], [[Pipeline Parallelism]], [[LLM Fundamentals]]
+- Management（管理关联）：[[AI Research Team Structure]]
 
 ## Core Concepts
 <!-- To be filled by raw-material-processor skill after you find learning materials -->

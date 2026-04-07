@@ -3,6 +3,7 @@ title: <% tp.file.title %>
 company: 
 date_added: <% tp.date.now("YYYY-MM-DD") %>
 status: analyzing
+match_score:
 growing_link:
 ---
 

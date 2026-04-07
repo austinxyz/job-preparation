@@ -11,9 +11,9 @@ created_from_jd:
 # Distributed Systems
 
 ## Knowledge Map
-- 前置知识：[[Networking Fundamentals]], [[Storage Systems]]
-- 延伸话题：[[Consensus Algorithms]], [[Distributed Storage]], [[Message Queues]]
-- 管理关联：[[Engineering Reliability Culture]]
+- Prerequisites（前置知识）：[[Networking Fundamentals]], [[Storage Systems]]
+- Related Topics（延伸话题）：[[Consensus Algorithms]], [[Distributed Storage]], [[Message Queues]]
+- Management（管理关联）：[[Engineering Reliability Culture]]
 
 ## Core Concepts
 <!-- To be filled by raw-material-processor skill -->

@@ -1,0 +1,7 @@
+# Job applications — not for public view
+positions/
+raw_material/positions/
+
+# Local state
+.claude/settings.local.json
+.obsidian/workspace.json

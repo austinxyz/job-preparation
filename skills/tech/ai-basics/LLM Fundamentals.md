@@ -11,9 +11,9 @@ created_from_jd:
 # LLM Fundamentals
 
 ## Knowledge Map
-- 前置知识：[[Deep Learning Basics]], [[Attention Mechanism]]
-- 延伸话题：[[LLM Inference Optimization]], [[RLHF]], [[Quantization]]
-- 管理关联：[[AI Research Team Structure]]
+- Prerequisites（前置知识）：[[Deep Learning Basics]], [[Attention Mechanism]]
+- Related Topics（延伸话题）：[[LLM Inference Optimization]], [[RLHF]], [[Quantization]]
+- Management（管理关联）：[[AI Research Team Structure]]
 
 ## Core Concepts
 <!-- To be filled by raw-material-processor skill -->

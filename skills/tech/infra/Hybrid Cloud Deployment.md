@@ -11,9 +11,9 @@ created_from_jd: [[positions/Sample AI Infra Manager - Test Co]]
 # Hybrid Cloud Deployment
 
 ## Knowledge Map
-- 前置知识：[[Kubernetes]], [[Networking Fundamentals]]
-- 延伸话题：[[VPN and Direct Connect]], [[Multi-cluster Management]], [[Data Sovereignty]]
-- 管理关联：[[Technical Roadmap]]
+- Prerequisites（前置知识）：[[Kubernetes]], [[Networking Fundamentals]]
+- Related Topics（延伸话题）：[[VPN and Direct Connect]], [[Multi-cluster Management]], [[Data Sovereignty]]
+- Management（管理关联）：[[Technical Roadmap]]
 
 ## Core Concepts
 <!-- To be filled by raw-material-processor skill after you find learning materials -->

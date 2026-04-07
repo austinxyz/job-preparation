@@ -11,9 +11,9 @@ created_from_jd: [[positions/Sample AI Infra Manager - Test Co]]
 # LLM Inference Optimization
 
 ## Knowledge Map
-- 前置知识：[[LLM Fundamentals]], [[GPU Cluster Management]]
-- 延伸话题：[[Quantization]], [[KV Cache]], [[Speculative Decoding]], [[vLLM]]
-- 管理关联：[[Capacity Planning]]
+- Prerequisites（前置知识）：[[LLM Fundamentals]], [[GPU Cluster Management]]
+- Related Topics（延伸话题）：[[Quantization]], [[KV Cache]], [[Speculative Decoding]], [[vLLM]]
+- Management（管理关联）：[[Capacity Planning]]
 
 ## Core Concepts
 <!-- To be filled by raw-material-processor skill after you find learning materials -->

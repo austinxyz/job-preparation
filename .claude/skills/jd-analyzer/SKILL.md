@@ -4,7 +4,8 @@ Analyze a Job Description note and populate its analysis sections by comparing a
 
 ## When to Use
 
-When the user has pasted a JD into a `positions/` note and wants to:
+When the user has a `positions/` note and wants to:
+- Get a match score against current background
 - Extract key skill requirements
 - See which skills are already in the knowledge base vs missing
 - Get a prioritized prep checklist
@@ -43,11 +44,51 @@ Match JD requirements against:
 - Skill note titles and tags
 - Experience note skills arrays
 
-### 4. Build the Skill Gap Analysis table
+### 4. Calculate Match Score
+
+Assess overall fit across two dimensions:
+
+**Technical fit**: How many required technical skills are covered by existing skill notes (any status) or experience notes?
+
+**Leadership/experience fit**: Does the management scope, years of experience, and domain align with the user's background (infer from `experience/` notes)?
+
+Assign one of four scores:
+
+| Score | Criteria |
+|-------|----------|
+| **strong-matched** | 80%+ required skills covered; leadership scope and domain strongly align |
+| **matched** | 60–79% required skills covered; leadership scope reasonably aligns |
+| **matched-with-gaps** | 40–59% required skills covered, OR key leadership/domain requirements are a stretch |
+| **not-matched** | <40% required skills covered, OR fundamental misalignment (wrong role type, missing core qualifications) |
+
+Write the match score into the JD note frontmatter:
+```yaml
+match_score: matched-with-gaps
+```
+
+**Present the score to the user now** with a 2-3 sentence rationale before continuing.
+
+---
+
+### If `not-matched`: STOP here
+
+Update the JD note:
+- Set `match_score` in frontmatter
+- Set `status: not-matched`
+- Write `## Key Requirements` section (already extracted)
+- Add a brief note under `## Skill Gap Analysis`: "Not pursued — match score: not-matched. Reason: [rationale]."
+
+Do NOT create stub notes, prep checklist, or resume tailoring for not-matched positions.
+
+---
+
+### 5. Build the Skill Gap Analysis table
+
+_(Only for strong-matched / matched / matched-with-gaps)_
 
 For each required skill from the JD:
 - If a matching skill note exists: record its current status and set priority = high
-- If NO matching skill note exists: 
+- If NO matching skill note exists:
   - Create a stub note in the appropriate `skills/` subdirectory (see "Creating Stub Notes" below)
   - Record status = stub, priority = high
 
@@ -62,7 +103,7 @@ Format as:
 | Kubernetes | reviewed | medium |
 ```
 
-### 5. Create stub notes for missing skills
+### 6. Create stub notes for missing skills
 
 For each skill not found in the knowledge base, create a stub note:
 
@@ -109,7 +150,7 @@ created_from_jd: [[positions/[JD filename]]]
 <!-- Save source articles to raw_material/ then link here -->
 ```
 
-### 6. Build Prep Checklist
+### 7. Build Prep Checklist
 
 Order by: stub (most urgent) → draft → in-progress, then by priority high → medium.
 
@@ -121,7 +162,7 @@ Format:
 - [ ] **[medium]** Refresh [Skill] — already reviewed but relevant (`reviewed`)
 ```
 
-### 7. Find Experience Matches
+### 8. Find Experience Matches
 
 Scan `experience/` notes. For each experience note, check if its `skills` array overlaps with the JD's required skills. List the top 3-5 most relevant, with a one-line note on why.
 
@@ -130,7 +171,7 @@ Format:
 - [[experience/[Title]]] — relevant for [JD skill 1], [JD skill 2]
 ```
 
-### 8. Resume Tailoring
+### 9. Resume Tailoring
 
 Read `_meta/resume-base.md`.
 
@@ -143,7 +184,7 @@ Only suggest changes where resume-base has content that could be reworded to mat
 
 **建议弱化的内容**: Identify resume-base content (roles, projects, skills) that is NOT relevant to this JD and would dilute focus. Suggest de-emphasizing or moving to an appendix.
 
-### 9. Write all sections into the JD note
+### 10. Write all sections into the JD note
 
 Update the JD note by filling in:
 - `## Key Requirements`
@@ -157,7 +198,8 @@ Also update the JD note frontmatter: set `status: ready`.
 ## Output
 
 The updated JD note with all sections filled. Summary to user:
+- Match score + rationale
 - N required skills found
 - M skills already in knowledge base (with status breakdown)
-- K stub notes created
-- Top 3 experience matches
+- K stub notes created (or "none — not-matched position")
+- Top 3 experience matches (if applicable)

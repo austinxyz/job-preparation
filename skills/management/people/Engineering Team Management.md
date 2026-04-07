@@ -11,9 +11,9 @@ created_from_jd:
 # Engineering Team Management
 
 ## Knowledge Map
-- 前置知識：[[STAR Method]]
-- 延伸话题：[[Hiring and Interviewing]], [[Performance Reviews]], [[Technical Roadmap]]
-- 管理关联：[[Project Management]]
+- Prerequisites（前置知识）：[[STAR Method]]
+- Related Topics（延伸话题）：[[Hiring and Interviewing]], [[Performance Reviews]], [[Technical Roadmap]]
+- Management（管理关联）：[[Project Management]]
 
 ## Core Concepts
 <!-- To be filled by raw-material-processor skill -->

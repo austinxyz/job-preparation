@@ -11,9 +11,9 @@ created_from_jd: [[positions/Sample AI Infra Manager - Test Co]]
 # InfiniBand and High-Speed Networking
 
 ## Knowledge Map
-- 前置知识：[[Networking Fundamentals]], [[GPU Cluster Management]]
-- 延伸话题：[[RDMA]], [[RoCE]], [[NCCL and Collective Communication]], [[NVLink]]
-- 管理关联：[[Capacity Planning]]
+- Prerequisites（前置知识）：[[Networking Fundamentals]], [[GPU Cluster Management]]
+- Related Topics（延伸话题）：[[RDMA]], [[RoCE]], [[NCCL and Collective Communication]], [[NVLink]]
+- Management（管理关联）：[[Capacity Planning]]
 
 ## Core Concepts
 <!-- To be filled by raw-material-processor skill after you find learning materials -->

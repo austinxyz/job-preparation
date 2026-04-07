@@ -11,9 +11,9 @@ created_from_jd:
 # Technical Roadmap
 
 ## Knowledge Map
-- 前置知識：[[Engineering Team Management]]
-- 延伸话题：[[OKRs and Goal Setting]], [[Cross-team Collaboration]], [[Risk Management]]
-- 管理关联：[[People Management]]
+- Prerequisites（前置知识）：[[Engineering Team Management]]
+- Related Topics（延伸话题）：[[OKRs and Goal Setting]], [[Cross-team Collaboration]], [[Risk Management]]
+- Management（管理关联）：[[People Management]]
 
 ## Core Concepts
 <!-- To be filled by raw-material-processor skill -->

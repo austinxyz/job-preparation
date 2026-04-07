@@ -11,9 +11,9 @@ created_from_jd:
 # Big O and Complexity
 
 ## Knowledge Map
-- 前置知識：
-- 延伸话题：[[Sorting Algorithms]], [[Graph Algorithms]], [[Dynamic Programming]]
-- 管理关联：
+- Prerequisites（前置知识）：
+- Related Topics（延伸话题）：[[Sorting Algorithms]], [[Graph Algorithms]], [[Dynamic Programming]]
+- Management（管理关联）：
 
 ## Core Concepts
 <!-- To be filled by raw-material-processor skill -->
