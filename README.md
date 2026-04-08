@@ -1,4 +1,4 @@
-# AI Infra Manager — Interview Prep Knowledge Base
+# Infra Manager — Interview Prep Knowledge Base
 
 An Obsidian vault + Claude Code workspace for structured interview preparation targeting Infrastructure Manager roles. Knowledge is distilled from books, articles, and personal experience into interview-ready skill notes and STAR stories.
 
