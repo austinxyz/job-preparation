@@ -14,7 +14,8 @@ Status: `stub` → `draft` → `in-progress` → `reviewed`
 | Note | Status | Priority |
 |------|--------|----------|
 | [[Distributed Training Frameworks]] | in-progress | high |
-| [[GPU Cluster Management]] | stub | high |
+| [[GPU Cluster Management]] | in-progress | high |
+| [[Kubernetes GPU Scheduling]] | in-progress | high |
 | [[NCCL and Collective Communication]] | stub | high |
 | [[AI Evaluation and Testing]] | stub | high |
 | [[LLM Inference Optimization]] | stub | medium |
@@ -117,7 +118,7 @@ Status: `stub` → `draft` → `in-progress` → `reviewed`
 | Status | Count |
 |--------|-------|
 | reviewed | 0 |
-| in-progress | 3 |
+| in-progress | 5 |
 | draft | 23 |
-| stub | 14 |
-| **Total** | **40** |
+| stub | 13 |
+| **Total** | **41** |

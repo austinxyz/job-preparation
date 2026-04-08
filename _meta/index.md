@@ -100,6 +100,15 @@ WHERE processed = false
 SORT date_saved DESC
 ```
 
+## Books Read
+
+```dataview
+TABLE book_url, date_read
+FROM "raw_material/books"
+WHERE file.name = "index"
+SORT date_read DESC
+```
+
 ## Open Positions
 
 ```dataview
@@ -120,9 +129,11 @@ SORT date DESC
 
 | Step | Action |
 |------|--------|
-| 0. Discover | Paste JD → run `jd-analyzer` skill |
-| 1. Learn | Review stub notes → find articles → save to `raw_material/` |
-| 2. Summarize | Run `raw-material-processor` skill on raw material note |
-| 3. Experience | Write STAR notes in `experience/` |
-| 4. Prep | Use Dataview tables above to prioritize review |
-| 5. Tailor | Run `jd-analyzer` on target JD for resume suggestions |
+| 0. Discover | Paste JD → run `/jd-analyzer` skill |
+| 1. Read books | Provide TOC URL → run `/book-reader` skill → creates `raw_material/books/` notes + skill note |
+| 2. Learn | Review stub notes → find articles → save to `raw_material/` |
+| 3. Summarize | Run `/raw-material-processor` skill on raw material note |
+| 4. Experience | Write STAR notes in `experience/` using `/experience-processor` |
+| 5. Prep | Use Dataview tables above to prioritize review |
+| 6. Mock | Run `/mock-interview` for targeted practice |
+| 7. Tailor | Re-run `/jd-analyzer` on target JD for resume suggestions |
