@@ -28,3 +28,12 @@ growing_link:
 ## Interview Usage
 - 适用 BQ：
 - 适用 JD 关键词：
+
+## Key Questions
+<!-- Common interview questions this story can answer, with talking-point frameworks. Filled by experience-processor skill. -->
+
+## Summary
+<!-- 1-2 paragraph synthesis of the story and its significance. Filled by experience-processor skill. -->
+
+## Raw Material
+<!-- Links to raw_material/experience/ source files -->

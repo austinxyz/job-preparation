@@ -3,7 +3,7 @@ title: eBay Work Highlights
 type: experience
 skills: [kubernetes, k8s, cross-functional-leadership, team-management, hiring, people-management, ai-tools, sre, incident-management, platform-engineering, cloud-infrastructure, devops]
 company: eBay
-date: 2023-09
+date: 2025-06
 impact: high
 growing_link:
 ---

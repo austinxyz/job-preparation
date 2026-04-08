@@ -94,6 +94,34 @@ Answer framework: Read-only degraded mode (existing Pods keep running; cannot cr
 Answer framework: kubelet Heartbeat → Node Controller detects → waits for eviction-timeout → evicts Pods for rescheduling; too short causes migration storms on network blips; too long increases unavailability window; calibrate based on business SLA.
 > 中文提示：太短触发迁移风暴（网络抖动误判），太长服务不可用；结合业务 SLA 取值
 
+**Q: Describe the networking model in Kubernetes. How do Pods communicate with each other?**
+Answer framework: Flat network model — every Pod gets a unique cluster-wide IP, no NAT between Pods; CNI plugins (Calico, Cilium, Flannel) implement the model; Services provide stable VIPs; CoreDNS for in-cluster DNS resolution; NetworkPolicy restricts Pod-to-Pod traffic.
+> 中文提示：每个 Pod 唯一 IP，无 NAT；CNI 插件实现；Service 提供稳定 VIP；NetworkPolicy 限流量
+
+**Q: What is the difference between a Kubernetes Ingress and a Service? When would you use each?**
+Answer framework: Service = internal/external L4 load balancing (ClusterIP, NodePort, LoadBalancer types); Ingress = HTTP(S) L7 routing with host/path rules, TLS termination, single entry point for multiple services; use Ingress to avoid provisioning one LoadBalancer per service.
+> 中文提示：Service 是 L4，Ingress 是 L7 HTTP 路由；Ingress 节省 LoadBalancer 数量
+
+**Q: How does Kubernetes handle horizontal and vertical scaling?**
+Answer framework: Horizontal Pod Autoscaler (HPA) watches CPU/memory/custom metrics, adjusts replica count; Vertical Pod Autoscaler (VPA) adjusts resource requests/limits per container; Cluster Autoscaler adds/removes Nodes based on pending Pods; note HPA and VPA conflict on CPU-based metrics.
+> 中文提示：HPA 调副本数，VPA 调 resource request，CA 调节点数；HPA+VPA 同时用要避免 CPU 指标冲突
+
+**Q: How do you secure a Kubernetes cluster? What measures protect both control plane and workloads?**
+Answer framework: Control plane — API server authN/authZ (RBAC), TLS everywhere, etcd encryption at rest, audit logging; Workloads — Network Policies (east-west traffic), PodSecurityStandards (privileged container prevention), admission controllers (OPA/Gatekeeper), ServiceAccount least privilege; image scanning in CI/CD pipeline.
+> 中文提示：控制面用 RBAC + TLS + etcd 加密；工作负载用 NetworkPolicy + PodSecurityStandards + admission controller
+
+**Q: A pod is stuck in CrashLoopBackOff. Walk through your debugging approach.**
+Answer framework: `kubectl logs <pod> --previous` (crashed container logs); `kubectl describe pod` (Events — OOMKilled, image pull errors, failed probes); check resource limits (OOM); inspect liveness/readiness probe config; check init container logs; look at recent Deployment changes (`kubectl rollout history`).
+> 中文提示：先看 --previous 日志，再看 describe Events；OOMKilled 调 limits，探针误杀调 initialDelaySeconds
+
+**Q: Design a system to patch the Linux kernel or container runtime across 10,000 nodes in 5 regions with zero downtime.**
+Answer framework: Phased rollout (canary per region → staging → prod); zone-aware sequencing (one AZ at a time per region); node drain/cordon + PodDisruptionBudgets to protect workloads during upgrade; automated health checks and rollback gates per phase; GitOps (ArgoCD/Flux) for version tracking; blast radius control by region; maintenance window alignment across time zones.
+> 中文提示：分阶段（canary→staging→prod），逐 AZ 操作，PDB 保护工作负载，GitOps 追踪版本，每阶段健康门控
+
+**Q: Design a system to detect noisy-neighbor disk I/O abuse in a multi-tenant Kubernetes cluster and rebalance automatically.**
+Answer framework: Real-time per-pod disk I/O metrics (cAdvisor + Prometheus); anomaly detection with threshold triggers; automatic Pod eviction (PriorityClass + preemption) or resource quota enforcement (cgroup limits); QoS class consideration (BestEffort evicted first); avoid thundering herd during rebalancing; notify tenant and log audit trail.
+> 中文提示：cAdvisor 采集 per-pod I/O，阈值触发驱逐，按 QoS class 排优先级，避免踩踏
+
 ## Summary
 
 Kubernetes is the industry standard for container orchestration, and its core value is **declarative infrastructure**: you describe the desired state, K8s converges to it and maintains it continuously. The key to understanding K8s is the **control loop** (observe → diff → act) — this pattern runs through the Scheduler, kubelet, Deployment Controller, HPA, and every other core component.

@@ -1,1 +1,5 @@
-{}
+{
+  "theme": "moonstone",
+  "accentColor": "#5ccef5",
+  "cssTheme": "Border"
+}

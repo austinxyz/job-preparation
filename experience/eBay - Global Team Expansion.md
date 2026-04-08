@@ -43,3 +43,26 @@ After China-based engineers were designated as covered persons and lost access t
 - 适用 BQ：Tell me about a time you had to manage a team across multiple geographies
 - 适用 BQ：Tell me about a time you improved a hiring or onboarding process
 - 适用 JD 关键词：team building, hiring, people management, managing 8–15 engineers, global team, onboarding
+
+## Key Questions
+
+**Q: Tell me about a time you built a team from scratch under time pressure.**
+Talking points: Name the constraint driving urgency (on-call coverage gap after China team lost access); describe how you structured the hiring process to move fast without sacrificing quality (AI-standardized pipeline, interviewer training); quantify — 8+ engineers across two regions in 3 months.
+
+**Q: How do you ensure new hires in remote locations ramp up effectively?**
+Talking points: Don't rely on tribal knowledge — build a documentation site with structured day-by-day ramp plans; pair new hires with existing team members for live production exposure; set a concrete ramp target (independently handle production incidents within 3 months) and measure against it.
+
+**Q: How do you scale a hiring process across multiple roles and interviewers without losing consistency?**
+Talking points: Standardize the artifacts that vary most — JD templates, question banks, feedback forms, debrief structure; use AI to reduce the per-interview overhead on interviewers; document and train so the process outlives any single person.
+
+**Q: Tell me about a time you managed a team across geographies and time zones.**
+Talking points: Describe the follow-the-sun model goal; explain how you established async communication norms and clear ownership boundaries; note how the ramp-up and documentation infrastructure made the team self-sufficient rather than dependent on US oversight.
+
+## Summary
+
+When eBay's China engineers lost access to production environments due to the DoJ compliance mandate, the US team was left as the sole 24/7 on-call owner — an unsustainable position for a Cloud platform team. The company's answer was to expand into Europe and India, and I was given a 3-month window to hire both teams.
+
+I treated this as a systems problem: standardize the hiring and onboarding workflows so they could run at speed without constant intervention, then build the knowledge infrastructure that would let new hires become independent within 3 months of joining. I used AI agents throughout — for JD creation, screening, interview libraries, and ramp-up documentation. Both teams were hired on schedule; Europe is now independently on-call, India is actively ramping. The hiring framework and ramp-up agents were later adopted by other teams in the org, extending the impact beyond the original mandate.
+
+## Raw Material
+<!-- No raw_material/ source file — story reconstructed from direct experience -->

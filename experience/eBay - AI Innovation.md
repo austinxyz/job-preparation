@@ -46,3 +46,26 @@ As eBay broadly adopted AI tools (ChatGPT, Gemini, Claude Code, Cline, Cursor), 
 - 适用 BQ：Tell me about a time you improved engineering productivity at scale
 - 适用 BQ：Tell me about a time you reduced operational toil
 - 适用 JD 关键词：AI tooling, operational excellence, SRE, MTTD/MTTR, automation, platform engineering
+
+## Key Questions
+
+**Q: How did you drive AI adoption across your team without it feeling forced?**
+Talking points: Led by example — personally used and iterated tools first; shared concrete productivity gains (not abstract promises); created space for experimentation on real work; documented workflows so adoption was cumulative, not one-off.
+
+**Q: Tell me about a time you reduced operational toil through automation.**
+Talking points: Quantify the before state (3–4 incidents/month, 1–2 hours triage); describe the specific system built (MCP server, triage agents); show the outcome (1–2 incidents/month, 5-minute triage, 70% support automation); explain what made the solution durable.
+
+**Q: How do you decide where to invest engineering effort on internal tooling?**
+Talking points: Identify highest-frequency pain points (RTB, incident triage, hiring); estimate leverage (80% of support cases → agent handles 70%); pilot on real work before scaling; measure and communicate results to build team confidence.
+
+**Q: Tell me about a time you introduced a new development methodology to your team.**
+Talking points: Explain why spec-driven development was chosen (quality, speed, repeatability); describe the pilot scope (hiring project) before scaling; show adoption curve (1 project → full team → 50+ projects); tie to measurable outcome (PR volume doubled).
+
+## Summary
+
+At eBay, I used the broad AI adoption wave as an opportunity to systematically rebuild how my team operated — not just to save time, but to raise the quality ceiling on work that had been rate-limited by manual effort. I introduced spec-driven development, built an MCP server for Cloud API access, deployed triage and customer support agents, and built end-to-end AI hiring skills. Each initiative was piloted on real work before being scaled to the team and eventually the broader org.
+
+The outcomes were compounding: PR volume doubled, monthly incidents dropped by 50%+, 70% of customer support cases were handled autonomously, and the spec-driven methodology was adopted across 50+ projects by the full team. The story demonstrates what's possible when AI adoption is treated as a deliberate engineering investment — not a set of disconnected experiments — and when the manager does the groundwork before asking the team to follow.
+
+## Raw Material
+<!-- No raw_material/ source file — story reconstructed from direct experience -->

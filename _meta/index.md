@@ -1,7 +1,6 @@
 ---
 title: AI Infra Manager Knowledge Base
 ---
-
 # AI Infra Manager Knowledge Base
 
 ## Quick Stats

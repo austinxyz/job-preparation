@@ -3,7 +3,7 @@ title: eBay - Platform Engineering at Scale
 type: experience
 skills: [kubernetes, k8s, platform-engineering, cloud-infrastructure, system-design, devops, sre, abstraction, crd, admission-webhooks]
 company: eBay
-date: 2020-01
+date: 2025-01
 impact: high
 growing_link:
 source_blog: https://austinxyz.github.io/blogs/blog/2026/03/16/platform-engineer-vs-ops-engineer
@@ -48,3 +48,26 @@ Shift the team's operating model from ops thinking ("fix this problem") to platf
 - 适用 BQ：Tell me about a time you reduced operational toil through platform thinking
 - 适用 Technical：How would you design an upgrade system for a 200+ cluster Kubernetes fleet?
 - 适用 JD 关键词：Kubernetes, platform engineering, CRD, admission webhooks, large-scale infra, SRE, operational excellence, self-service, automation
+
+## Key Questions
+
+**Q: Tell me about a time you fundamentally changed how your team operated at scale.**
+Talking points: Name the inflection point (manual ops couldn't keep up with 200+ clusters); articulate the shift in mental model (ops thinking vs. platform thinking); describe the concrete mechanisms built (CRDs, controllers, admission webhooks, declarative upgrades); show the outcome (2 engineers, zero incidents, monthly patching as routine).
+
+**Q: How do you design systems that eliminate entire classes of operational problems?**
+Talking points: Identify the recurring pattern to eliminate (rewriting automation per upgrade, heroic incident response); encode correctness as technical constraint rather than runbook discipline (admission webhooks, declarative desired state); measure not just incidents but the absence of the pattern — e.g., no more rewriting.
+
+**Q: How would you approach Kubernetes fleet management at 200+ cluster scale?**
+Talking points: Declarative upgrade model with CRDs/controllers; standardized patch specs for customer modifications; self-service validation so teams don't queue on a central team; staged rollout with automatic rollback gates; admission webhooks for non-bypassable guardrails.
+
+**Q: Tell me about a time you eliminated single points of failure in your team's operations.**
+Talking points: Name the SPOF explicitly (the engineer who gets called at 2am — only they know how); systematize the capability by making it self-service and documented; measure whether the person-dependency actually went away (can the team operate without that person for a week?).
+
+## Summary
+
+eBay's Kubernetes platform reached a scale — 200+ clusters, 5,000+ applications, 2M instances — where the existing ops model was a ceiling, not a floor. Two major K8s upgrades per year, monthly OS patching, hundreds of new app onboardings annually: doing these by hand was creating an exponentially growing maintenance burden and a fragile dependency on a small number of people with irreplaceable tribal knowledge.
+
+The shift from ops thinking to platform thinking meant reframing the goal: not "fix this upgrade problem" but "make upgrade problems impossible to create." The mechanism was declarative desired state — engineers specify what they need, the platform enforces it automatically via CRDs, controllers, and admission webhooks. The result was two engineers maintaining the entire fleet with zero incidents, and monthly patching becoming a non-event. This story is strongest for technical depth questions about Kubernetes at scale, and for leadership questions about changing team operating philosophy rather than just optimizing the existing one.
+
+## Raw Material
+- source_blog: https://austinxyz.github.io/blogs/blog/2026/03/16/platform-engineer-vs-ops-engineer
