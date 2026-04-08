@@ -86,6 +86,16 @@ ai-infra-manager/
 
 ---
 
+## Preparation Methodology
+
+See **[methodology/README.md](methodology/README.md)** for the full three-phase prep system:
+
+1. **Phase 1 — Build the knowledge base**: Two paths — start from a JD (gap-driven) or start from learning materials (accumulation-driven). Covers the full `stub → draft → in-progress → reviewed` lifecycle with concrete steps for each transition.
+2. **Phase 2 — Consolidate**: Feynman technique, Obsidian review, LeetCode/Hello Interview practice, and English fluency drills.
+3. **Phase 3 — Sprint for a target JD**: JD analysis → gap-based study plan → resume tailoring → AI mock interview.
+
+---
+
 ## Typical Workflow
 
 ```
