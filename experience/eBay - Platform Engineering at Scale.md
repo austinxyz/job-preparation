@@ -13,7 +13,7 @@ source_blog: https://austinxyz.github.io/blogs/blog/2026/03/16/platform-engineer
 
 ## Situation
 
-eBay's Kubernetes platform had grown to 200+ clusters, 5,000+ applications, 500,000 nodes, and 2M instances. Annual operational demands included two major Kubernetes version upgrades, adding ~33% more clusters each year, onboarding hundreds of new applications, and monthly OS security patching. With this scale, a traditional ops approach — scripting node-by-node upgrades, writing per-customer runbooks, manually coordinating rollouts — was no longer sustainable. Every new requirement meant rewriting automation; every incident meant heroic intervention by a small number of people with irreplaceable context.
+eBay's Kubernetes platform had grown to 200+ clusters, 5,000+ applications, 50,000 nodes, and 2M instances. Annual operational demands included two major Kubernetes version upgrades, adding ~33% more clusters each year, onboarding hundreds of new applications, and monthly OS security patching. With this scale, a traditional ops approach — scripting node-by-node upgrades, writing per-customer runbooks, manually coordinating rollouts — was no longer sustainable. Every new requirement meant rewriting automation; every incident meant heroic intervention by a small number of people with irreplaceable context.
 
 ## Task
 

@@ -14,7 +14,7 @@ TABLE WITHOUT ID
   length(filter(rows, (r) => r.status = "reviewed")) AS "Reviewed"
 FROM "skills"
 WHERE file.name != "_index"
-FLATTEN file AS rows
+GROUP BY true
 ```
 
 ## High Priority — Action Required
