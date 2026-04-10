@@ -1,6 +1,7 @@
-# Job applications — not for public view
+# Job applications and personal strategy — not for public view
 positions/
 raw_material/positions/
+methodology/
 
 # Local state
 .claude/settings.local.json

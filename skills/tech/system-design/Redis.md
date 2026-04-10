@@ -2,9 +2,9 @@
 title: Redis
 category: tech/system-design
 tags: [redis, cache, in-memory, rdb, aof, zset, skip-list, sentinel, redis-cluster, bloom-filter, hash-slot]
-status: draft
+status: in-progress
 priority: high
-last_updated: 2026-04-06
+last_updated: 2026-04-10
 created_from_jd:
 ---
 
@@ -72,6 +72,51 @@ created_from_jd:
 - Does not support deletion (multiple elements share bits); does not support exact queries
 - **Counting Bloom Filter**: each bit becomes a counter, supports deletion; cost is increased memory
 
+**Performance Numbers (benchmark context)**
+- Write throughput: **O(100k) writes/second**; read latency: often in the **microsecond range**
+- These numbers change what's feasible: 100 serial Redis calls is tolerable where 100 SQL queries would be unacceptable. Still avoid unnecessary round trips (use pipelines or Lua scripts), but don't over-optimize.
+- All of this is a consequence of pure in-memory + single-threaded model: no disk IO, no lock contention.
+
+**Distributed Lock Patterns**
+- Simplest lock: `SET key value NX EX ttl` — atomic set-if-not-exists with expiry. If SET succeeds, you hold the lock; if it returns nil, someone else does.
+- INCR-based lock (Hello Interview pattern): `INCR key` → if result is 1, you hold the lock; if > 1, wait. Set TTL immediately after. Less safe — INCR and EXPIRE are two operations (not atomic unless wrapped in Lua).
+- **Redlock algorithm**: acquire locks on N/2+1 independent Redis nodes with the same key and TTL; only proceed if majority acquired within a time window smaller than TTL. Guards against single-node failure. Add **fencing tokens** (monotonically increasing lock version) to prevent stale lock holders from taking effect after TTL expiry.
+- Caution: distributed locks in Redis are *not* as safe as locks in Zookeeper/etcd (which have stronger consistency guarantees). For most use cases, single-node SET NX EX is sufficient; Redlock is for high-stakes scenarios where correctness > simplicity.
+
+**Rate Limiting with Redis**
+- **Fixed-window**: on each request, `INCR user:123:ratelimit` and check against limit N; `EXPIRE` the key with window duration W so it resets automatically. Simple, low latency. Weakness: burst at window boundary (up to 2N requests in one real-world second spanning two windows).
+- **Sliding window (log-based)**: store timestamps in a Sorted Set per user; on each request: `ZREMRANGEBYSCORE` to remove old entries, `ZCARD` to count current entries, `ZADD` to add the new request timestamp. Run in a Lua script to keep it atomic. Accurate but higher memory per user.
+- **Sliding window (approximate)**: blend two fixed windows weighted by time elapsed — lower memory, still accurate enough for most rate-limiting use cases.
+- Interview tip: start with fixed-window (simple, fast), then describe the boundary burst problem, then offer sliding window as the fix with the memory/accuracy tradeoff.
+
+**Proximity Search (Geospatial)**
+- `GEOADD key longitude latitude member` — indexes a location
+- `GEOSEARCH key FROMLONLAT lon lat BYRADIUS r unit` — finds members within radius; runs in O(N + log M)
+- Internally uses **geohashes**: encodes lat/lon into a single string; nearby locations share a prefix. Candidate search fetches a bounding box of geohash cells, then a second pass filters to the exact radius.
+- Good fit for: Uber driver location lookup, restaurant proximity search, anything needing "find N nearest." Not a replacement for PostGIS for complex polygon queries.
+
+**Streams for Event Sourcing / Work Queues**
+- Redis Streams = append-only log, similar to Kafka topics but simpler.
+- `XADD stream * field value` — appends an entry; `*` auto-generates a timestamp-based ID.
+- **Consumer groups**: multiple workers share a stream; each message is delivered to exactly one worker in the group. `XREADGROUP` to read, `XACK` to acknowledge, `XCLAIM` to re-assign a message whose worker died (detected via PEL — Pending Entries List).
+- vs Kafka: Redis Streams are simpler to operate but have less retention and replication guarantees. Good for moderate-scale queues (job dispatch, async task pipelines) where you don't need Kafka's throughput or replay across consumer groups independently.
+- vs Pub/Sub: Streams persist messages; Pub/Sub does not. If consumers can go offline, use Streams.
+
+**Pub/Sub — Capabilities and Limits**
+- `SPUBLISH channel message` / `SSUBSCRIBE channel` — sharded pub/sub (S prefix); one connection per node in cluster, not per channel.
+- Delivery guarantee: **at-most-once**. If a subscriber is offline when a message is published, the message is lost entirely.
+- When to use: real-time notifications, chat, ephemeral fan-out where missing a message is acceptable.
+- When NOT to use: any scenario requiring delivery guarantees, offline consumers, or message replay → use Streams or Kafka instead.
+- Common misconception: old Redis Pub/Sub required a connection per channel → modern sharded Pub/Sub uses one connection per node regardless of channel count.
+
+**Hot Key Problem and Remediations**
+- Cause: one key receives disproportionate traffic, overloading the single node that holds it (hash slot assignment is deterministic).
+- Remediations (with tradeoffs):
+  1. **Local in-process cache** on application servers: absorb repetitive reads before hitting Redis. Simplest; introduces cache-per-instance staleness.
+  2. **Key replication with randomization**: store hot data at N keys (`product:123:0` … `product:123:9`); reads pick a random replica. Writes must update all N keys. Good for read-heavy hot keys.
+  3. **Read replicas per hot shard**: dynamically spin up read replicas for the overloaded node and load-balance reads. Operationally complex but doesn't require application changes.
+- Interview signal: spotting hot key risk proactively (before the interviewer asks) and proposing a mitigation with tradeoffs = strong candidate signal.
+
 ## Key Questions
 
 **Q: What scenarios are String/Bitmap/ZSet/List/HyperLogLog each suited for?**
@@ -94,6 +139,18 @@ Answer framework: Sentinel solves HA (auto primary failover when primary fails),
 Answer framework: Multiple hash functions set bits + query checks if all bits are 1; false positive (hash collision mistakenly judges "exists") is acceptable (at worst recommends one already-watched video); no false negative (bit=0 means definitely doesn't exist); suited for "check existence" scenarios where a small error rate is acceptable at large scale; doesn't support deletion (use Counting Bloom Filter instead).
 > 中文提示：假阳性可接受（顶多多推一个），无假阴性（bit=0 绝对不存在）；不支持删除
 
+**Q: How would you implement a distributed rate limiter using Redis?**
+Answer framework: Start with fixed-window (INCR + EXPIRE) — explain the implementation, then name the boundary burst problem. Upgrade to sliding window using a Sorted Set per user (ZADD timestamps, ZREMRANGEBYSCORE, ZCARD) wrapped in a Lua script for atomicity. State the tradeoff: fixed-window is O(1) memory per user; sliding-window log is O(requests-per-window) but accurate. For most production rate limiting, fixed-window is sufficient; sliding-window is for strict SLA enforcement.
+
+**Q: When would you use Redis Pub/Sub vs Redis Streams vs Kafka?**
+Answer framework: Pub/Sub = ephemeral, real-time, at-most-once — good for live notifications where missing a message is acceptable. Streams = durable, consumer groups with ACK, message replay — good for work queues and async pipelines at moderate scale. Kafka = high-throughput, long retention, independent consumer groups replaying at different offsets — good for event sourcing and data pipelines. Decision factors: durability requirements, replay needs, scale, operational complexity tolerance.
+
+**Q: How would you implement a distributed lock in Redis? What are the failure modes?**
+Answer framework: Simple case: SET NX EX — atomic, correct for single-node. Failure modes: (1) lock TTL expires before work completes → another process acquires while first still holds; fix with fencing tokens. (2) Node failure before replication → lock lost; fix with Redlock across N nodes. Emphasize: for most applications single-node SET NX EX is sufficient; Redlock adds complexity and is rarely needed. Close with: if you need guaranteed correctness under network partition, use ZooKeeper/etcd rather than Redis.
+
+**Q: You're designing a "nearby drivers" feature. How would you use Redis?**
+Answer framework: GEOADD to store driver lat/lon with driver ID as member; GEOSEARCH to find drivers within radius on each request. Discuss update frequency (driver location updates every N seconds — GEOADD is idempotent, just overwrites). Discuss hot key risk (all drivers in one city → one slot). If city-level sharding is needed, use city as part of the key to control slot distribution. Mention geohash internals at depth if pressed: bounding-box candidate fetch + exact-radius filter second pass.
+
 ## Summary
 
 Redis's value is as the high-speed cache layer of distributed systems: trade memory for speed, and match data structures precisely to use cases. Choosing the right data structure is central to Redis usage: String for counting, Bitmap for status bitmaps, ZSet for leaderboards, List for time-ordered queues — each structure is optimized for specific query patterns; choosing wrong loses performance or functionality.
@@ -106,3 +163,4 @@ From an AI Infra perspective, Redis is important for: ① training job schedulin
 
 ## Raw Material
 - [[raw_material/tech/system-design/sd-redis]]
+- [[raw_material/tech/system-design/Redis - Hello Interview]]
