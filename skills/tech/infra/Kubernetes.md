@@ -2,9 +2,9 @@
 title: Kubernetes
 category: tech/infra
 tags: [k8s, container-orchestration, scheduling, pods, deployments, statefulset, rbac, hpa, pv, pvc]
-status: draft
+status: in-progress
 priority: high
-last_updated: 2026-04-06
+last_updated: 2026-04-10
 created_from_jd:
 ---
 
@@ -59,6 +59,63 @@ created_from_jd:
 **Cluster Stability（集群稳定性）**
 - kubelet sends periodic Heartbeats; `pod-eviction-timeout` controls when to evict Pods after a Node goes silent — too short causes false-positive migration storms on network blips; too long means prolonged unavailability
 - If etcd goes down → cluster enters **read-only degraded mode**: existing Pods keep running, but no new resources can be created or modified （只读降级）
+
+**Control Plane Architecture**
+- **API Server**: the single entry point for all cluster operations — validates/persists objects to etcd, enforces authN/authZ/admission. Stateless and horizontally scalable; multiple replicas behind a load balancer for HA.
+- **Controller Manager**: runs reconciliation loops (Deployment Controller, ReplicaSet Controller, Node Controller, etc.). Each controller watches the API Server for object changes and drives actual state toward desired state.
+- **Scheduler**: watches for unscheduled Pods → runs Filter + Score → writes `spec.nodeName` back to the API Server. Pluggable; custom schedulers possible for specialized workloads (e.g., gang scheduling for ML training jobs).
+- **etcd**: the only stateful component of the control plane. All cluster state lives here. HA requires 3 or 5 nodes (Raft quorum = majority). Losing quorum = read-only degraded mode. etcd should run on dedicated nodes, separate from worker nodes.
+- **kubelet**: agent on each worker node. Watches API Server for Pods assigned to its node, drives container runtime (containerd/CRI-O) to start/stop containers, reports node/pod status back.
+- **kube-proxy**: runs on every node, programs network rules (iptables or ipvs) for Service VIP → Pod IP translation. IPVS mode is preferred at scale (O(1) rule lookup vs O(n) iptables traversal).
+
+**APF — API Priority and Fairness (K8s 1.20+)**
+- Problem: in a large cluster, a chatty controller (e.g., release pipeline making thousands of LIST calls) can exhaust API Server concurrency and starve other clients — cascading to cluster instability.
+- APF introduces **PriorityLevelConfigurations** (each with a concurrency quota) and **FlowSchemas** (match rules → priority level). Every API request is classified into a flow and queued/executed within its level's concurrency budget.
+- Key metrics: `apiserver_flowcontrol_rejected_requests_total` (requests dropped because queue was full), `apiserver_flowcontrol_current_executing_requests` (in-flight per level).
+- Tuning: create separate FlowSchemas for known high-volume clients (monitoring scrapers, CI pipelines, user traffic) and assign them appropriate priority levels and concurrency. Don't leave all clients on the default level.
+- **eBay lesson**: APF misconfiguration (app release controllers on the same priority level as platform tooling) caused multiple API Server saturation incidents. Fix: model each client type explicitly in FlowSchemas.
+
+**Resource Requests, Limits, and QoS Classes**
+- **Request**: the amount of CPU/memory the scheduler uses for placement decisions. A node won't be selected unless it has enough unallocated resources to satisfy all requests.
+- **Limit**: the hard cap at runtime. Exceeding CPU limit → throttling. Exceeding memory limit → OOMKill.
+- **QoS Classes** (assigned automatically):
+  - **Guaranteed**: `requests == limits` for all containers. Never evicted under resource pressure (except for critical node pressure). Highest scheduling priority. Use for latency-sensitive workloads.
+  - **Burstable**: `requests < limits` or only some containers have both. Evicted after BestEffort under pressure. Middle tier.
+  - **BestEffort**: no requests or limits set. First to be evicted. For fault-tolerant batch jobs only.
+- Best practice: always set requests (for accurate scheduling); set limits for memory (to bound OOM impact); consider leaving CPU limits unset for latency-sensitive workloads (CPU throttling at limit causes unexpected latency spikes even when the node has idle CPU).
+- **LimitRange**: sets default and max requests/limits per namespace. Prevents Pods from launching without resource specs.
+- **ResourceQuota**: caps total resource consumption per namespace. Essential for multi-tenant clusters.
+
+**DaemonSet**
+- Ensures exactly one Pod runs on every node (or a subset matching a NodeSelector/Toleration). Used for: log collectors (Fluent Bit), monitoring agents (node-exporter, cAdvisor), CNI plugins, security scanners.
+- Pods are created/deleted automatically as nodes join/leave the cluster.
+- Tolerates node taints by default for system-level DaemonSets (`node.kubernetes.io/not-ready`, etc.) — otherwise monitoring would fail on problem nodes, exactly when you need it most.
+- Rolling update supported (`RollingUpdate` strategy); `maxUnavailable` controls pace.
+
+**PodDisruptionBudget (PDB)**
+- Limits the number of Pods that can be voluntarily disrupted simultaneously — during node drains, cluster upgrades, or evictions.
+- `minAvailable: 2` → at least 2 Pods must stay up during disruption. `maxUnavailable: 1` → at most 1 Pod can be unavailable at a time.
+- PDB blocks `kubectl drain` if draining a node would violate the budget. This is the mechanism that makes large-scale node upgrades safe without manual coordination.
+- Required for any production workload. Without PDB, rolling a 10k-node cluster can accidentally take down an entire service if the upgrade evicts Pods faster than they reschedule.
+
+**Admission Controllers and Webhooks**
+- Admission controllers intercept API Server requests *after* authN/authZ, *before* persistence to etcd. Two phases: **Mutating** (modify the object, e.g., inject sidecar, set default resource limits) → **Validating** (accept or reject).
+- Built-in controllers: `LimitRanger` (enforce LimitRange), `ResourceQuota`, `PodSecurity` (enforce PodSecurityStandards), `DefaultStorageClass`.
+- **MutatingAdmissionWebhook / ValidatingAdmissionWebhook**: call external HTTPS endpoints for custom logic. Power tools like Istio sidecar injection, OPA/Gatekeeper policy enforcement, and image signature verification.
+- The webhook call is on the critical path — a slow or unavailable webhook can block all Pod creation. Always set `failurePolicy: Fail` for security-critical webhooks but `Ignore` for non-critical ones; always run webhooks with high availability (≥ 2 replicas).
+
+**CRDs and the Operator Pattern**
+- **CRD (Custom Resource Definition)**: extends the K8s API with custom object types. After registering a CRD, you can `kubectl get myresource` just like Pods or Deployments.
+- **Operator pattern**: CRD (defines the custom object) + custom Controller (reconciles desired state → actual state). This is how Prometheus Operator, cert-manager, Kafka on K8s, and GPU operator work.
+- Why it matters for platform engineering: complex stateful systems (databases, ML training jobs, GPU allocation) need domain-specific reconciliation logic that generic K8s controllers don't provide. Operators encode that operational knowledge into code, making it repeatable and version-controlled.
+- Operator development frameworks: Kubebuilder (Go, official), Operator SDK (Go/Ansible/Helm).
+
+**Multi-Tenancy Patterns**
+- **Namespace-level**: namespaces provide soft isolation (separate RBAC, ResourceQuota, NetworkPolicy). Simple to operate; workloads still share the same node kernel. Sufficient for most internal multi-team scenarios.
+- **Node-level**: dedicated node pools per tenant (Taint + Toleration + NodeSelector). Hard isolation; workloads don't share nodes. More expensive but required for regulatory/security separation.
+- **Cluster-level**: separate clusters per tenant. Maximum isolation; highest operational overhead. Typical for multi-org or prod/staging separation.
+- Control plane isolation: without APF, a noisy tenant's workload can degrade the API Server for all tenants. APF FlowSchemas per namespace/tenant are the mitigation.
+- NetworkPolicy is mandatory for namespace-level multi-tenancy: without it, Pods in one namespace can reach Pods in any other by default.
 
 ## Key Questions
 
@@ -121,6 +178,24 @@ Answer framework: Phased rollout (canary per region → staging → prod); zone-
 **Q: Design a system to detect noisy-neighbor disk I/O abuse in a multi-tenant Kubernetes cluster and rebalance automatically.**
 Answer framework: Real-time per-pod disk I/O metrics (cAdvisor + Prometheus); anomaly detection with threshold triggers; automatic Pod eviction (PriorityClass + preemption) or resource quota enforcement (cgroup limits); QoS class consideration (BestEffort evicted first); avoid thundering herd during rebalancing; notify tenant and log audit trail.
 > 中文提示：cAdvisor 采集 per-pod I/O，阈值触发驱逐，按 QoS class 排优先级，避免踩踏
+
+**Q: Walk through the K8s control plane components. What happens from the moment you run `kubectl apply` to a Pod running?**
+Answer framework: `kubectl apply` → API Server (authN/authZ/admission/persist to etcd) → Controller Manager detects new ReplicaSet → creates Pod objects (unscheduled) → Scheduler picks up unscheduled Pods, runs Filter+Score, writes nodeName → kubelet on that node watches for its assigned Pods → calls container runtime to pull image and start containers → kubelet reports status back to API Server. Emphasize each component's role and that the API Server is the only component that talks to etcd directly.
+
+**Q: What are K8s QoS classes and how do they affect scheduling and eviction?**
+Answer framework: Three classes assigned automatically: Guaranteed (requests==limits, never evicted except critical pressure), Burstable (requests < limits, middle priority), BestEffort (no resources set, first evicted). Practical guidance: always set memory limits to bound OOM blast radius; consider leaving CPU limits unset for latency-sensitive services because throttling at limit causes latency spikes even when the node has spare CPU. LimitRange enforces defaults; ResourceQuota caps namespace totals.
+
+**Q: What is API Priority and Fairness (APF) and when do you need to tune it?**
+Answer framework: APF classifies API requests into flows via FlowSchemas, queues them per PriorityLevelConfiguration, and enforces per-level concurrency budgets. Without it, one chatty client (CI pipeline, misconfigured controller) can exhaust API Server concurrency and starve platform tooling. Tune it when: a cluster has heterogeneous clients with very different call patterns; a noisy-neighbor incident has occurred (monitor `apiserver_flowcontrol_rejected_requests_total`). Fix: create explicit FlowSchemas per client type with appropriate priority levels. Close with the eBay experience: APF misconfiguration caused multiple API Server saturation incidents before flow schemas were properly modeled per client.
+
+**Q: How do you safely upgrade Kubernetes nodes at scale? What mechanisms protect workloads?**
+Answer framework: Three safety mechanisms working together: (1) PodDisruptionBudget blocks drain if eviction would violate `minAvailable`; (2) node cordon prevents new scheduling while drain completes; (3) Readiness Probes ensure rescheduled Pods are ready before receiving traffic. Rollout strategy: canary → AZ-by-AZ within a region → region-by-region. Automated health gates between phases; pre-provision surge capacity so evicted Pods reschedule immediately. For 10k nodes: GitOps tracks target version, cluster autoscaler pre-scales if needed, automation handles drain/replace in parallel per AZ with PDB as the governor.
+
+**Q: Explain the Operator pattern. Why would you build one instead of using plain Deployments?**
+Answer framework: An Operator = CRD (custom object type) + custom Controller (reconciliation loop). Use when the workload needs domain-specific operational logic that generic K8s controllers don't provide: complex stateful systems (databases need coordinated failover, not just restart), batch ML training jobs (need gang scheduling awareness), GPU allocation policies. Examples: Prometheus Operator manages scrape configs as K8s objects; cert-manager automates certificate rotation; GPU Operator configures drivers and device plugins on GPU nodes. Trade-off: more development and maintenance overhead vs. encoding tribal operational knowledge into version-controlled, auditable code.
+
+**Q: How would you design multi-tenancy for a shared Kubernetes cluster serving 20 engineering teams?**
+Answer framework: Namespace per team as the baseline (RBAC, ResourceQuota, LimitRange, NetworkPolicy per namespace). APF FlowSchemas per namespace to prevent any team's workload from starving the API Server. NetworkPolicy default-deny within and between namespaces, with explicit allow rules for shared services. For teams with strict isolation requirements (different compliance posture): dedicated node pools via Taint/Toleration. Centralized admission webhooks (OPA/Gatekeeper) enforce org-wide policies (image registry allowlist, required labels, security contexts). Escalation path: namespace-level for most teams, node-level for regulated teams, separate cluster only for highest-sensitivity workloads.
 
 ## Summary
 

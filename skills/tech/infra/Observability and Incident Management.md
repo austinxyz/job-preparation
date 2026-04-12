@@ -111,7 +111,7 @@ Structured debugging flow:
 **On-call rotation models and evolution**
 - **Follow-the-sun**: each regional team covers a business-hours shift (e.g., US covers 8am–8pm PST, China covers the other 12h). No one wakes up for incidents. Requires meaningful timezone coverage (>= 2 regions, ~12h apart).
 - **Primary/Secondary**: 24h primary who handles all alerts; secondary escalation for incidents the primary can't resolve within N minutes. Simpler to staff; primary does sometimes wake up.
-- **eBay evolution**: started follow-the-sun (US + China). When China team lost production access, pivoted to primary/secondary with India/Europe as secondary, while building those teams toward follow-the-sun capability. The lesson: on-call model must adapt to org structure realities; don't force a model that requires access/coverage you don't have.
+- **eBay evolution**: started follow-the-sun (US + China). When China team lost production access, pivoted to primary/secondary with India/Europe as backup, while building those teams toward follow-the-sun capability. The lesson: on-call model must adapt to org structure realities; don't force a model that requires access/coverage you don't have.
 - Burnout prevention: enforce < 25% on-call time per engineer; mandatory off-call recovery after high-incident periods; track pager volume per rotation slot and flag outliers.
 
 ## Key Questions

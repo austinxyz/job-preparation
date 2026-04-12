@@ -2,6 +2,7 @@
 positions/
 raw_material/positions/
 methodology/
+resumes/
 
 # Local state
 .claude/settings.local.json
