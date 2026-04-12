@@ -37,6 +37,33 @@
 3. 运行 /raw-material-processor → 提炼内容，自动更新 skill note
 ```
 
+**如果材料是在线书籍或系列文章：** 用 `/book-reader` 代替手动保存：
+
+```
+1. 找到书籍/系列文章的目录页 URL
+2. 运行 /book-reader，提供 TOC URL + book slug
+   → 自动抓取所有章节，按 section 生成 raw_material/books/[slug]/ 文件
+   → 自动匹配到现有 skill notes（或提示创建新 note）
+3. 对每个 section 文件运行 /raw-material-processor → 填入 skill note
+```
+
+适合系统学习技术书籍（如 DDIA、MLSys、GPU Perfomance 等），避免手动逐章整理。
+
+### 路径三：从亲身经历出发，沉淀 STAR 故事
+
+适合回忆工作经历、提炼 Behavior 面试素材。
+
+```
+1. 把原始故事、叙述或访谈记录保存到 raw_material/experience/
+   （格式不限：段落、要点、问答片段均可）
+2. 运行 /experience-processor → 自动：
+   - 重构为标准 STAR 格式（Situation / Task / Action / Result）
+   - 识别关联 skill 并打 tag
+   - 生成适用 BQ 问题 + 回答框架
+   - 输出面试就绪的 experience note 到 experience/
+3. 将生成的 experience note 用于 /jd-analyzer 的简历优化建议和 /mock-interview 的 behavioral 练习
+```
+
 ### Skill Note 状态流转
 
 ```
@@ -169,6 +196,18 @@ jd-analyzer 的 Resume Tailoring 部分会给出：
 - 关键词映射表（JD 词 → 简历改写建议）
 - 建议强调的经历（按优先级排序）
 - 建议弱化的内容
+
+在关键词映射表的 **"我的comments"** 列填写个人指令（"不用加"、"保持原来"、具体改写短语等），然后：
+
+```
+positions/ 笔记（含 Resume Tailoring 分析）→ /resume-builder → resumes/ 定制简历
+```
+
+`/resume-builder` 会自动：
+- 读取 `_meta/resume-base.md` 作为内容基础
+- 按关键词映射表（优先遵循"我的comments"）重写每条 bullet
+- 前置 JD 最相关的技能和经历
+- 输出 ATS 优化的 markdown 简历到 `resumes/[Company] - [Role] - [YYYY-MM].md`
 
 修改后用以下提示词做最终检查：
 > "请对比这份 JD 和我的简历，指出还有哪些 JD 关键词没有体现，以及哪些地方表述可以更贴近目标职位语言风格。"
