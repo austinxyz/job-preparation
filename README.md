@@ -45,12 +45,13 @@ Claude Code reads `CLAUDE.md` automatically — no extra config needed. All cust
 
 | Command | What it does |
 |---------|-------------|
-| `/jd-analyzer` | Analyze a job description → gap table, stub notes, prep checklist |
 | `/jd-importer` | Import raw JD text into a structured `positions/` note |
-| `/book-reader` | Fetch an online book by TOC URL → raw material notes + skill note |
+| `/jd-analyzer` | Analyze a job description → gap table, stub notes, prep checklist |
 | `/raw-material-processor` | Distill a `raw_material/` note into its linked skill note |
+| `/book-reader` | Fetch an online book by TOC URL → raw material notes + skill note |
 | `/experience-processor` | Convert a raw experience note into a polished STAR story |
-| `/mock-interview` | Run a targeted mock interview session |
+| `/resume-builder` | Generate a tailored resume from `_meta/resume-base.md` + JD analysis |
+| `/mock-interview` | Run a targeted mock interview session (technical / behavioral / system-design) |
 | `/git-commit-push` | Stage all changes, commit, and push to GitHub |
 
 ---
@@ -65,22 +66,25 @@ ai-infra-manager/
 ├── _templates/                 # Templater templates for new notes
 ├── skills/                     # Interview knowledge notes
 │   ├── tech/
-│   │   ├── ai-infra/           # GPU, CUDA, training infra, MLOps
-│   │   ├── ai-basics/          # LLM theory, deep learning
-│   │   ├── infra/              # K8s, cloud, networking
-│   │   ├── system-design/      # Distributed systems
+│   │   ├── ai-infra/           # GPU clusters, training infra, MLOps, agentic frameworks
+│   │   ├── ai-basics/          # LLM theory, agents architecture, deep learning
+│   │   ├── infra/              # K8s, AWS/GCP/cloud, networking, SRE
+│   │   ├── system-design/      # Distributed systems, databases, caching
 │   │   ├── algorithms/         # Algorithms, data structures
-│   │   └── software-eng/       # Design patterns
+│   │   └── software-eng/       # Design patterns, Python infra
 │   └── management/
-│       ├── behavior/           # Behavioral / leadership
+│       ├── behavior/           # Behavioral / leadership (STAR)
 │       ├── people/             # Hiring, team, performance
-│       └── project/            # Roadmap, planning
+│       └── project/            # Roadmap, planning, DORA, Agile
 ├── experience/                 # STAR-format stories from past roles
+├── resumes/                    # Tailored resumes per target role (gitignored)
 ├── raw_material/               # Source articles before processing
 │   ├── books/                  # Book notes from /book-reader
 │   ├── tech/                   # Mirrored structure of skills/tech/
-│   └── management/             # Mirrored structure of skills/management/
-├── positions/                  # Job descriptions (gitignored)
+│   ├── management/             # Mirrored structure of skills/management/
+│   └── positions/              # Raw JD text (gitignored)
+├── positions/                  # Structured JD notes (gitignored)
+├── methodology/                # Prep methodology docs and Feynman technique guide
 └── .claude/skills/             # Custom Claude Code slash commands
 ```
 
@@ -123,10 +127,11 @@ See **[methodology/README.md](methodology/README.md)** for the full three-phase 
    └─ Focus on high-priority notes not yet "in-progress"
 
 5. Practice
-   └─ Run /mock-interview for a targeted session
+   └─ Run /mock-interview for a targeted session (technical / behavioral / system-design)
 
 6. Before interview
    └─ Re-run /jd-analyzer for resume tailoring suggestions
+   └─ Run /resume-builder → generates tailored resume to resumes/
    └─ Run /git-commit-push to save all progress
 ```
 
