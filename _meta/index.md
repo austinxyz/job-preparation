@@ -125,15 +125,24 @@ FROM "experience"
 SORT date DESC
 ```
 
+## Daily Log
+
+```dataview
+LIST
+FROM "daily"
+SORT file.name DESC
+```
+
 ## Workflow Reference
 
 | Step | Action |
 |------|--------|
-| 0. Discover | Paste JD → run `/jd-analyzer` skill |
+| 0. Discover | Find JD → save raw text to `raw_material/positions/` → run `/jd-importer` → run `/jd-analyzer` |
 | 1. Read books | Provide TOC URL → run `/book-reader` skill → creates `raw_material/books/` notes + skill note |
 | 2. Learn | Review stub notes → find articles → save to `raw_material/` |
-| 3. Summarize | Run `/raw-material-processor` skill on raw material note |
-| 4. Experience | Write STAR notes in `experience/` using `/experience-processor` |
+| 3. Summarize | Run `/raw-material-processor` on each raw material note |
+| 4. Experience | Write STAR stories in `experience/` using `/experience-processor` |
 | 5. Prep | Use Dataview tables above to prioritize review |
 | 6. Mock | Run `/mock-interview` for targeted practice |
-| 7. Tailor | Re-run `/jd-analyzer` on target JD for resume suggestions |
+| 7. Tailor | Re-run `/jd-analyzer` on target JD → run `/resume-builder` to tailor resume |
+| 8. Log | Record daily progress in `daily/YYYY-MM-DD.md` |
