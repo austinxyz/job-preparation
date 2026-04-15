@@ -286,5 +286,67 @@ At eBay, Jenkins served as the CI layer of the CIaaS platform (the build half of
 
 The honest assessment of Jenkins in 2025: it's not the right choice for new projects (GitHub Actions, GitLab CI, or Tekton are better starting points), but it's not worth wholesale replacing in established environments where the shared library investment and plugin ecosystem are providing real value. The migration path that makes the most sense is separating CI from CD: move deployment to ArgoCD/Tekton first (cleaner GitOps model, lower blast radius), evaluate CI migration separately when the Jenkins maintenance burden becomes a real velocity bottleneck. Groovy shared libraries, JCasC, and K8s dynamic agents are the three capabilities that make Jenkins viable at scale — organizations that haven't adopted these are carrying unnecessary operational debt.
 
+## Key Terms
+
+**核心架构**
+- Jenkins Master · Agent (Slave) · JNLP · SSH agent connection
+- JVM heap · SPOF (单点故障) · shard by domain
+- Kubernetes Plugin · pod template · ephemeral agent
+- Kaniko (rootless image build) · CIaaS (CI as a Service)
+
+**Pipeline 语法**
+- `Declarative Pipeline` · `Scripted Pipeline`
+- `pipeline {}` · `node {}` · `stage {}` · `steps {}`
+- `parallel {}` · `when {}` · `post { failure/always }`
+- `environment {}` · `container()` · `script {}`
+- `Jenkinsfile` · `checkout scm` · `sh`
+
+**Shared Library**
+- `@Library('lib@version') _`
+- `vars/` (global vars) · `src/` (Groovy classes)
+- `def call(Map config)` pattern
+- `JenkinsPipelineUnit` (testing shared libs)
+
+**Configuration as Code (JCasC)**
+- `configuration-as-code` plugin · `jenkins.yaml`
+- `clouds.kubernetes` · `podRetention: never`
+- `numExecutors: 0` (master runs no jobs)
+- `credentials` via env var injection
+
+**关键插件**
+- `kubernetes` · `configuration-as-code` · `git` · `github-branch-source`
+- `pipeline` · `workflow-aggregator` · `credentials-binding`
+- `blueocean` · `junit` · `jacoco`
+- `role-strategy` (RBAC) · `audit-trail`
+
+**K8s 集成**
+- Kubernetes Plugin · pod template · taint/toleration (dedicated CI node pool)
+- `resourceRequestCpu/Memory` · `resourceLimitCpu/Memory`
+- APF (API Priority and Fairness) — CI traffic class
+- gateway/queue layer (防止 API server 过载)
+
+**安全**
+- `credentials-binding` plugin · Groovy sandbox · script approval
+- RBAC (Role Strategy plugin) · audit trail
+- Vault agent injector · External Secrets Operator
+
+**扩展性 Pattern**
+- 多 Master 分域 (shard by domain)
+- 专用 CI node pool + taint/toleration
+- `maxRequestsPerHost` (Kubernetes Plugin 并发限制)
+- JVM heap tuning (4–8GB for production master)
+
+**Jenkins vs 替代品决策点**
+- 保留 Jenkins：existing shared library investment · plugin ecosystem · team expertise
+- 迁移：Groovy/plugin 维护负担重 · GitOps-first model → Tekton + ArgoCD
+- 渐进路径：先分离 CI/CD → CD 迁移到 ArgoCD/Tekton → CI 再评估
+
+**反模式 (要避免)**
+- 硬编码 credentials 在 Jenkinsfile
+- Plugin sprawl（随意安装插件，无审批流程）
+- 无 JCasC（点击配置不可审计、不可复现）
+- 共享 node pool（CI 与 production 抢资源）
+- 未设 agent pod resource limits
+
 ## Raw Material
 - [[raw_material/tech/infra/CI-CD Pipeline Engineering - personal]]

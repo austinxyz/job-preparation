@@ -437,5 +437,55 @@ The Kubernetes Python client and kopf operator framework enable the "platform en
 
 For AI Infra Manager roles, the most important Python dimension is the AI/ML ecosystem integration: Ray for distributed training orchestration, Airflow/Prefect for pipeline DAGs, and prometheus_client for model serving observability. The key architectural insight is that in AI infrastructure, Python is not just the automation language — it's also the runtime language of the workloads themselves. This means infra engineers and ML engineers share a language, which reduces the tooling gap but also means infra engineers need enough ML-specific Python fluency (async patterns, GPU resource management, distributed computing primitives) to build platforms that ML engineers can actually use.
 
+## Key Terms
+
+**库 / 工具**
+- `boto3` · `kubernetes` (Python client) · `kopf` · `kubernetes_asyncio`
+- `asyncio` · `aiohttp` · `httpx`
+- `ray` · `airflow` · `prefect` · `mlflow`
+- `pytest` · `moto` · `responses` · `pytest-kubernetes`
+- `prometheus_client` · `structlog` · `tenacity`
+- `mypy` · `dataclasses` · `typing`
+
+**boto3 核心 Pattern**
+- `paginator` · `waiter` · `ClientError`
+- `resource` vs `client` interface
+- `sts.assume_role()` (cross-account)
+
+**Kubernetes Python Client**
+- `watch.Watch()` · `list_*` + `continue` token (pagination)
+- field selector · label selector
+- `dry_run="All"`
+- `CustomObjectsApi` · `CoreV1Api` · `AppsV1Api`
+
+**kopf (Python Operator)**
+- `@kopf.on.create` · `@kopf.on.update` · `@kopf.on.delete`
+- `load_incluster_config()` · `load_kube_config()`
+
+**Async 模式**
+- `asyncio.gather()` · `asyncio.Semaphore`
+- `asyncio.to_thread()` (sync in async context)
+
+**测试**
+- `@mock_aws` · `@pytest.fixture`
+- unit test (mocked) vs integration test (real infra)
+
+**生产代码规范**
+- type hints + `@dataclass`
+- `@contextmanager` (resource cleanup)
+- `@retry` + `wait_exponential` (tenacity)
+- structured logging (`structlog`)
+
+**Python vs Go 决策点**
+- Go: production K8s operator · informer cache · work queue · kubebuilder · single binary CLI
+- Python: AI/ML infra · cloud automation · operator prototyping · pipeline DAGs
+
+**反模式 (要避免)**
+- `except Exception: pass`
+- 忘记 pagination
+- HTTP call 无 timeout
+- blocking sync call in async code
+- hardcoded credentials
+
 ## Raw Material
 <!-- Save source articles to raw_material/ then link here -->

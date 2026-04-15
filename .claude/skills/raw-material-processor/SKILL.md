@@ -78,12 +78,39 @@ Write the distilled content into the skill note:
 - Fill `## Core Concepts` (append if content already exists; don't overwrite)
 - Fill `## Key Questions` (append if content already exists)
 - Fill `## Summary` (replace if stub placeholder, append otherwise)
+- Update `## Key Terms` (see step 7a below)
 - Add a link under `## Raw Material`: `- [[raw_material/[path/to/note]]]`
 - Update `last_updated` frontmatter to today's date
 - Advance `status`:
   - `stub` → `draft`
   - `draft` → `in-progress`
   - `in-progress` stays `in-progress` (user marks as reviewed manually)
+
+### 7a. Update Key Terms
+
+`## Key Terms` is a flat, grouped vocabulary list for quick pre-interview scanning — no explanations, just terms.
+
+**If the section does not exist:** create it just before `## Raw Material`.
+
+**Format:** group terms by theme (e.g., libraries, patterns, anti-patterns, decision points). Within each group, use `·`-separated inline lists or short bullets. Keep it dense — one glance should surface all the keywords worth remembering.
+
+```markdown
+## Key Terms
+
+**[Theme]**
+- `term1` · `term2` · `term3`
+
+**[Theme]**
+- `term4` · `term5`
+```
+
+**What to include:** topic-specific terms worth memorizing — tool/library names, named patterns or algorithms, decision-point labels, common failure mode names. Use backticks for code symbols.
+
+**What to exclude:**
+- General terms not specific to this topic
+- Full sentences or explanations (those belong in Core Concepts)
+
+**If the section already exists:** merge new terms from this raw material in; do not remove existing terms.
 
 ### 8. Mark raw material as processed
 
@@ -102,6 +129,6 @@ If no matching skill note exists for a raw material:
 
 Summary to user:
 - Skill note updated: [path]
-- Sections updated: Core Concepts, Key Questions, Summary
+- Sections updated: Core Concepts, Key Questions, Summary, Key Terms
 - Status advanced: [old] → [new]
 - Raw material marked processed: [path]

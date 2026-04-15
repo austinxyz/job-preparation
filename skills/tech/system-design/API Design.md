@@ -2,9 +2,9 @@
 title: API Design
 category: tech/system-design
 tags: [api, rest, graphql, grpc, http, protobuf, websocket, sse, api-design, microservices]
-status: draft
+status: in-progress
 priority: medium
-last_updated: 2026-04-06
+last_updated: 2026-04-14
 created_from_jd:
 ---
 
@@ -56,6 +56,36 @@ created_from_jd:
 - `400 Bad Request` / `401 Unauthorized` (not authenticated) / `403 Forbidden` (authenticated but no permission) / `404 Not Found` / `429 Too Many Requests`
 - `500 Server Error` / `502 Bad Gateway` (invalid upstream response) / `503 Service Unavailable`
 
+**REST Deep Dive: Resource Modeling and Data Passing**
+
+- **Resources = nouns, not verbs**: REST resources represent things in your system, not actions. `/bookings` not `/createBooking`; `PATCH /games/{id} {"status":"started"}` not `/startGame`. Resources should always be plural nouns.
+- **Nested resources vs query params**: Use nested paths (`/events/{id}/tickets`) when the parent relationship is *required* — the request doesn't make sense without it. Use query params (`/tickets?event_id=123`) when the filter is *optional* — you might want all tickets or filtered tickets. Path params are structural; query params are modifiers.
+- **Three ways to pass data**: ① **Path params** — identify the specific resource (required, e.g. `/events/123`); ② **Query params** — optional filters, sorts, pagination (e.g. `?city=NYC&limit=20`); ③ **Request body** — complex payload for create/update (JSON, too large or sensitive for URL).
+- **HTTP method idempotency**: GET, PUT, DELETE are idempotent (repeating the call leaves the server in the same final state). POST creates new resources — NOT idempotent (calling twice creates two bookings). PATCH is not guaranteed idempotent. Idempotency matters when networks fail and clients retry — you don't want duplicate payments. Solution: **Idempotency Key** in request header for non-idempotent operations.
+
+**Pagination**
+
+- **Offset-based** (`?offset=20&limit=10`): simple, widely used, but unstable under concurrent writes — new records shift positions, causing duplicates or gaps during pagination. Good default for simple, low-write data.
+- **Cursor-based** (`?cursor=<encoded_pointer>&limit=10`): response includes a `next_cursor` pointing to the last record. Stable under writes because it tracks a specific record, not a position. Cannot easily "jump to page 5" but preferred for real-time or high-write data. Interview default: offset is fine unless interviewer asks about high-volume/real-time scenarios.
+
+**API Versioning**
+
+- **URL versioning** (`/v1/events`, `/v2/events`): explicit, easy to understand and test in browsers, most common. Recommended default.
+- **Header versioning** (`Accept-Version: v2`): cleaner URLs, follows HTTP standards, but less obvious to developers and harder to test directly. Most interviewers don't care — mention URL versioning briefly and move on.
+
+**Authentication and Authorization**
+
+- **Authentication** (who are you?) vs **Authorization** (are you allowed?): always keep these separate conceptually. Auth checks a valid JWT/session; authz checks whether that user owns the booking they're trying to cancel.
+- **API keys**: for server-to-server and 3rd-party developer access. Not for user-facing sessions — users shouldn't manage cryptographic strings. Stored in `Authorization: Bearer sk_live_...` header.
+- **JWT (JSON Web Tokens)**: encode user context (user_id, role, exp) in a signed token. Stateless — any service with the verification key can validate without a DB lookup. Ideal for user sessions in distributed systems. Use API keys for service-to-service; JWTs for user sessions.
+- **RBAC (Role-Based Access Control)**: assign roles to users, permissions to roles (e.g. `customer` can book; `venue_manager` can create events; `admin` can access everything). In interviews, briefly note which endpoints require which roles — don't over-engineer.
+- **Rate limiting**: restrict requests per time window. Common: per-user (1000 req/hr authenticated), per-IP (100 req/hr unauthenticated), per-endpoint (10 booking attempts/min to prevent scalping). Return `429 Too Many Requests`. Implement at API gateway or middleware.
+
+**GraphQL: N+1 Problem and Field-Level Auth**
+
+- **N+1 problem**: querying events with venue details may fire 1 query for N events, then N separate queries for each venue = N+1 DB queries instead of 2. Solution: **DataLoader** pattern — batches and deduplicates all DB calls within a single GraphQL request execution. Adds complexity not present with REST.
+- **Field-level authorization**: GraphQL authorizes at the field resolver level (user can see event name/date but not internal cost data), not at the endpoint level like REST. This adds implementation complexity but enables fine-grained access control.
+
 ## Key Questions
 
 **Q: REST vs GraphQL vs gRPC — how do you choose in an interview?**
@@ -78,6 +108,18 @@ Answer framework: GET/DELETE are naturally idempotent; POST is not idempotent �
 Answer framework: Hybrid architecture — external API Gateway (REST/HTTP) accepts browser requests, internal services use gRPC (high-performance binary); API Gateway handles protocol translation (REST → gRPC); benefits: stable external interface easy to test, efficient internal communication; this is the standard pattern at Google, Netflix, and other large companies.
 > 中文提示：外部 REST + 内部 gRPC + API Gateway 做协议转换；大厂标准模式
 
+**Q: When should you use cursor-based pagination vs offset-based? What's the trade-off?**
+Answer framework: Offset-based is simple and familiar but unstable under concurrent writes — if new records are inserted while a client is paginating, records shift and duplicates/gaps appear. Cursor-based uses an opaque pointer to a specific record (usually last record's ID or timestamp), so insertions don't affect ongoing pagination. Use cursor-based for real-time feeds, social timelines, or any data with frequent inserts; offset-based for static or low-write data where "jump to page N" matters. Most interviewers care more that you remembered to include pagination than which approach.
+
+**Q: When would you recommend API keys vs JWT for authentication? What are the failure modes of each?**
+Answer framework: API keys are for programmatic, server-to-server or 3rd-party developer access — they're long-lived and don't carry user context, so they're wrong for user sessions. JWTs encode user identity and expiry in a signed token, enabling stateless verification by any service with the public key — ideal for user sessions in distributed systems. JWT failure modes: token leakage (can't revoke until expiry without a token blacklist), clock skew issues with short expiry, large token size. API key failure modes: no automatic rotation, no user context. In interviews: say JWT for user auth, API keys for service-to-service.
+
+**Q: What is the N+1 problem in GraphQL and how do you solve it?**
+Answer framework: When a GraphQL query fetches a list of N events each with their venue, the naive resolver fires 1 query for events then N queries for venues = N+1 total DB queries. This degrades to O(N) DB calls as result size grows. The solution is the DataLoader pattern — it batches all venue lookups that occur within the same request execution tick into a single `SELECT ... WHERE id IN (...)` query, reducing N+1 to 2. DataLoader also deduplicates repeated lookups. This is a known complexity of adopting GraphQL that doesn't exist with REST.
+
+**Q: A client is seeing duplicate orders after a network retry. How do you fix this at the API level?**
+Answer framework: This is the POST idempotency problem. POST is not idempotent by default — each call creates a new resource. The solution is an **Idempotency Key**: the client generates a unique key (UUID or `user_id+timestamp`) and includes it in a header (`Idempotency-Key: <uuid>`). The server checks if this key was already processed, and if so, returns the previous response without re-executing. The check-and-mark operation must be atomic (single DB transaction or Redis SETNX). This is the standard pattern for payment APIs (Stripe uses it explicitly).
+
 ## Summary
 
 API design paradigm selection is fundamentally a trade-off between **development efficiency, performance, and flexibility**. REST's resource-centered design is simple and intuitive — the right choice for the vast majority of public APIs; GraphQL hands query flexibility to clients, most valuable in fast-iteration frontend/backend scenarios; gRPC uses binary protocol + HTTP/2 for extreme performance in internal service communication.
@@ -88,5 +130,47 @@ From an AI Infra perspective, gRPC is the common choice for model serving APIs: 
 
 > 面试重点：三范式选型框架（默认 REST → 需要灵活查询时 GraphQL → 内部高性能时 gRPC）→ SSE vs WebSocket 选型 → Idempotency Key 设计 → 混合架构（外部 REST + 内部 gRPC）
 
+## Key Terms
+
+**API 范式**
+- `REST` · `GraphQL` · `gRPC` · `RPC` · `WebSocket` · `SSE` · `WebRTC`
+
+**REST 核心**
+- `resource modeling` · plural nouns · `path parameter` · `query parameter` · `request body`
+- `GET` · `POST` · `PUT` · `PATCH` · `DELETE`
+- `idempotent` · `Idempotency Key` · `stateless`
+
+**gRPC / Protobuf**
+- `Protocol Buffers` · `.proto` · `HTTP/2` · `binary serialization`
+- `Apache Thrift` · bidirectional streaming · compile-time type safety
+
+**状态码速查**
+- `200` · `201` · `204` · `400` · `401` · `403` · `404` · `429` · `500` · `502` · `503`
+- 4xx (client error) vs 5xx (server error)
+
+**分页**
+- `offset-based pagination` · `cursor-based pagination` · `next_cursor`
+
+**版本控制**
+- `URL versioning` (`/v1/`) · `header versioning` (`Accept-Version`)
+
+**认证鉴权**
+- `API key` · `JWT` · `RBAC` · `authentication` vs `authorization`
+- `Bearer token` · `exp` claim · stateless validation
+
+**限流**
+- `rate limiting` · `per-user limit` · `per-IP limit` · `429 Too Many Requests`
+
+**GraphQL 特有**
+- `N+1 problem` · `DataLoader` · `over-fetching` · `under-fetching`
+- `schema` · `resolver` · field-level authorization · `query` · `mutation`
+
+**反模式 / 面试陷阱**
+- verb-based URLs (`/createBooking`) → use noun resources
+- POST without Idempotency Key for payment
+- GraphQL by default (adds complexity; use REST unless over/under-fetching is the explicit problem)
+- spending >5 min on API design in interviews
+
 ## Raw Material
 - [[raw_material/tech/system-design/network-essential]]
+- [[raw_material/tech/system-design/API Design - Hello Interview]]
