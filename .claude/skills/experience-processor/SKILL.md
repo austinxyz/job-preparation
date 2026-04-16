@@ -1,14 +1,15 @@
 # experience-processor
 
-Read a raw experience note and distill it into a polished STAR-format experience note, saved to `experience/`.
+Read a raw experience note and distill it into a polished CARL-format experience note, saved to `experience/`.
 
 ## When to Use
 
 When the user has saved a rough story, narrative dump, or interview Q&A into `raw_material/experience/` and wants Claude to:
-- Restructure the content into clean STAR format
-- Identify applicable skills and BQ question mappings
+- Restructure the content into CARL format (Context, Actions, Results, Learnings)
+- Map the story to Signal Areas
+- Assign Core or Additional type
 - Generate Key Questions with talking-point frameworks
-- Write a Summary paragraph for quick pre-interview review
+- Write a Summary for quick pre-interview review
 - Link back to the raw material source
 - Produce a polished, interview-ready experience note
 
@@ -16,64 +17,138 @@ When the user has saved a rough story, narrative dump, or interview Q&A into `ra
 
 - **Raw material path** (required): path to the note under `raw_material/experience/`
 
+---
+
+## Core Principles (read before writing anything)
+
+### CARL, not STAR
+
+All experience notes use CARL structure:
+- **Context** — replaces Situation + Task. Sets the stage AND establishes the specific accountability/decision the user owned. No artificial separation.
+- **Actions** — what the user specifically did. Must be accurate to their actual role (see Don't Lie).
+- **Results** — quantified outcomes wherever possible. Include timeline if notable.
+- **Learnings** — specific, honest reflection. What would you do differently? What did this reveal? Not generic lessons.
+
+### Don't Lie
+
+This is the most important constraint. Before writing any action:
+- Attribute team work to the team, not to the user personally.
+- Distinguish between "I designed/built" (personal) vs. "I led the team to build" (directed) vs. "I supported" (enabled).
+- Do not claim credit for frameworks, methodologies, or systems invented by other teams — acknowledge adoption and the judgment call to apply them.
+- Do not overstate the user's role in large cross-functional programs — scope claims to the specific workstream or contribution owned.
+- After writing, flag specific claims for user verification: "Did you personally do X, or did the team?"
+
+Common patterns and how to attribute them correctly:
+
+| What happened | Correct framing |
+|---|---|
+| User personally built something | "I built..." |
+| Team built under user's direction | "I led the team to build..." |
+| User supported a team lead's initiative | "I supported / provided resources for..." |
+| User adopted another team's framework | "I adopted [X]'s framework and applied it to..." |
+| Working group reached consensus on user's proposal | "I developed a proposal; the working group reached consensus on..." |
+| User participated in a cross-functional program | "As [team]'s representative in the broader program, I..." |
+
+### Senior Staff / Principal framing
+
+Write from the perspective of someone operating at org-wide impact, not individual execution:
+- Emphasize mental model shifts, philosophy changes, and judgment calls — not just what was delivered.
+- Show influence without authority: cross-team alignment, persuasion, building shared contracts.
+- Show outcomes that outlast the individual: tools adopted by other teams, practices that continued after the user moved on, playbooks that reduced future cycle time.
+- Use the word "I" for decisions and judgment; use "team" or "we" for execution.
+
+### Signal Areas
+
+Every story maps to one or more of these 8 areas. Assign Primary (what the story is most about) and Secondary (additional signal available for follow-up):
+
+| Signal Area | What it demonstrates |
+|---|---|
+| **Scope** | Scale of impact — team size, user/system count, org-wide reach, multi-year investment |
+| **Ownership** | End-to-end accountability; identified the problem and drove the outcome without being asked |
+| **Ambiguity** | Made sound decisions with incomplete information; created forcing functions to resolve unclear requirements |
+| **Perseverance** | Sustained execution through obstacles, changing requirements, or sustained pressure over months |
+| **Conflict Resolution** | Resolved genuine disagreements between peers, leads, or with manager; created conditions for consensus |
+| **Communication** | Stakeholder management, transparent documentation, shared vocabulary that aligned teams |
+| **Growth** | Personal or team capability shift; chose discomfort as the learning mechanism; adopted new mental models |
+| **Leadership** | Changed how a team operated; built capability in others; influenced culture or practice beyond immediate team |
+
+---
+
 ## Steps
 
 ### 1. Read the raw material
 
-Read the full content of the raw material note. It may contain any combination of:
-- Freeform narrative paragraphs
-- A "Story" section
-- Raw interview Q&A transcripts
-- Bullet points or fragments
+Read the full content of the raw material note. It may contain freeform narrative, bullet points, Q&A transcripts, or fragments.
 
-Extract from the content (or infer if not explicitly stated):
+Extract or infer:
 - **Company** name
-- **Approximate date** (YYYY-MM; default to company tenure period if unknown)
-- **Event/story title** (use filename if not clear)
-- **Core technical or leadership challenge**
+- **Approximate date** (YYYY-MM)
+- **Story title** (use filename if not clear)
+- **Core challenge** — technical, organizational, or people
 
-### 2. Determine output path
+### 2. Determine output path and type
 
-The experience note should be saved to `experience/` at the top level.
+**Filename format:** `{Company} - {Short Title}.md`
+- e.g., `eBay - Resolving L7 Traffic Gap.md`
 
-- Filename format: `{Company} - {Short Title}.md`
-  - e.g., `eBay - Resolving L7 Traffic Gap.md`
-- Check if a note with this name (or very similar) already exists in `experience/`. If so, ask the user before overwriting.
+Check if a note already exists at that path. If so, ask the user before overwriting.
 
-### 3. Distill into STAR format
+**Assign type** — ask the user if unclear:
+- `Core`: highest-impact, most versatile stories (typically 3–5 total; the ones used in every interview)
+- `Additional`: fills specific signal area gaps; used when a question calls for it specifically
 
-Rewrite the raw content into four clean sections. Be concise and specific — avoid filler phrases like "I took the initiative to" or "This experience taught me." Prioritize concrete actions and quantified outcomes.
+### 3. Distill into CARL format
 
-#### Situation
-- Set the stage: company, team, the problem or context
-- Include scale/stakes if relevant (revenue impact, user count, system scale)
-- 2–4 sentences
+Write four sections. Be concise and specific — no filler phrases like "I took the initiative to" or "leveraged synergies."
 
-#### Task
-- Your specific scope of ownership or responsibility
-- What decision or outcome you were accountable for
-- 2–3 sentences
+#### Context
+- Company, team, the problem or gap
+- Why it mattered — stakes, scale, business impact
+- The specific accountability or decision the user owned
+- 3–5 sentences; do NOT separate into "Situation" + "Task"
 
-#### Action
-- What YOU specifically did — not the team in general
-- Technical decisions, design choices, cross-team work, tradeoffs navigated
-- Use bullet points if there were multiple distinct actions
-- Include the "why" behind key decisions where possible
+#### Actions
+- Bullet points, one action per bullet
+- Lead each bullet with a verb: "I designed...", "I directed the team to...", "I partnered with...", "I established..."
+- For multi-part stories, group actions under bold subheadings
+- Include the *why* behind key decisions: "I chose X rather than Y because..."
+- Apply the Don't Lie attribution rules throughout
 
-#### Result
-- Quantified outcomes wherever possible (%, time saved, scale, cost, reliability metrics)
-- If no numbers are available, describe the qualitative outcome clearly
-- Mention timeline if notable ("within 1 month", "over 6 months")
+#### Results
+- Quantified outcomes with units (%, time, count, scale)
+- Timeline where notable ("within 3 months", "over 6 months")
+- Outcomes that outlasted the immediate delivery (adopted by other teams, reduced future cycle time, etc.)
 
-### 4. Tag related skills
+#### Learnings
+- 2–4 specific, honest reflections — not generic wisdom
+- Format: "I should have...", "X was the right call because...", "The thing I'd do differently..."
+- Include at least one thing the user would change or do earlier
+- Avoid lessons that are obviously true ("communication is important")
 
-Scan the skills directory structure to identify 2–5 relevant skill notes to link under `## Related Skills`. Use wiki links:
+### 4. Assign Signal Areas
+
+Based on the CARL content, assign:
+- **Primary**: 1–2 signal areas the story most directly demonstrates
+- **Secondary**: 1–2 additional signal areas available for follow-up questions
+
+Write these as a `## Signal Areas` section:
+```markdown
+**Primary:** Ownership (...brief rationale...), Leadership (...brief rationale...)
+
+**Secondary:** Scope (...), Communication (...)
 ```
-[[skills/tech/ai-infra/Distributed Training Frameworks]]
+
+Update the frontmatter `signal_areas` field to match.
+
+### 5. Tag related skills
+
+Scan the skills directory structure to identify 2–5 relevant skill notes. Use wiki links:
+```
+[[skills/tech/infra/Kubernetes]]
 [[skills/management/people/Engineering Team Management]]
 ```
 
-Use this category map to guide tagging:
+Category map:
 ```
 skills/tech/ai-infra/       — GPU, CUDA, training infra, MLOps
 skills/tech/ai-basics/      — LLM theory, deep learning
@@ -84,23 +159,37 @@ skills/management/people/   — Hiring, team, performance
 skills/management/project/  — Roadmap, planning, delivery
 ```
 
-### 5. Generate Interview Usage
+### 6. Write Interview Usage
 
 Under `## Interview Usage`, produce:
-- **适用 BQ**: 2–4 behavioral question phrasings this story best answers
-  - e.g., "Tell me about a time you disagreed with your manager"
-  - e.g., "Describe a situation where you had to influence without authority"
+- **适用 BQ**: 3–5 behavioral question phrasings this story best answers
 - **适用 JD 关键词**: 4–8 JD keywords this story demonstrates
 
-Focus on BQ questions that are commonly asked for senior engineering manager / AI Infra manager roles.
+Focus on BQ questions commonly asked for Senior EM / AI Infra Manager roles. Use the Signal Areas to guide which question types to include.
 
-### 6. Write the frontmatter
+### 7. Write Key Questions
+
+Produce 3–5 interview questions with talking-point frameworks (not full answers — just the structure).
+
+Format:
+```
+**Q: [Behavioral question]**
+Talking points: [2–3 key beats to hit — what to name, what to show, what outcome to land on]
+```
+
+Prioritize questions that:
+- Map directly to a concrete moment in this story
+- Test judgment, conflict, cross-team influence, or scale
+- Correspond to the assigned Primary signal areas
+
+### 8. Write the frontmatter
 
 ```yaml
 ---
 title: {Company} - {Short Title}
-type: experience
-skills: [{comma-separated tag list, no brackets in values}]
+type: {Core | Additional}
+signal_areas: [{list of assigned signal areas}]
+skills: [{comma-separated tag list}]
 company: {Company}
 date: {YYYY-MM}
 impact: {low | medium | high}
@@ -108,66 +197,55 @@ growing_link:
 ---
 ```
 
-- `skills`: short tag names (e.g., `distributed-training`, `cross-team-collaboration`) — not wiki paths
-- `impact`: judge based on scope and business outcome
-  - `high`: org-wide, revenue/reliability impact, or 10+ people affected
-  - `medium`: team-level or multi-team, meaningful metric movement
-  - `low`: individual or process improvement
+Impact guide:
+- `high`: org-wide, revenue/reliability impact, or 10+ people affected
+- `medium`: team-level or multi-team, meaningful metric movement
+- `low`: individual or process improvement
 
-### 7. Generate Key Questions
+### 9. Write the Summary
 
-Produce 3–5 interview questions this story is well-suited to answer, with a brief talking-point framework for each (not a full answer — just the structure).
+Write 2 paragraphs:
+- **Paragraph 1**: What happened and why it was significant. Name the scale, the stakes, the outcome.
+- **Paragraph 2**: The key judgment call or leadership behavior demonstrated. What made this hard and how did you navigate it? What would a less experienced manager have done instead?
 
-Format:
-```
-**Q: [Behavioral question]**
-Talking points: [2–3 key beats to hit in the answer]
-```
+Readable as a standalone pre-interview refresher — assume the reader won't go back to the full note.
 
-Prioritize questions that:
-- Test conflict resolution, cross-team influence, or technical judgment
-- Are commonly asked for senior EM / AI Infra manager roles
-- Map directly to a concrete moment in this story
+### 10. Assemble the full experience note
 
-### 8. Write the Summary
-
-Write 1–2 paragraphs that:
-- Summarize what happened and why it was significant
-- Call out the key judgment call or leadership behavior demonstrated
-- Are readable as a standalone refresher before an interview
-
-### 9. Write the experience note
-
-Create the file at the determined path using the full structure:
-
-```
+```markdown
 ---
 [frontmatter]
 ---
 
 # {Title}
 
-## Situation
+## Context
 ...
 
-## Task
+## Actions
 ...
 
-## Action
+## Results
 ...
 
-## Result
+## Learnings
 ...
+
+## Signal Areas
+**Primary:** ...
+**Secondary:** ...
 
 ## Related Skills
-...
+- [[skills/...]]
 
 ## Interview Usage
 - 适用 BQ：...
 - 适用 JD 关键词：...
 
 ## Key Questions
-...
+
+**Q: ...**
+Talking points: ...
 
 ## Summary
 ...
@@ -176,20 +254,36 @@ Create the file at the determined path using the full structure:
 - [[raw_material/experience/{source filename}]]
 ```
 
-### 10. Mark raw material as processed
+### 11. Flag accuracy claims for user verification
 
-Add a `processed: true` field to the raw material note's frontmatter (add it if missing).
-Add an `experience_note` field pointing to the created file:
+After writing, explicitly list 3–5 specific claims for the user to verify before accepting the note:
+
+```
+Accuracy checks before you confirm:
+1. "[Specific action claim]" — did you personally do this, or did the team?
+2. "[Specific metric]" — accurate number/timeline?
+3. "[Attribution]" — is this correctly attributed?
+```
+
+Focus on: personal vs. team actions, exact metrics, role scope in large programs, and attribution of ideas/frameworks to originating teams.
+
+### 12. Mark raw material as processed
+
+Add to the raw material note's frontmatter:
 ```yaml
 processed: true
 experience_note: "[[experience/{filename}]]"
 ```
 
+---
+
 ## Output
 
 Summary to user:
 - Experience note created: `experience/{filename}.md`
-- Impact: {impact level}
+- Type: Core or Additional
+- Signal areas assigned: Primary + Secondary
+- Impact: {level}
 - Skills tagged: {list}
 - BQ mappings: {count}
-- Raw material marked processed
+- Accuracy checks: {list of claims to verify}
