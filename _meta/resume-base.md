@@ -11,7 +11,7 @@ last_updated: 2026-04-06
 
 ## Summary / Professional Profile
 
-Experienced platform engineering leader with 20+ years of building and operating large-scale cloud and development platforms. Proven track record in K8s infrastructure, DevOps tooling, app lifecycle automation, and site reliability engineering. Hands-on full-stack developer with practical JavaScript/Vue.js experience. Active AI practitioner leveraging Claude-powered agents/skills, MCP servers, and spec-driven development to modernize the SDLC process.
+Experienced platform engineering leader with 20+ years of building and operating large-scale cloud and development platforms. Proven track record in K8s infra, DevOps, CI/CD platform, and SRE. Proven ability to set technical direction, drive automation culture, and grow global high-performing teams. Active AI practitioner leveraging Claude-powered agents/skills, MCP servers, and spec-driven development to modernize the SDLC process. Outside of work, an avid tennis and pickleball player, USTA national champion.
 
 **Contact:** Phone: (408) 797-7545 | Email: austin.xyz@gmail.com | [LinkedIn](https://www.linkedin.com/in/austin-xyz/) | [Github](https://github.com/austinxyz)
 
