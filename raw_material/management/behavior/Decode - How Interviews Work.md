@@ -2,8 +2,8 @@
 title: "Decode: How Interviews Work"
 source:
 date_saved: 2026-04-15
-processed: false
-skill_note:
+processed: true
+skill_note: "[[skills/management/behavior/Behavioral Interview Framework]]"
 ---
 
 # # Decode: How Interviews Work

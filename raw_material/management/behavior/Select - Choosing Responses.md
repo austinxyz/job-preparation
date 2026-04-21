@@ -2,8 +2,8 @@
 title: Select - Choosing Responses
 source:
 date_saved: 2026-04-15
-processed: false
-skill_note:
+processed: true
+skill_note: "[[skills/management/behavior/Story Catalog and Selection]]"
 ---
 
 # Select - Choosing Responses

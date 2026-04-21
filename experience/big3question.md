@@ -26,7 +26,7 @@ growing_link:
 
 ### Delivery Script
 
-> I'm an engineering manager with 20+ years in platform engineering, currently leading eBay's Cloud Fleet Management, Core Services, and App Lifecycle teams. My focus has been building and operating large-scale cloud and CI/CD platforms — Kubernetes, SRE, and developer velocity — and I'm a hands-on AI practitioner bringing Claude-powered agents, MCP servers, and spec-driven development into the SDLC.
+> I'm an engineering manager with 20+ years in platform engineering, currently leading eBay's Cloud Fleet Management, Core Services, and App Lifecycle teams. My focus has been building and operating large-scale cloud and CI/CD platforms — Kubernetes, SRE, and developer velocity, Proven ability to set technical direction, drive automation culture, and grow global high-performing teams — and I'm a hands-on AI practitioner bringing Claude-powered agents, MCP servers, and spec-driven development into the SDLC.
 >
 > At eBay over the last couple of years, I led the cloud-native migration of 5,000+ applications onto Kubernetes across 100+ clusters and 2M+ pods, and served as the infrastructure lead on a company-wide engineering velocity program — coordinating cloud-infra changes across multiple teams that helped cut 95th-percentile deployment time by 20% for the initial application population. More recently, I personally built a suite of Claude-based skills for end-to-end hiring, and led my team to a customer-support agent that automated 70% of support cases, and a Cloud Platform MCP server for issue triage. I've published some of this work externally.
 >

@@ -1,8 +1,18 @@
 ---
 title: eBay - Engineering Velocity Program
-type: Additional
-signal_areas: [Conflict Resolution, Leadership, Scope]
-skills: [engineering-velocity, ci-cd, cross-team-leadership, dora-metrics, security-policy, stakeholder-alignment, conflict-resolution]
+type: Core
+signal_areas:
+  - Conflict Resolution
+  - Leadership
+  - Scope
+skills:
+  - engineering-velocity
+  - ci-cd
+  - cross-team-leadership
+  - dora-metrics
+  - security-policy
+  - stakeholder-alignment
+  - conflict-resolution
 company: eBay
 date: 2024-01
 impact: high

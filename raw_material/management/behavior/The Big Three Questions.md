@@ -2,8 +2,8 @@
 title: The Big Three Questions
 source:
 date_saved: 2026-04-16
-processed: false
-skill_note:
+processed: true
+skill_note: "[[skills/management/behavior/Big Three Questions]]"
 ---
 
 # The Big Three Questions

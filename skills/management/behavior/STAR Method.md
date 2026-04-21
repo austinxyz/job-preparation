@@ -12,7 +12,7 @@ created_from_jd:
 
 ## Knowledge Map
 - Prerequisites（前置知识）：
-- Related Topics（延伸话题）：[[Conflict Resolution]], [[Influencing Without Authority]], [[Leadership Principles]]
+- Related Topics（延伸话题）：[[CARL Framework and Story Delivery]] (senior-level evolution of STAR), [[Behavioral Interview Framework (Decode, Select, Deliver)|Behavioral Interview Framework]], [[Conflict Resolution]], [[Influencing Without Authority]], [[Leadership Principles]]
 - Management（管理关联）：[[People Management]]
 
 ## Core Concepts

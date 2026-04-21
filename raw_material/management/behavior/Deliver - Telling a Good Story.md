@@ -2,8 +2,8 @@
 title: Deliver - Telling a Good Story
 source:
 date_saved: 2026-04-15
-processed: false
-skill_note:
+processed: true
+skill_note: "[[skills/management/behavior/CARL Framework and Story Delivery]]"
 ---
 
 # Deliver - Telling a Good Story

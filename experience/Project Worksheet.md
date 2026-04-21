@@ -23,22 +23,22 @@ Based on the thebehavioral.tech framework. Ratings: **Size** = S / M / L / XL. *
 
 ## Signal Areas Table
 
-| Project | Impact | Scope | My Contribution | Tech | Org | Initiative | Ambiguity | Perseverance | Conflict | Growth | Communication | Leadership | Compassion | Mentoring |
-|---------|--------|-------|----------------|------|-----|-----------|-----------|-------------|---------|--------|--------------|-----------|-----------|---------|
-| [DoJ & Jade Programs](eBay%20-%20DoJ%20and%20Jade%20Programs.md) | XL | XL | L | L | XL | — | ✓ | ✓ | — | — | ✓ | ✓ | — | — |
-| [Global Team Expansion](eBay%20-%20Global%20Team%20Expansion.md) | L | XL | L | M | L | ✓ | — | ✓ | — | ✓ | ✓ | ✓ | — | ✓ |
-| [AI Innovation](eBay%20-%20AI%20Innovation.md) | L | L | L | L | M | ✓ | — | — | — | ✓ | ✓ | ✓ | — | — |
-| [Platform Engineering at Scale](eBay%20-%20Platform%20Engineering%20at%20Scale.md) | XL | XL | L | XL | L | ✓ | — | ✓ | — | ✓ | — | ✓ | — | — |
-| [Cloud Infra Team Turnaround](eBay%20-%20Cloud%20Infrastructure%20Team%20Turnaround.md) | L | L | L | M | M | — | — | ✓ | — | — | ✓ | ✓ | ✓ | — |
-| [SRE Practice Implementation](eBay%20-%20SRE%20Practice%20Implementation%20and%20API%20Server%20Reliability.md) | L | L | L | L | M | — | — | ✓ | — | ✓ | — | ✓ | — | — |
-| [Automated Cluster Mgmt Overhaul](eBay%20-%20Automated%20Cluster%20Management%20Overhaul.md) | L | L | L | L | L | ✓ | — | ✓ | — | — | ✓ | ✓ | — | — |
-| [CI/CD Platform Architecture](eBay%20-%20CI-CD%20Platform%20Architecture%20and%20Reliability.md) | L | XL | L | XL | L | — | — | — | — | — | — | ✓ | — | — |
-| [Engineering Velocity Program](eBay%20-%20Engineering%20Velocity%20Program.md) | L | XL | M | M | XL | — | — | — | ✓ | — | ✓ | ✓ | — | — |
-| [Cloud Migration to Kubernetes](eBay%20-%20Cloud%20Migration%20to%20Kubernetes.md) | XL | XL | L | XL | L | — | — | ✓ | — | — | ✓ | ✓ | — | — |
-| [Resolving L7 Traffic Gap](eBay%20-%20Resolving%20L7%20Traffic%20Gap.md) | M | M | M | M | M | — | — | — | ✓ | — | — | — | — | — |
-| [Growing & Managing Talent](eBay%20-%20Growing%20and%20Managing%20Engineering%20Talent.md) | L | M | L | L | M | — | — | ✓ | — | ✓ | — | ✓ | ✓ | ✓ |
-| [Embracing New Leadership Challenge](eBay%20-%20Embracing%20a%20New%20Leadership%20Challenge.md) | L | L | L | M | M | — | ✓ | ✓ | — | ✓ | ✓ | ✓ | ✓ | — |
-| [AI-Augmented EM Workflow](eBay%20-%20AI-Augmented%20Engineering%20Management.md) | M | M | L | M | S | ✓ | — | — | — | ✓ | — | — | — | — |
+| Project                                                                                                         | Impact | Scope | My Contribution | Tech | Org | Initiative | Ambiguity | Perseverance | Conflict | Growth | Communication | Leadership | Compassion | Mentoring |
+| --------------------------------------------------------------------------------------------------------------- | ------ | ----- | --------------- | ---- | --- | ---------- | --------- | ------------ | -------- | ------ | ------------- | ---------- | ---------- | --------- |
+| [DoJ & Jade Programs](eBay%20-%20DoJ%20and%20Jade%20Programs.md)                                                | XL     | XL    | L               | L    | XL  | —          | ✓         | ✓            | —        | —      | ✓             | ✓          | —          | —         |
+| [Global Team Expansion](eBay%20-%20Global%20Team%20Expansion.md)                                                | L      | XL    | L               | M    | L   | ✓          | —         | ✓            | —        | ✓      | ✓             | ✓          | —          | ✓         |
+| [AI Innovation](eBay%20-%20AI%20Innovation.md)                                                                  | L      | L     | L               | L    | M   | ✓          | —         | —            | —        | ✓      | ✓             | ✓          | —          | —         |
+| [Platform Engineering at Scale](eBay%20-%20Platform%20Engineering%20at%20Scale.md)                              | XL     | XL    | L               | XL   | L   | ✓          | —         | ✓            | —        | ✓      | —             | ✓          | —          | —         |
+| [Cloud Infra Team Turnaround](eBay%20-%20Cloud%20Infrastructure%20Team%20Turnaround.md)                         | L      | L     | L               | M    | M   | —          | —         | ✓            | —        | —      | ✓             | ✓          | ✓          | —         |
+| [SRE Practice Implementation](eBay%20-%20SRE%20Practice%20Implementation%20and%20API%20Server%20Reliability.md) | L      | L     | L               | L    | M   | —          | —         | ✓            | —        | ✓      | —             | ✓          | —          | —         |
+| [Automated Cluster Mgmt Overhaul](eBay%20-%20Automated%20Cluster%20Management%20Overhaul.md)                    | L      | L     | L               | L    | L   | ✓          | —         | ✓            | —        | —      | ✓             | ✓          | —          | —         |
+| [CI/CD Platform Architecture](eBay%20-%20CI-CD%20Platform%20Architecture%20and%20Reliability.md)                | L      | XL    | L               | XL   | L   | —          | —         | —            | —        | —      | —             | ✓          | —          | —         |
+| [Engineering Velocity Program](eBay%20-%20Engineering%20Velocity%20Program.md)                                  | L      | XL    | L               | L    | XL  | —          | —         | —            | ✓        | —      | ✓             | ✓          | —          | —         |
+| [Cloud Migration to Kubernetes](eBay%20-%20Cloud%20Migration%20to%20Kubernetes.md)                              | XL     | XL    | L               | XL   | L   | —          | —         | ✓            | —        | —      | ✓             | ✓          | —          | —         |
+| [Resolving L7 Traffic Gap](eBay%20-%20Resolving%20L7%20Traffic%20Gap.md)                                        | M      | M     | M               | M    | M   | —          | —         | —            | ✓        | —      | —             | —          | —          | —         |
+| [Growing & Managing Talent](eBay%20-%20Growing%20and%20Managing%20Engineering%20Talent.md)                      | L      | M     | L               | L    | M   | —          | —         | ✓            | —        | ✓      | —             | ✓          | ✓          | ✓         |
+| [Embracing New Leadership Challenge](eBay%20-%20Embracing%20a%20New%20Leadership%20Challenge.md)                | L      | L     | L               | M    | M   | —          | ✓         | ✓            | —        | ✓      | ✓             | ✓          | ✓          | —         |
+| [AI-Augmented EM Workflow](eBay%20-%20AI-Augmented%20Engineering%20Management.md)                               | M      | M     | L               | M    | S   | ✓          | —         | —            | —        | ✓      | —             | —          | —          | —         |
 
 ---
 
