@@ -4,6 +4,10 @@ raw_material/positions/
 methodology/
 resumes/
 
+# Daily prep notes — private, not for public view
+daily/
+/20[0-9][0-9]-[0-9][0-9]-[0-9][0-9].md
+
 # Local state
 .claude/settings.local.json
 .obsidian/workspace.json
