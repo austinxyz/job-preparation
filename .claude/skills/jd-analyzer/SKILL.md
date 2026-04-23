@@ -1,10 +1,10 @@
 # jd-analyzer
 
-Analyze a Job Description note and populate its analysis sections by comparing against the existing knowledge base.
+Analyze a Job Description (raw JD in `jobs/` root) and produce a `jobs/<Company>/jd-analysis.md` file populated with match score, key requirements, skill gap, prep checklist, experience match, and resume tailoring directives.
 
 ## When to Use
 
-When the user has a `positions/` note and wants to:
+When the user has a raw JD file at `jobs/<Job Title> - <Company>.md` (typically via `jd-importer`) and wants to:
 - Get a match score against current background
 - Extract key skill requirements
 - See which skills are already in the knowledge base vs missing
@@ -14,18 +14,26 @@ When the user has a `positions/` note and wants to:
 
 ## Inputs
 
-- **JD note path** (required): the positions/ note containing the raw JD text
+- **Raw JD path** (required): e.g. `jobs/Manager, DevOps, SRE & AI Infrastructure - AppZen.md`
 - **Resume base**: `_meta/resume-base.md` (used for resume tailoring section)
+
+## Output
+
+- `jobs/<Company>/jd-analysis.md` — the analysis note (created or overwritten)
+- Stub skill notes in `skills/` for any missing required skills (unless `not-matched`)
+- Updated `jobs/<Company>/README.md` with analysis link and next-step prompts
 
 ## Steps
 
-### 1. Read the JD note
+### 1. Read the raw JD
 
-Read the full content of the JD note provided by the user. Focus on:
+Read the full content of the JD file provided by the user. Focus on:
 - Required skills and technologies (hard requirements)
 - Preferred/nice-to-have skills
 - Leadership scope (team size, org level, cross-functional scope)
 - Company/domain context
+
+Extract the company name from the JD frontmatter (`company:` field) — this determines the target folder `jobs/<Company>/`.
 
 ### 2. Extract Key Requirements
 
@@ -61,24 +69,21 @@ Assign one of four scores:
 | **matched-with-gaps** | 40–59% required skills covered, OR key leadership/domain requirements are a stretch |
 | **not-matched** | <40% required skills covered, OR fundamental misalignment (wrong role type, missing core qualifications) |
 
-Write the match score into the JD note frontmatter:
-```yaml
-match_score: matched-with-gaps
-```
-
 **Present the score to the user now** with a 2-3 sentence rationale before continuing.
 
 ---
 
 ### If `not-matched`: STOP here
 
-Update the JD note:
-- Set `match_score` in frontmatter
-- Set `status: not-matched`
-- Write `## Key Requirements` section (already extracted)
-- Add a brief note under `## Skill Gap Analysis`: "Not pursued — match score: not-matched. Reason: [rationale]."
+Create `jobs/<Company>/jd-analysis.md` with only:
+- Frontmatter: `match_score: not-matched`, `status: not-pursued`
+- Match score section with rationale
+- Key Requirements section (already extracted)
+- Brief note: "Not pursued — reason: [rationale]."
 
-Do NOT create stub notes, prep checklist, or resume tailoring for not-matched positions.
+Update `jobs/<Company>/README.md`:
+- Status: 🔴 not-pursued
+- Do NOT create stub notes, prep checklist, or resume tailoring for not-matched positions.
 
 ---
 
@@ -118,7 +123,7 @@ Determine the correct subdirectory:
 - Team, hiring, performance → `skills/management/people/`
 - Roadmap, planning, stakeholders → `skills/management/project/`
 
-Stub note format:
+Stub note format (note the `created_from_jd` wikilink now points into `jobs/` root):
 ```markdown
 ---
 title: [Skill Name]
@@ -127,7 +132,7 @@ tags: []
 status: stub
 priority: high
 last_updated: [today's date YYYY-MM-DD]
-created_from_jd: [[positions/[JD filename]]]
+created_from_jd: "[[jobs/[Job Title] - [Company]]]"
 ---
 
 # [Skill Name]
@@ -184,22 +189,95 @@ Only suggest changes where resume-base has content that could be reworded to mat
 
 **建议弱化的内容**: Identify resume-base content (roles, projects, skills) that is NOT relevant to this JD and would dilute focus. Suggest de-emphasizing or moving to an appendix.
 
-### 10. Write all sections into the JD note
+### 10. Write the analysis file
 
-Update the JD note by filling in:
-- `## Key Requirements`
-- `## Skill Gap Analysis` table
-- `## Prep Checklist`
-- `## Experience Match`
-- `## Resume Tailoring` (all three subsections)
+Create `jobs/<Company>/jd-analysis.md` with this structure:
 
-Also update the JD note frontmatter: set `status: ready`.
+```markdown
+---
+title: <Company> JD Analysis
+type: JD Analysis
+company: <Company>
+role: <Job Title>
+date_added: <today YYYY-MM-DD>
+last_updated: <today YYYY-MM-DD>
+status: prep-in-progress
+match_score: <matched / strong-matched / matched-with-gaps / not-matched>
+source_jd: "[[jobs/<Job Title> - <Company>]]"
+---
 
-## Output
+# <Company> JD Analysis
 
-The updated JD note with all sections filled. Summary to user:
+Analysis output for [[jobs/<Job Title> - <Company>]]. Covers match score, key requirements, skill gap, prep checklist, experience match, and resume tailoring.
+
+---
+
+## Match Score
+
+**<score>** — 2-3 sentence rationale.
+
+---
+
+## Key Requirements
+
+[from step 2]
+
+---
+
+## Skill Gap Analysis
+
+[from step 5]
+
+---
+
+## Prep Checklist
+
+[from step 7]
+
+---
+
+## Experience Match
+
+[from step 8]
+
+---
+
+## Resume Tailoring
+
+### 关键词匹配
+
+[from step 9]
+
+### 建议强调的 Experience
+
+[from step 9]
+
+### 建议弱化的内容
+
+[from step 9]
+
+---
+
+## Progress Log
+
+- **<today>** — JD analyzed. Match score: <score>. Skill gap: N skills, M stubs created.
+```
+
+### 11. Update the company README
+
+Update `jobs/<Company>/README.md`:
+- Change `status:` frontmatter to `jd-analyzed`
+- Update "Key Artifacts" section to link the newly created `jd-analysis.md`
+- Add the next-step prompt: "Run `/resume-builder` to generate role-tailored resume"
+- Add log entry: "YYYY-MM-DD — JD analyzed. Match score: <score>."
+
+## Output Summary to User
+
 - Match score + rationale
 - N required skills found
 - M skills already in knowledge base (with status breakdown)
 - K stub notes created (or "none — not-matched position")
 - Top 3 experience matches (if applicable)
+- File written: `jobs/<Company>/jd-analysis.md`
+- README updated: `jobs/<Company>/README.md`
+- Suggested next step: `/resume-builder` pointing to the raw JD file

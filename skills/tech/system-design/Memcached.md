@@ -4,7 +4,7 @@ category: tech/system-design
 tags: [memcached, cache, in-memory, distributed-cache, key-value, slab-allocation, consistent-hashing, cache-cluster, mcrouter, extstore]
 status: draft
 priority: high
-last_updated: 2026-04-21
+last_updated: 2026-04-23
 created_from_jd: "[[positions/Manager II, Engineering - Infra - Pinterest]]"
 ---
 
@@ -61,9 +61,71 @@ created_from_jd: "[[positions/Manager II, Engineering - Infra - Pinterest]]"
 - **Different workloads have different churn rates**. Mixing high-churn keys (e.g. transient session data) with low-churn keys (e.g. static profile info) in one pool → high-churn evicts low-churn via LRU.
 - **Solution: separate pools**. Each pool sized for its working set. Reduces unwanted evictions, simplifies capacity planning.
 
+### Memcached vs Redis — full comparison
+
+| Dimension | Memcached | Redis |
+|-----------|-----------|-------|
+| **Threading** | Multithreaded (libevent + per-thread event loop) | Single-threaded (IO threads assist since 7.0) |
+| **Data model** | Pure string key-value | Rich: strings, lists, sets, sorted sets, hashes, bitmaps, hyperloglogs, streams, geo |
+| **Memory allocator** | Slab allocator (1 MB pages → fixed-size chunks per class) | jemalloc (general-purpose) |
+| **Eviction** | Per-slab-class LRU + TTL expiry crawler | 8 policies (noeviction, allkeys-lru, volatile-lru, lfu, random, ttl-oldest, etc.) |
+| **Persistence** | ❌ None | ✅ RDB snapshots + AOF append-only log |
+| **Replication / HA** | ❌ None natively (relies on mcrouter layer) | ✅ Primary/replica + Sentinel automatic failover |
+| **Clustering** | ❌ Nodes unaware (client or mcrouter shards) | ✅ Redis Cluster native (16384 hash slots) |
+| **Max connections/node** | 100K+ (multithread + libevent) | ~10K (single-thread bottleneck) |
+| **Pub/Sub** | ❌ | ✅ channel and pattern subscribe |
+| **Transactions / scripting** | ❌ | ✅ MULTI/EXEC, Lua |
+| **Geospatial** | ❌ | ✅ GEOADD, GEORADIUS |
+| **Streams / MQ** | ❌ | ✅ Redis Streams (5.0+) |
+| **Typical throughput/node** | 100K+ RPS on `r5.2xlarge` (Pinterest) | 50K–100K RPS (single-thread ceiling) |
+| **Capacity scaling** | DRAM only by default; **extstore** tier → NVMe (~55 GB → ~1.7 TB/node) | RAM only — scale by adding shards |
+| **CAS (compare-and-swap)** | ✅ built-in | ✅ via WATCH / optimistic locking |
+| **Max value size** | 1 MB default | 512 MB |
+| **TLS** | ✅ since 1.5.13 | ✅ since 6.0 |
+| **Typical deployment** | Clients/apps → mcrouter → horizontal node fleet | Primary + replicas + Sentinel; or Redis Cluster |
+| **Pick it when** | Need multi-core throughput + pure cache + simple model | Need complex data structures + persistence + pub/sub + transactions |
+| **AI-infra use cases** | Training metadata cache, frontend query cache, pure key-value hot paths | Feature store, rate limit, leaderboards, session store, lightweight MQ |
+
+**One-line selection rules:**
+- **"Only caching, simple, high throughput"** → Memcached
+- **"Data structures, persistence, pub/sub"** → Redis
+- **"Using Redis but only calling GET/SET"** → migrate to Memcached, recover resources
+- **"Starting to write business logic into the cache"** → switch to Redis
+
 ### The unsolved problem — hot keys
-- When one key gets disproportionate traffic (e.g. celebrity profile, trending post), a single shard gets hammered. No amount of consistent hashing fixes this because all requests hash to the same node.
-- **Pinterest explicitly acknowledges this remains unsolved.** Partial mitigations: local in-process caching for hottest keys, key splitting (foo → foo:shard1, foo:shard2, client picks randomly), multi-tier caching with L1 in-process cache.
+
+**Why it's unsolvable at the cache layer alone.** One key × 10M QPS → consistent hashing routes it to one shard by definition → that shard gets hammered. Memcached's multithreading and memory speed accelerate single-machine performance; they do not help "one key pounded to death." The mcrouter + gutter + consistent-hashing stack solves *failure isolation* and *load balancing*, but not *single-key overload* — that is a fundamental limitation of sharding itself.
+
+**Pinterest's public stance** (as of their Engineering blog on cache infrastructure): *"Abnormal request spikes on specific keys still cause shard overload"* — explicitly called out as **remaining unsolved**. No public announcement to date that Pinterest has closed this gap.
+
+**Layered mitigation — no single fix works alone:**
+
+| # | Technique | Mechanism | Cost | Impact |
+|---|-----------|-----------|------|--------|
+| 1 | **L1 in-process cache** | Each app instance caches hot keys locally with a short TTL (few seconds) | Low — app-layer change only | **100–1000× read-path reduction** on hot keys (highest leverage) |
+| 2 | **Key splitting / fan-out** | Replace hot key `foo` with N replicas `foo:0`..`foo:N`; clients pick one at random; writers fan out | Medium — writers must update all N replicas | Hot-shard load drops by N× |
+| 3 | **Dedicated hot-key pool** | Detect hot keys at runtime, promote them to an isolated replicated cluster | High — needs detection + dynamic routing | Isolates spikes from the main fleet |
+| 4 | **Adaptive routing in mcrouter** | Proxy observes per-key QPS and fans out reads to multiple replicas | High — mcrouter customization | No application-layer changes required |
+| 5 | **Probabilistic early expiration** | Before TTL expires, a small fraction of requests proactively refresh the cache while others keep serving the old value | Low — cache-read logic change | Prevents the cache-stampede flavor of hot keys |
+| 6 | **Read replicas** | Mirror one key onto multiple nodes via mcrouter | Medium | Simple but wastes memory |
+
+**Typical combined approach** (documented in Facebook/Twitter publications): layers **1 + 2 + 5**. In-process L1 delivers the cheapest 100× win; key splitting adds another N× multiplier for known hot keys; probabilistic expiration prevents thundering herds at refresh time.
+
+**Interview framing — two levels:**
+
+*Surface answer (~30 sec):*
+> "Hot keys are the hardest unsolved problem in caching at scale. You cannot solve it purely at the cache layer because consistent hashing routes one key to one shard by definition. Pinterest's own engineering team has publicly stated that spikes on specific keys still cause shard overload."
+
+*Depth answer if probed (~2 min):*
+> "The only real answer is layered mitigation, because different mechanisms work at different time scales:
+> - **Steady-state hot reads** → L1 in-process cache per app instance, short TTL. Cheapest to ship; 100–1000× reduction.
+> - **Predictable hot keys** → key splitting. Write amplification in exchange for read scalability.
+> - **Unpredictable spikes** → detection plus dynamic routing. mcrouter or similar sees per-key QPS and fans out to a dedicated replica pool. Operationally expensive, but what you would build if spikes cost real money.
+> - **Cache stampede at expiry** → probabilistic early expiration. Prevents the thundering-herd flavor of hot keys.
+>
+> My first question in this role would be which of these the team has tried, and which they decided not to ship and why — because whether the problem is genuinely unsolved or solved-but-not-deployed is a very different conversation."
+
+The final line is the **senior-level move**: do not pretend to know the team's internal context; invite the interviewer to share it, and signal strategic thinking about deployment tradeoffs rather than just picking the "best" textbook solution.
 
 ## Key Questions
 

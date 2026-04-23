@@ -1,36 +1,44 @@
 # resume-builder
 
-Generate a tailored, interview-ready resume for a specific JD position by combining `_meta/resume-base.md` with the analysis from the positions/ note.
+Generate a tailored, interview-ready resume for a specific job by combining `_meta/resume-base.md` with the analysis output from `jobs/<Company>/jd-analysis.md`. Output is written into the per-company folder under `jobs/`.
 
 ## When to Use
 
-When the user wants to produce a customized resume for a specific job application. Requires `jd-analyzer` to have already run on the target positions/ note (so that Resume Tailoring analysis is available).
+When the user wants to produce a customized resume for a specific job application. Requires `/jd-analyzer` to have already run and produced `jobs/<Company>/jd-analysis.md` (so that Resume Tailoring analysis is available).
 
 ## Inputs
 
-- **JD note path** (required): e.g. `positions/Manager, DevOps Engineering - NVIDIA.md`
+- **Raw JD path or Company name** (required): e.g. `jobs/Manager, DevOps, SRE & AI Infrastructure - AppZen.md` or just "AppZen"
+
+From either input, derive:
+- The raw JD file (in `jobs/` root)
+- The per-company folder `jobs/<Company>/`
+- The analysis file `jobs/<Company>/jd-analysis.md`
 
 ## Steps
 
 ### 1. Read inputs
 
 Read in parallel:
-- The positions/ note (for: Key Requirements, Resume Tailoring section — keyword matches, experience priorities, de-emphasis list)
+- The raw JD file (for company, role, JD language)
+- `jobs/<Company>/jd-analysis.md` (for Key Requirements, Resume Tailoring section — keyword matches, experience priorities, de-emphasis list)
 - `_meta/resume-base.md` (full unabridged resume content)
 
-If the positions/ note has no `## Resume Tailoring` section, stop and tell the user to run `/jd-analyzer` first.
+If `jobs/<Company>/jd-analysis.md` has no `## Resume Tailoring` section, stop and tell the user to run `/jd-analyzer` first.
 
 ### 2. Read top experience notes
 
 From the Resume Tailoring → 建议强调的 Experience list, read the top 3–4 experience/ notes in full. These provide the detailed bullet content to draw from.
 
-### 3. Determine output filename
+### 3. Determine output path
 
-Format: `resumes/[Company] - [Short Role Title] - [YYYY-MM].md`
+The resume is always written to:
 
-Example: `resumes/NVIDIA - Manager DevOps Engineering - 2026-04.md`
+```
+jobs/<Company>/resume.md
+```
 
-Extract company name and role from the positions/ note frontmatter (`company`, `title`). Use today's date for YYYY-MM.
+Overwrite if it exists (user is re-generating after feedback or analysis updates).
 
 ### 4. Write the tailored resume
 
@@ -43,8 +51,9 @@ Generate a complete, ATS-optimized resume in markdown. Follow this structure exa
 position: [Full JD title]
 company: [Company]
 generated: [YYYY-MM-DD]
-base_version: _meta/resume-base.md
-jd_note: positions/[filename]
+base_version: "[[_meta/resume-base]]"
+source_jd: "[[jobs/<Job Title> - <Company>]]"
+jd_analysis: "[[jobs/<Company>/jd-analysis]]"
 ---
 
 # [Your Name]
@@ -134,16 +143,16 @@ User comment patterns and how to interpret them:
 - Technologies that signal the wrong domain (per 建议弱化的内容)
 - Any bullet that does not relate to this JD's requirements
 
-### 5. Update resumes/README.md
+### 5. Update the company README
 
-Add a row to the index table:
-```
-| [filename] | [Position] | [date] | generated |
-```
+Update `jobs/<Company>/README.md`:
+- Update "Key Artifacts → Resume" to link `jobs/<Company>/resume.md`
+- Change status frontmatter to `resume-ready` (if currently `jd-analyzed`)
+- Add log entry: "YYYY-MM-DD — Role-tailored resume generated."
 
 ### 6. Output summary to user
 
-- Resume written to: `resumes/[filename]`
+- Resume written to: `jobs/<Company>/resume.md`
 - User comments applied: [for each row with a non-empty 我的comments, briefly note what directive was followed]
 - Keywords injected: [list top 5 JD keywords used]
 - Sections de-emphasized: [list what was removed/compressed]

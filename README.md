@@ -45,12 +45,12 @@ Claude Code reads `CLAUDE.md` automatically — no extra config needed. All cust
 
 | Command | What it does |
 |---------|-------------|
-| `/jd-importer` | Import raw JD text into a structured `positions/` note |
-| `/jd-analyzer` | Analyze a job description → gap table, stub notes, prep checklist |
+| `/jd-importer` | Normalize a raw JD dropped at `jobs/` root → create `jobs/<Company>/` workspace + dashboard |
+| `/jd-analyzer` | Analyze the JD → `jobs/<Company>/jd-analysis.md` with gap table, stub notes, prep checklist |
+| `/resume-builder` | Generate a tailored resume from `_meta/resume-base.md` + JD analysis → `jobs/<Company>/resume.md` |
 | `/raw-material-processor` | Distill a `raw_material/` note into its linked skill note |
 | `/book-reader` | Fetch an online book by TOC URL → raw material notes + skill note |
 | `/experience-processor` | Convert a raw experience note into a polished STAR story |
-| `/resume-builder` | Generate a tailored resume from `_meta/resume-base.md` + JD analysis |
 | `/mock-interview` | Run a targeted mock interview session (technical / behavioral / system-design) |
 | `/git-commit-push` | Stage all changes, commit, and push to GitHub |
 
@@ -77,16 +77,31 @@ ai-infra-manager/
 │       ├── people/             # Hiring, team, performance
 │       └── project/            # Roadmap, planning, DORA, Agile
 ├── experience/                 # STAR-format stories from past roles
-├── resumes/                    # Tailored resumes per target role (gitignored)
 ├── raw_material/               # Source articles before processing
 │   ├── books/                  # Book notes from /book-reader
 │   ├── tech/                   # Mirrored structure of skills/tech/
-│   ├── management/             # Mirrored structure of skills/management/
-│   └── positions/              # Raw JD text (gitignored)
-├── positions/                  # Structured JD notes (gitignored)
+│   └── management/             # Mirrored structure of skills/management/
+├── jobs/                       # Per-position workspaces (gitignored) ⚠️ see isolation rules
+│   ├── README.md               # Cross-position dashboard
+│   ├── <Job Title> - <Company>.md   # Raw JD files at root
+│   └── <Company>/              # Per-company workspace
+│       ├── README.md           # Status dashboard + interview loop + links
+│       ├── jd-analysis.md      # JD analysis (from /jd-analyzer)
+│       ├── resume.md           # Tailored resume (from /resume-builder)
+│       ├── contacts/           # Recruiter / interviewer prep + raw correspondence
+│       ├── prep/               # Round-specific prep docs
+│       ├── mocks/              # Mock interview transcripts
+│       └── correspondence/     # Email / LinkedIn / Slack history
+├── daily/                      # Daily prep notes (gitignored) — private scratch, reflections
+├── positions/                  # Legacy JD notes (being superseded by jobs/) (gitignored)
+├── resumes/                    # Legacy tailored resumes (gitignored)
 ├── methodology/                # Prep methodology docs and Feynman technique guide
 └── .claude/skills/             # Custom Claude Code slash commands
 ```
+
+### ⚠️ Per-Position Isolation Rule
+
+Each `jobs/<company>/` is a **physically independent workspace**. Never copy position-specific data (interview loop, interviewer names, schedule, comp numbers) from one company to another. See [CLAUDE.md](CLAUDE.md#per-position-workspace-jobs-rules) for the full rule + anti-patterns.
 
 ---
 
@@ -104,9 +119,10 @@ See **[methodology/README.md](methodology/README.md)** for the full three-phase 
 
 ```
 0. Find a JD
-   └─ Paste raw text → raw_material/positions/
-   └─ Run /jd-importer → creates structured positions/ note
-   └─ Run /jd-analyzer → gap table, stub notes, prep checklist
+   └─ Paste raw text → jobs/<Job Title> - <Company>.md (at jobs/ root)
+   └─ Run /jd-importer → creates jobs/<Company>/ workspace + dashboard
+   └─ Run /jd-analyzer → jobs/<Company>/jd-analysis.md (gap table, stub notes, prep checklist)
+   └─ Run /resume-builder → jobs/<Company>/resume.md (tailored resume)
 
 1. Read a book or article series
    └─ Run /book-reader <TOC URL>
@@ -126,13 +142,15 @@ See **[methodology/README.md](methodology/README.md)** for the full three-phase 
    └─ Open _meta/index.md → Dataview tables show status by priority
    └─ Focus on high-priority notes not yet "in-progress"
 
-5. Practice
-   └─ Run /mock-interview for a targeted session (technical / behavioral / system-design)
+5. As interviews get scheduled
+   └─ Record contacts/correspondence in jobs/<Company>/contacts/
+   └─ Synthesize per-round prep in jobs/<Company>/prep/
+   └─ Run /mock-interview → store transcripts in jobs/<Company>/mocks/
 
 6. Before interview
-   └─ Re-run /jd-analyzer for resume tailoring suggestions
-   └─ Run /resume-builder → generates tailored resume to resumes/
-   └─ Run /git-commit-push to save all progress
+   └─ Re-run /jd-analyzer if JD analysis needs refresh
+   └─ Re-run /resume-builder if resume needs tuning
+   └─ Run /git-commit-push to save non-job artifacts (skills, experience); jobs/ stays private
 ```
 
 ---
@@ -158,4 +176,10 @@ See **[methodology/README.md](methodology/README.md)** for the full three-phase 
 
 ## Privacy
 
-`positions/` and `raw_material/positions/` are gitignored — job applications stay local.
+The following directories are gitignored — private job-search strategy and personal notes stay local:
+
+- `jobs/` — per-position workspaces (JDs, analysis, tailored resumes, interviewer contacts, prep docs, mocks, correspondence)
+- `daily/` — daily scratch notes, reflections, cross-position musings
+- `positions/` and `raw_material/positions/` — legacy JD content
+- `resumes/` — legacy tailored resumes
+- `methodology/` — private methodology docs

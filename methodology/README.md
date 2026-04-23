@@ -19,13 +19,15 @@
 适合不知道该学什么的时候，用 JD 倒推需要掌握的知识点。
 
 ```
-1. 把 JD 原文保存到 raw_material/positions/
-2. 运行 /jd-importer → 生成 positions/ 笔记
-3. 运行 /jd-analyzer → 自动识别 skill 缺口，创建 stub 笔记
-4. 根据 stub 清单，去找对应的学习材料
+1. 把 JD 原文粘贴到 jobs/<Job Title> - <Company>.md（在 jobs/ 根目录）
+2. 运行 /jd-importer → 创建 jobs/<Company>/ 工作目录 + dashboard
+3. 运行 /jd-analyzer → 生成 jobs/<Company>/jd-analysis.md，自动识别 skill 缺口，创建 stub 笔记
+4. 根据 stub 清单和 prep checklist，去找对应的学习材料
 5. 将材料保存到 raw_material/tech/ 或 raw_material/management/
 6. 运行 /raw-material-processor → 提炼核心内容填入 skill note
 ```
+
+> **⚠️ Per-Position 隔离规则：** 每个 `jobs/<company>/` 是**物理独立的工作空间**。不要把一家公司的 interview loop、interviewer 姓名、schedule、comp 数据复制到另一家。详见 [CLAUDE.md](../CLAUDE.md) 里的 "Per-Position Workspace Rules" 章节。
 
 ### 路径二：从材料出发，主动积累知识
 
@@ -168,8 +170,11 @@ stub（空架子）→ draft（有内容）→ in-progress（持续完善）→ 
 ### Step 1：分析 JD
 
 ```
-raw_material/positions/ → /jd-importer → positions/ 笔记
-positions/ 笔记 → /jd-analyzer → match score + gap 分析
+JD 原文粘贴到 jobs/<Job Title> - <Company>.md
+    ↓
+/jd-importer → 创建 jobs/<Company>/ 工作目录 + README dashboard
+    ↓
+/jd-analyzer → 生成 jobs/<Company>/jd-analysis.md（match score + gap 分析 + 简历 tailoring 建议）
 ```
 
 根据 `match_score` 决定投入力度：
@@ -192,7 +197,7 @@ jd-analyzer 会生成 Prep Checklist，按以下顺序执行：
 
 ### Step 3：简历针对性修改
 
-jd-analyzer 的 Resume Tailoring 部分会给出：
+`jobs/<Company>/jd-analysis.md` 的 Resume Tailoring 部分会给出：
 - 关键词映射表（JD 词 → 简历改写建议）
 - 建议强调的经历（按优先级排序）
 - 建议弱化的内容
@@ -200,14 +205,15 @@ jd-analyzer 的 Resume Tailoring 部分会给出：
 在关键词映射表的 **"我的comments"** 列填写个人指令（"不用加"、"保持原来"、具体改写短语等），然后：
 
 ```
-positions/ 笔记（含 Resume Tailoring 分析）→ /resume-builder → resumes/ 定制简历
+jobs/<Company>/jd-analysis.md（含 Resume Tailoring 分析）→ /resume-builder → jobs/<Company>/resume.md
 ```
 
 `/resume-builder` 会自动：
 - 读取 `_meta/resume-base.md` 作为内容基础
+- 读取 `jobs/<Company>/jd-analysis.md` 的 Resume Tailoring 指令
 - 按关键词映射表（优先遵循"我的comments"）重写每条 bullet
 - 前置 JD 最相关的技能和经历
-- 输出 ATS 优化的 markdown 简历到 `resumes/[Company] - [Role] - [YYYY-MM].md`
+- 输出 ATS 优化的 markdown 简历到 `jobs/<Company>/resume.md`（固定路径，重跑时覆盖）
 
 修改后用以下提示词做最终检查：
 > "请对比这份 JD 和我的简历，指出还有哪些 JD 关键词没有体现，以及哪些地方表述可以更贴近目标职位语言风格。"
