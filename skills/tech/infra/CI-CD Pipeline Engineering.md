@@ -12,8 +12,10 @@ created_from_jd: "[[positions/Manager, DevOps Engineering - NVIDIA]]"
 
 ## Knowledge Map
 - 前置知识：build systems, version control (Git), containerization, Kubernetes
-- 延伸话题：[[DORA Metrics]], [[Deployment Strategies (canary, blue-green)]], [[GitOps]], [[Kubernetes]], [[SRE Practices and SLO Engineering]]
+- 延伸话题：[[DORA Metrics]], [[Deployment Strategies (canary, blue-green)]], [[GitOps]], [[Kubernetes]], [[SRE Practices and SLO Engineering]], [[Multi-Cluster GitOps and Fleet Management]]
 - 管理关联：developer productivity, engineering velocity, platform reliability, developer experience (DevEx)
+
+> **Multi-cluster fleet management** (ApplicationSet, OCM, cross-cluster rollout, Blue/Green across clusters, FDC comparison) is covered in depth in **[[Multi-Cluster GitOps and Fleet Management]]**. This note focuses on single-cluster and platform-level CI/CD patterns.
 
 ## Core Concepts
 
@@ -342,6 +344,9 @@ Answer framework: Start with DORA metrics as baseline. Break down lead time into
 
 **Q: How do you manage CI/CD costs at scale without sacrificing speed?**
 Answer framework: Use spot instances for CI workers (with retry on interruption) — biggest lever. Invest in build caching (layer cache, dependency cache) and measure cache hit rate. Implement selective test execution to avoid running all tests on every commit. Tag pipeline costs by team for visibility and accountability. Right-size persistent infra (Jenkins master, ArgoCD). The framing: cost optimization and speed are aligned — faster pipelines cost less because they consume resources for less time.
+
+**Q: What is ArgoCD's role in reconciliation? How does it relate to the Kubernetes Deployment Controller?**
+Answer framework: They reconcile at different layers — this is the most common ArgoCD misconception to clear up. ArgoCD is the manifest-layer control loop: it compares Git desired state against K8s object specs and re-applies when there's drift. The Deployment Controller is the runtime-layer control loop: it ensures the actual running pods match the Deployment spec. Pod crash recovery is entirely the Deployment Controller's job — ArgoCD does not restart pods. When `selfHeal: true` is set, ArgoCD re-applies the Git spec when it detects manual drift (e.g., someone `kubectl edit`ed the Deployment). The HPA gotcha: HPA modifies `spec.replicas` at runtime, which ArgoCD sees as drift — use `ignoreDifferences` to tell ArgoCD this field is server-managed. The principle generalizes: every K8s controller (Deployment, Argo Rollouts, HPA, Node controller) owns one segment of the reconcile chain. ArgoCD is the outermost loop, converting Git into K8s desired state; controllers handle everything below.
 
 ## Summary
 
