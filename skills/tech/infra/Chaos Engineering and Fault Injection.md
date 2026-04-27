@@ -1,11 +1,22 @@
 ---
 title: Chaos Engineering and Fault Injection
 category: tech/infra
-tags: [chaos-engineering, fault-injection, chaos-monkey, litmus-chaos, gremlin, resilience-testing, blast-radius, game-day, failure-mode-analysis, steady-state, hypothesis-testing]
+tags:
+  - chaos-engineering
+  - fault-injection
+  - chaos-monkey
+  - litmus-chaos
+  - gremlin
+  - resilience-testing
+  - blast-radius
+  - game-day
+  - failure-mode-analysis
+  - steady-state
+  - hypothesis-testing
 status: stub
 priority: medium
 last_updated: 2026-04-18
-created_from_jd: "[[positions/Cloud Leader - RD & SRE - TikTok]]"
+created_from_jd: "[[jobs/Cloud Leader - RD & SRE - TikTok]]"
 ---
 
 # Chaos Engineering and Fault Injection

@@ -1,5 +1,5 @@
 ---
-title: AI Native Infrastructure — Part II: Principles
+title: "AI Native Infrastructure — Part II: Principles"
 source: https://jimmysong.io/book/ai-native-infra/compute-governance/
 date_saved: 2026-04-09
 processed: true

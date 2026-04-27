@@ -1,5 +1,5 @@
 ---
-title: AI Native Infrastructure — Part III: Organization & Migration
+title: "AI Native Infrastructure — Part III: Organization & Migration"
 source: https://jimmysong.io/book/ai-native-infra/operating-model/
 date_saved: 2026-04-09
 processed: true

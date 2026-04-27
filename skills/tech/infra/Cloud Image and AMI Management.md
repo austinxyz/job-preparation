@@ -1,11 +1,23 @@
 ---
 title: Cloud Image and AMI Management
 category: tech/infra
-tags: [ami, cloud-image, machine-image, image-pipeline, golden-image, packer, image-governance, multi-environment, security-hardening, os-baseline, gcp-image, azure-image]
+tags:
+  - ami
+  - cloud-image
+  - machine-image
+  - image-pipeline
+  - golden-image
+  - packer
+  - image-governance
+  - multi-environment
+  - security-hardening
+  - os-baseline
+  - gcp-image
+  - azure-image
 status: stub
 priority: high
 last_updated: 2026-04-18
-created_from_jd: "[[positions/Cloud Leader - RD & SRE - TikTok]]"
+created_from_jd: "[[jobs/Cloud Leader - RD & SRE - TikTok]]"
 ---
 
 # Cloud Image and AMI Management

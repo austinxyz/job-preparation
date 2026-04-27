@@ -1,11 +1,25 @@
 ---
 title: Linux Systems and Internals
 category: tech/infra
-tags: [linux, kernel, process-management, memory-management, storage, filesystems, networking, performance, cgroups, namespaces, signals, ipc, syscalls, debugging]
+tags:
+  - linux
+  - kernel
+  - process-management
+  - memory-management
+  - storage
+  - filesystems
+  - networking
+  - performance
+  - cgroups
+  - namespaces
+  - signals
+  - ipc
+  - syscalls
+  - debugging
 status: stub
 priority: high
 last_updated: 2026-04-18
-created_from_jd: "[[positions/Cloud Leader - RD & SRE - TikTok]]"
+created_from_jd: "[[jobs/Cloud Leader - RD & SRE - TikTok]]"
 ---
 
 # Linux Systems and Internals
