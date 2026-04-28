@@ -79,6 +79,24 @@ Answer framework: Sidecar = simple, full-featured, works out of the box — good
 Answer framework: Trace ID propagates via HTTP Header at each hop; Envoy auto-handles (forwards existing or creates new); Span ID records per-hop latency; protocol misconfiguration (gRPC vs HTTP) causes Header format incompatibility and breaks the Trace chain — this is a common Istio production debugging pitfall.
 > 中文提示：Trace ID 通过 HTTP Header 传递；协议配错（gRPC vs HTTP）导致 Header 不兼容，Trace 断链是生产常见坑
 
+**Q: A cache proxy (like mcrouter) has its own "topology control plane" — how does that relate to service mesh architecture?**
+Answer framework: This is a real pattern seen at Pinterest (2022 blog). Their topology control plane for mcrouter is architecturally identical to istiod: cluster discovery, health-based topology computation, config propagation to all proxy instances. The key insight — mcrouter predates Envoy by 4 years, so this was built before service mesh as a concept existed. The architectural question is whether to converge the cache control plane with the HTTP service mesh control plane via xDS. The pragmatic path (Option B): keep mcrouter as the data plane (it has deep cache-specific features — lease handling, gutter pool semantics, L1/L2 tiering — that Envoy's memcached filter lacks) but make the control plane xDS-compatible so it shares service discovery, health check, and cert management with the HTTP mesh. This preserves the existing investment while eliminating the duplicate control plane stack.
+
+```
+istiod (control plane)              mcrouter topology control plane
+    ↓ xDS streaming                     ↓ proprietary protocol
+Envoy sidecars (data plane)         mcrouter sidecars (data plane)
+    ↓ HTTP / gRPC                       ↓ Memcached protocol
+```
+
+Design space for cache proxy + service mesh convergence:
+- **A (status quo)**: mcrouter + proprietary control plane. Works well, two separate stacks.
+- **B (recommended)**: Keep mcrouter data plane, make control plane xDS-compatible. Preserves cache feature depth, eliminates control plane duplication.
+- **C (aggressive)**: Replace mcrouter with Envoy. Risk: Envoy memcached filter lacks lease handling, gutter semantics, TTL rewriting. Performance risk at 100K+ RPS/node.
+- **D (full mesh)**: Integrate with Istio Ambient / Cilium eBPF. Ambient Mesh's per-node model (ztunnel) is less intrusive than sidecar for latency-sensitive caches.
+
+Interview framing: when asked about this, treat it as "invitation to discuss" not "proposition to argue." Acknowledge the trade-offs; ask about their team's thinking rather than declaring a conclusion.
+
 ## Summary
 
 Istio's core value is extracting cross-cutting concerns of microservice governance (security, observability, traffic control) from business code and pushing them down into the infrastructure layer. The Sidecar pattern leverages K8s's multi-container shared Network Namespace, combined with Mutation Webhook auto-injection, achieving zero business code changes. Istiod centrally manages config distribution and certificate lifecycle for all Envoy instances — it is the central nervous system of the entire setup.

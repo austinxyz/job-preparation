@@ -441,5 +441,5 @@ Observability requires two distinct signals: ArgoCD for deployment/sync/health s
 The comparison with eBay's Federated Deployment Controller illustrates the fundamental trade-off: OCM + ArgoCD + Pipeline is the off-the-shelf standard, flexible on validation logic but fragile for long-running rollouts (imperative, runner-dependent). FDC-style custom Controllers are declarative and self-recovering, essential for 100+ cluster fleets where rollouts run for hours. The inflection point is roughly 50 clusters / 1 hour of rollout duration.
 
 ## Raw Material
-- [[daily/Multi-Cluster Deployment - OCM+ArgoCD vs FDC]]
-- [[daily/CI-CD Pipeline Engineering - zh]]
+- [[Multi-Cluster Deployment - OCM+ArgoCD vs FDC]]
+- [[CI-CD Pipeline Engineering - zh]]
