@@ -1,7 +1,6 @@
 # Job applications and personal strategy — not for public view
 positions/
 raw_material/positions/
-methodology/
 resumes/
 
 # Daily prep notes — private, not for public view
@@ -14,3 +13,6 @@ jobs/
 # Local state
 .claude/settings.local.json
 .obsidian/workspace.json
+
+# MCP server config — contains bearer tokens, do not commit
+.mcp.json
