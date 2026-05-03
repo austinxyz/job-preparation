@@ -144,9 +144,17 @@ Vue.js, Sprint, Memcache, ActiveMQ, JQuery, Tailwind — non-core for Senior EM 
 - Zhejiang University — Master's, Automation (1997–2000)
 - Zhejiang University — Bachelor's, Automation (1993–1997)
 
-### Certifications (keep, trim)
-PMP | Scrum | Kubernetes | Redhat  
-(Remove: eBay People Management, OpenStack — internal/dated)
+### Certifications (keep only formal)
+PMP | Scrum  
+(Remove: Kubernetes, Redhat, eBay People Management, OpenStack — informal/internal/dated)
+
+### Social Media & Side Projects
+- **Resume header:** GitHub (austinxyz) + Medium + blog (austinxyz.github.io) links
+- **Resume section:** Rename "Hobbies/Side Projects" → "Side Projects & Interests"
+  - USTA national tennis champion
+  - Claude Code side projects: match analysis system + finance management system (reinforces AI-native narrative)
+  - Organizer of tech/career/finance seminar series
+- **LinkedIn:** GitHub + Medium + blog already in Contact Info; add personal line at end of About section
 
 ---
 
