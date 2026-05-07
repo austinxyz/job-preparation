@@ -186,7 +186,36 @@ Use `match_score` to decide how much effort to invest:
 | `matched-with-gaps` | Prioritize high-priority stubs; focused 2–3 week study plan |
 | `not-matched` | Evaluate whether long-term investment is worthwhile; don't deep-dive yet |
 
-### Step 2: Gap-based Study Plan
+### Step 2: Interviewer Intelligence
+
+Once your interview loop is confirmed and you know who you're meeting, shift focus from the JD to the people across the table.
+
+> Most job requirements are overstated. What actually lands in an interview is whether your story resonates with THIS interviewer's specific challenges and perspective. The goal is to understand them well enough to turn the conversation from "do you meet our requirements?" into "here's how I'd approach your problems."
+
+**For each interviewer / hiring manager, research:**
+
+| Source | What to look for |
+|--------|-----------------|
+| LinkedIn profile | Career trajectory, what they've owned, tenure, mutual connections |
+| LinkedIn posts & comments | What they publish or engage with — signals what they actually care about |
+| Company engineering blog / announcements | Technical decisions they've championed, current priorities |
+| Podcasts / conference talks / videos | How they think, what problems they prioritize, communication style |
+| Earnings calls / investor materials | Business context, current pressures, strategic bets |
+| Mutual connections | Anyone in your network who knows them or has worked with them |
+
+**What to do with this:**
+
+1. Identify their top 2–3 current challenges or priorities based on what you've found
+2. Map your strongest stories to their specific context — not generic competencies, but their actual situation
+3. Prepare 1–2 questions that show you've done this work (without being obvious about it)
+4. If you find a mutual connection, reach out before the interview: *"I'm talking to X next week — any color on what they care about?"*
+
+**AI prompt to synthesize research:**
+> "Here is the LinkedIn profile and recent posts of [Name], who is interviewing me for [Role] at [Company]. Based on this, what are their likely top 2–3 priorities? Help me identify which of my experiences would resonate most in this conversation."
+
+---
+
+### Step 3: Gap-based Study Plan
 
 The jd-analyzer generates a Prep Checklist. Execute in this order:
 
@@ -195,7 +224,7 @@ The jd-analyzer generates a Prep Checklist. Execute in this order:
 3. **in-progress:** do Hello Interview practice problems
 4. **reviewed:** final validation with AI mock interview
 
-### Step 3: Tailored Resume Edits
+### Step 4: Tailored Resume Edits
 
 The Resume Tailoring section of `jobs/<Company>/jd-analysis.md` provides:
 - Keyword mapping table (JD term → resume rewrite suggestion)
@@ -218,7 +247,7 @@ jobs/<Company>/jd-analysis.md (with Resume Tailoring analysis) → /resume-build
 After editing, do a final check with this prompt:
 > "Compare this JD and my resume — identify any JD keywords not yet reflected, and where the phrasing could better match the target role's language."
 
-### Step 4: AI Mock Interview
+### Step 5: AI Mock Interview
 
 Run `/mock-interview`, which supports three modes:
 
@@ -229,6 +258,38 @@ Run `/mock-interview`, which supports three modes:
 | `system-design` | Open-ended system design problems, entirely candidate-led |
 
 Optional parameters: specify a `positions/` note (sets company and role context), target skill, difficulty level (mid / senior / staff). After the interview, automatically generates Strengths, Gaps, and English expression feedback.
+
+**Use AI mock to clean up obvious gaps first** — story structure, missing details, weak transitions. Once the content is solid, move to human mock.
+
+---
+
+### Step 6: Human Mock Interview
+
+AI mock tests content. Human mock tests delivery — and they are not the same thing.
+
+> Writing a story and delivering it under pressure to a real person who's evaluating you in real time are completely different skills. Spoken delivery — pacing, signposting, English fluency under pressure, reading the room — only gets better through reps with a real human.
+
+**When to use:**
+- After AI mock has cleaned up story structure and content gaps
+- Before any high-stakes interview in your active loop
+- Whenever you get a rejection and aren't sure if it was content or delivery
+
+**Who to practice with:**
+
+| Option | Best for |
+|--------|----------|
+| Career coach (e.g., Regan/Allan) | Behavioral stories, delivery, Senior Manager positioning |
+| Ex-colleague or peer EM | Realistic pressure, domain-specific technical pushback |
+| Dedicated mock service (e.g., IGotAnOffer) | Independent blind evaluation from a former FAANG interviewer |
+| Trusted peer in your network | Low-stakes warm-up reps, story flow testing |
+
+**What to ask for after each session:**
+- Did the story land? What specifically was unclear?
+- Did I sound like a Senior Manager or like an IC?
+- Where did my delivery lose you?
+- Was my English fluency a distraction at any point?
+
+**Key difference from AI mock:** A human interviewer will interrupt, push back, show skepticism, and react in real time. That pressure is exactly what breaks delivery patterns you didn't know you had.
 
 ---
 
