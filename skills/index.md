@@ -51,6 +51,8 @@ Status: `stub` → `draft` → `in-progress` → `reviewed`
 | [[Hybrid Cloud Deployment]] | stub | medium |
 | [[Cloud Computing Fundamentals]] | draft | medium |
 | [[Observability and Incident Management]] | draft | high |
+| [[AWS Infrastructure]] | in-progress | high |
+| [[GCP Infrastructure]] | in-progress | high |
 
 ---
 
@@ -118,7 +120,7 @@ Status: `stub` → `draft` → `in-progress` → `reviewed`
 | Status | Count |
 |--------|-------|
 | reviewed | 0 |
-| in-progress | 5 |
+| in-progress | 7 |
 | draft | 23 |
 | stub | 13 |
-| **Total** | **41** |
+| **Total** | **43** |
