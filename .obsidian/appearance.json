@@ -1,5 +1,8 @@
 {
   "theme": "moonstone",
   "accentColor": "#5ccef5",
-  "cssTheme": "Shimmering Focus"
+  "cssTheme": "Shimmering Focus",
+  "enabledCssSnippets": [
+    "wide-images"
+  ]
 }

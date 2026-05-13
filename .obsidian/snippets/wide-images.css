@@ -1,0 +1,6 @@
+.markdown-preview-view img,
+.markdown-reading-view img,
+.cm-content img {
+  width: 100% !important;
+  max-width: 100% !important;
+}
