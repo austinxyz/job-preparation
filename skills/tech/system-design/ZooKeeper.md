@@ -2,9 +2,9 @@
 title: ZooKeeper
 category: tech/system-design
 tags: [distributed-systems, coordination, consensus, leader-election, service-discovery]
-status: draft
+status: in-progress
 priority: medium
-last_updated: 2026-04-14
+last_updated: 2026-05-14
 created_from_jd:
 ---
 
@@ -45,6 +45,11 @@ created_from_jd:
 - **Modern landscape**: ZooKeeper is still central to the Apache ecosystem (HBase, Hadoop, Solr, Pulsar, ClickHouse). Kafka moved away from it via KRaft (Raft-based). Common alternatives: **etcd** (Kubernetes, cloud-native), **Consul** (service mesh + health checking), and cloud-managed services (AWS Parameter Store, AWS CloudMap, Azure App Configuration).
 - **When to reach for it in interviews**: Deep infra design problems (distributed message queue, distributed task scheduler), smart routing/colocation for websocket servers, durable hierarchical distributed locks. NOT the default choice for general system design.
 
+**Hello Interview: Smart Routing Pattern（面试场景：智能路由）**
+- **Chat apps / Live comments**: each WebSocket server registers an ephemeral ZNode with its capacity + the list of rooms/videos it handles; API Gateway queries ZooKeeper to find the right server for a new user's room/chat; when a server reaches capacity, ZooKeeper coordinates expansion and re-routing — eliminates the need for a separate service registry
+- **ZAB vs Paxos/Raft**: ZAB (ZooKeeper Atomic Broadcast) serves the same role as Paxos/Raft — leader election + atomic broadcast for consensus; key difference is ZAB's two-phase design (leader election phase → then steady-state broadcast phase)
+- **Distributed lock: ZooKeeper vs Redis decision rule**: ZooKeeper for strong consistency + long-lived locks + hierarchical lock structures (file systems); Redis for simple, short-lived locks where performance matters more than theoretical correctness guarantees
+
 ## Key Questions
 
 **Q: What are the three types of ZNodes and when do you use each?**
@@ -79,6 +84,8 @@ Internally, ZooKeeper achieves consistency through the ZAB (ZooKeeper Atomic Bro
 
 In the modern landscape, ZooKeeper remains central to the Apache ecosystem (HBase, Hadoop, Solr, ClickHouse, Pulsar) but is less dominant elsewhere. Kafka migrated to its own Raft-based KRaft mode; Kubernetes uses etcd; many teams use Consul or cloud-managed services. For system design interviews, ZooKeeper is most relevant in deep infrastructure problems (designing a distributed message queue or task scheduler), smart websocket routing/colocation scenarios, and hierarchical distributed lock designs. It should not be your first-reach tool — modern load balancers and cloud service discovery often cover simpler coordination needs.
 
+From the Hello Interview perspective, the highest-value ZooKeeper interview use case is smart routing for stateful connections: each WebSocket/chat server registers itself as an ephemeral ZNode with capacity and room metadata; the API Gateway watches ZooKeeper to route users to the right server; failures auto-deregister via ephemeral node deletion. This pattern elegantly replaces a dedicated service registry + health-check system with ZooKeeper primitives. The lock comparison is also interview-critical: ZooKeeper > Redis when locks must be long-lived, hierarchical, or require strong consistency guarantees; Redis > ZooKeeper for short-lived, performance-sensitive locks.
+
 ## Key Terms
 
 **ZNode types**
@@ -104,3 +111,4 @@ In the modern landscape, ZooKeeper remains central to the Apache ecosystem (HBas
 
 ## Raw Material
 - [[raw_material/tech/system-design/ZooKeeper - Hello Interview]]
+- [[raw_material/tech/system-design/hello-interview/tech-zookeeper.md]]

@@ -1,10 +1,10 @@
 ---
 title: Networking Fundamentals
 category: tech/system-design
-tags: [networking, dns, tcp, udp, https, tls, websocket, sse, cdn, circuit-breaker, http, latency, load-balancer, l4, l7, retry, backoff, idempotency, regional-partitioning]
-status: draft
+tags: [networking, dns, tcp, udp, https, tls, websocket, sse, cdn, circuit-breaker, http, latency, load-balancer, l4, l7, retry, backoff, idempotency, regional-partitioning, grpc, graphql, rest, quic, webrtc, stun, turn, http-status-codes, osi]
+status: in-progress
 priority: high
-last_updated: 2026-04-06
+last_updated: 2026-05-14
 created_from_jd:
 ---
 
@@ -74,6 +74,29 @@ created_from_jd:
 - **Regional Partitioning**: partition data and services by geographic region (e.g., Uber by city — each region has independent DB and service nodes); local requests hit local DB, minimizing cross-region latency
 - CDN is regionalization for static resources; Regional Partitioning is regionalization for stateful data; both together cover most global scenarios
 
+**API Protocol Selection（API 协议选型）**
+- **REST**: resource-based, nouns in URLs, standard HTTP methods (GET/POST/PUT/PATCH/DELETE), stateless — interview default for most public APIs
+- **GraphQL**: client specifies exactly what data it needs; eliminates over-fetching and under-fetching; useful when different clients (mobile vs web) need different data shapes
+- **gRPC**: high-performance RPC over HTTP/2 + Protocol Buffers (binary serialization); primarily for internal microservices where performance matters; not natively supported in browsers without a proxy
+- HTTP status code quick reference (interview utility):
+  - `200 OK` · `201 Created` · `301 Permanent Redirect` · `302 Temporary Redirect`
+  - `401 Unauthorized` (not authenticated) · `403 Forbidden` (authenticated but not authorized) · `404 Not Found` · `429 Too Many Requests`
+  - `500 Internal Server Error` · `502 Bad Gateway` (upstream error)
+
+**WebRTC — Peer-to-Peer Communication（P2P 通信）**
+- Uses UDP for low-latency audio/video; browser-native
+- NAT traversal challenge: peers behind NAT don't know their public IP/port
+  - **STUN server**: each peer queries a STUN server to discover its public IP/port ("hole punching")
+  - **TURN server**: relay server used as fallback when direct P2P connection fails (symmetric NAT blocks hole punching)
+- Connection flow: both clients → signaling server (exchange SDP offers/answers) → STUN to discover public addresses → exchange addresses via signaling server → attempt direct P2P → fall back to TURN if needed
+
+**OSI Layer Mental Model（OSI 层次速查）**
+- Application Layer: DNS, HTTP/HTTPS, WebSockets, WebRTC, gRPC
+- Transport Layer: TCP, UDP, QUIC
+- Network Layer: IP, DHCP, routing
+- Data Link + Physical: Ethernet, fiber, switches
+- Interview utility: L4 load balancers operate at Transport layer (TCP/UDP); L7 load balancers operate at Application layer (HTTP/gRPC)
+
 **Cascading Failure: Circuit Breaker and Thundering Herd（级联故障防护）**
 - Root cause of cascading failures: synchronous blocking calls let one slow node exhaust threads, propagating failure down the entire chain
 - **Circuit Breaker three states**:
@@ -116,6 +139,14 @@ Answer framework: L4 = transport-layer routing (IP+Port), transparently passes T
 Answer framework: Three-layer protection: ① Exponential Backoff (wait time grows exponentially, reduces total request volume); ② Jitter (random offset breaks synchronized retry "pulses" from multiple clients); ③ Circuit Breaker (failure rate exceeds threshold → fail fast, stop retrying); all three combined: Jitter prevents pulses, Backoff reduces frequency, Circuit Breaker protects recovering services; "retry with exponential backoff and jitter" is the interview keyword.
 > 中文提示：三层：Backoff 降频率 + Jitter 打散脉冲 + Circuit Breaker 保护恢复中的服务；必须三者结合
 
+**Q: When would you choose REST vs GraphQL vs gRPC for a new API?**
+Answer framework: REST is the default for public-facing APIs — simple, cacheable, widely understood. Choose GraphQL when different client types (mobile, web, third-party) need different subsets of the same data, or when reducing over-fetching/under-fetching is a priority (at cost of caching complexity). Choose gRPC for internal microservice-to-microservice communication where performance matters: binary serialization (Protocol Buffers) is faster than JSON, streaming is built-in, and strongly typed contracts prevent integration errors. gRPC is not browser-native — use REST or GraphQL for public APIs; gRPC for the internal service mesh.
+> 中文提示：REST 公开 API 默认；GraphQL 多端不同数据需求；gRPC 内部微服务高性能（二进制+HTTP/2）
+
+**Q: How does WebRTC achieve low-latency peer-to-peer video, and what happens when direct connection fails?**
+Answer framework: WebRTC uses UDP for audio/video streams (latency beats reliability for live media). Peers behind NAT don't know their public IP — each queries a STUN server to discover their public address (hole punching). Both peers exchange their STUN-discovered addresses via a signaling server (SDP offer/answer). If direct P2P is possible, they connect directly. If symmetric NAT blocks hole punching, traffic is relayed through a TURN server (more latency, more cost). In production, always provision TURN fallback — ~10–15% of connections need it.
+> 中文提示：UDP 低延迟；STUN 发现公网地址；TURN 是 P2P 失败后的中继兜底；生产环境必须配 TURN
+
 **Q: How do you handle cross-region latency for a global service?**
 Answer framework: Speed-of-light physical limit (NY→London RTT minimum 56ms) cannot be eliminated, only unnecessary cross-region hops can be reduced; two main strategies: ① CDN (static resources cached nearby); ② Regional Partitioning (stateful data partitioned by region, local requests hit local DB); Uber partitions by city (driver and rider data only in local city DB); global user data (accounts, payments) still needs cross-region access — handle with async + eventual consistency.
 > 中文提示：光速限制不可消除；CDN 缓存静态资源 + Regional Partitioning 本地化有状态数据；全局账户数据需异步+最终一致
@@ -130,6 +161,33 @@ From an AI Infra perspective, high-speed networking fundamentals (RDMA/InfiniBan
 
 > 面试重点：TLS 握手（非对称换密钥+对称加密数据）→ SSE vs WebSocket 选型 → L4 vs L7 负载均衡 → retry + exponential backoff + jitter 三层 → Circuit Breaker 三态 → CDN 对动态内容的价值
 
+The Hello Interview networking framework adds three practical layers. First, the **API protocol selection triangle** (REST / GraphQL / gRPC) is a frequent interviewer probe: REST for public APIs, GraphQL when different clients need different data shapes, gRPC for internal high-performance microservices. Second, **WebRTC's STUN/TURN mechanism** is the standard answer for any P2P video/audio design: STUN for NAT traversal (hole punching), TURN as relay fallback (~10–15% of connections need it). Third, the **HTTP status code vocabulary** (401 vs 403, 429, 502) signals API design fluency. The OSI layer mental model — L4 at Transport, L7 at Application — provides the vocabulary to explain load balancer routing without ambiguity.
+
+## Key Terms
+
+**Transport Protocols**
+- `TCP` · `UDP` · `QUIC (HTTP/3)` · `connection-oriented` · `connectionless` · `Head-of-Line Blocking`
+
+**Application Protocols**
+- `REST` · `GraphQL` · `gRPC` · `Protocol Buffers` · `HTTP/2` · `SSE` · `WebSocket` · `WebRTC`
+
+**HTTP Status Codes**
+- `200 OK` · `201 Created` · `301/302 Redirect` · `401 Unauthorized` · `403 Forbidden` · `404 Not Found` · `429 Too Many Requests` · `500 Server Error` · `502 Bad Gateway`
+
+**Real-Time Communication**
+- `SSE (server→client)` · `WebSocket (bidirectional)` · `WebRTC (P2P UDP)` · `STUN` · `TURN` · `signaling server`
+
+**Load Balancing**
+- `L4 (TCP/IP routing)` · `L7 (HTTP routing)` · `Round Robin` · `Least Connections` · `IP Hash` · `sticky session`
+- `HAProxy` · `Nginx` · `Envoy` · `AWS ELB/ALB/NLB`
+
+**Failure Handling**
+- `exponential backoff` · `jitter` · `idempotency key` · `circuit breaker` · `Closed/Open/Half-Open` · `thundering herd`
+
+**Latency Constants**
+- `NY→London RTT ≈ 56ms` · `fiber speed ~200,000 km/s` · `CDN edge` · `regional partitioning`
+
 ## Raw Material
 - [[raw_material/tech/system-design/sd-network]]
 - [[raw_material/tech/system-design/network-essential]]
+- [[raw_material/tech/system-design/hello-interview/concept-networking-101.md]]

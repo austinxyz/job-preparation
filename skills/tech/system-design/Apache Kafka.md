@@ -2,9 +2,9 @@
 title: Apache Kafka
 category: tech/system-design
 tags: [kafka, distributed-systems, message-queue, event-streaming, partitioning, replication, isr, consumer-group, offset, hot-partition, dlq, throughput]
-status: draft
+status: in-progress
 priority: high
-last_updated: 2026-04-06
+last_updated: 2026-05-14
 created_from_jd:
 ---
 
@@ -86,6 +86,15 @@ created_from_jd:
 - Controlled by `retention.ms` (default: 7 days) and `retention.bytes`
 - Streaming use cases may configure longer retention to support replay; watch storage costs
 
+**When to Add Kafka — Hello Interview Decision Framework（何时选 Kafka 的面试框架）**
+- **Async processing**: decouple producer from consumer when they operate at different speeds (e.g., YouTube video transcoding — upload is instant; transcoding takes minutes)
+- **Ordered processing**: guarantee sequential handling of related events (e.g., TicketMaster seat booking — prevent race conditions)
+- **Decoupling producer/consumer**: allows each to scale independently
+- **Stream mode** (do NOT commit offsets → enables replay):
+  - Continuous real-time aggregation: Ads click aggregation
+  - Multiple simultaneous independent consumers: Live comments (each consumer group reads the same events independently)
+- **Pull-based consumption** rationale: consumer controls consumption rate, enables efficient batching, prevents overwhelming slow consumers, consumer can pause without dropping messages
+
 ## Key Questions
 
 **Q: What is the difference between a Topic and a Partition? Why is the Partition count so important for scaling?**
@@ -126,5 +135,8 @@ From an AI Infra perspective, Kafka excels in: training job scheduling (decouple
 
 > 面试重点顺序：① Partition 策略（Key 选择 + hot partition 应对）→ ② at-least-once + 幂等 → ③ ISR 高可用 → ④ Kafka vs SQS 选型
 
+From the Hello Interview perspective, the key interview use cases for Kafka are: (1) async processing (YouTube transcoding — producer/consumer speed mismatch), (2) ordered processing (TicketMaster seat booking — prevent race conditions), and (3) stream mode for real-time aggregation where committing offsets would prevent replay (Ads click aggregation, Live comments with multiple consumer groups). The summary characterization: "always available, sometimes consistent; purpose-built for high-throughput, durable, distributed event streaming."
+
 ## Raw Material
 - [[raw_material/tech/system-design/kafka]]
+- [[raw_material/tech/system-design/hello-interview/tech-kafka.md]]

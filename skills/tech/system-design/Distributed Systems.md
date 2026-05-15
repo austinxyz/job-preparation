@@ -4,7 +4,7 @@ category: tech/system-design
 tags: [distributed, consistency, availability, cap-theorem, consensus, sharding, caching, consistent-hashing, async, layered-architecture, high-concurrency]
 status: in-progress
 priority: high
-last_updated: 2026-04-10
+last_updated: 2026-05-14
 created_from_jd:
 ---
 
@@ -57,6 +57,12 @@ created_from_jd:
   | Database (Postgres) | 50K TPS, 64TB+ storage | Writes > 10K TPS, storage in TBs |
   | App servers | 100K concurrent connections | CPU > 70%, latency > SLA |
   | Kafka | 1M msgs/sec per broker | Partition count ~200K/cluster |
+
+- **CAP decision framework (Hello Interview)** — real systems often need both CP and AP for *different features* within the same product:
+  - **Consistency (CP)**: ticket booking, e-commerce inventory, financial systems → RDBMS, Google Spanner, DynamoDB (strong consistency mode)
+  - **Availability (AP)**: social media, content platforms (Netflix), review sites (Yelp) → Cassandra, DynamoDB (default), Redis
+  - Mixed example: TicketMaster needs CP for booking a seat but AP for viewing event information; Tinder needs CP for match creation but AP for profile browsing.
+  - Consistency spectrum: Strong → Causal (comments/posts in order visible to all) → Read-your-own-writes (user sees their own posts immediately) → Eventual
 
 - **Scale-up vs Scale-out** — two fundamental strategies for handling more load:
   - **Scale-up (垂直扩展)**: buy bigger hardware (more CPU/RAM). Simple, no distributed complexity. Limited by hardware ceiling and cost curve. Right choice early-stage or when distributed overhead exceeds benefit.
@@ -116,6 +122,9 @@ Answer framework: Cross-continent latency is ~80-300ms from physics (speed of li
 **Q: When would you use async processing instead of synchronous calls, and what are the tradeoffs?**
 Answer framework: Use async when (1) the operation is long-running and the caller doesn't need an immediate result, (2) you need to absorb traffic bursts without blocking web-tier resources, or (3) downstream services are unreliable and you want to decouple failure propagation. Describe the mechanism (message queue, worker pool, callback/notification). State the tradeoff clearly: async introduces eventual-consistency semantics — callers must handle "pending" states and delayed notifications, which complicates UX. Reserve sync calls for operations where the caller needs an immediate guaranteed result (payment confirmation, inventory reservation).
 
+**Q: A product has features that need both strong consistency and high availability. How do you design for both in the same system?**
+Answer framework: CAP only forces a tradeoff at the partition boundary — you can and should scope consistency models per feature rather than globally. Map features to requirements: booking/payment flows need CP (inventory overselling = real money loss); browsing/recommendations/notifications are fine with AP (stale profile data = minor UX issue). Use CP-grade databases (RDBMS, Spanner) for the former and AP-grade (Cassandra, DynamoDB default) for the latter. Make this split explicit in the design — don't apply one consistency model uniformly across the entire system.
+
 **Q: How do you decide when a system needs to be redesigned vs. incrementally improved?**
 Answer framework: Start from current pain points — are bottlenecks isolated (single component) or systemic (architectural)? Isolated: fix the component (add index, add cache, scale that service). Systemic: consider a targeted refactor (e.g., extract a layer, introduce a message queue). Full rewrites are a last resort. Give an example: Taobao moved monolith → SOA only after organic growth made further incremental fixes impractical. The risk of big-bang rewrites is high — prefer strangler-fig patterns that migrate incrementally.
 
@@ -130,8 +139,28 @@ The practical design consequence: default to eventual consistency for most data 
 
 For engineering manager interviews, the differentiating skill is knowing *when* to apply each technique — not just *how*. Proposing sharding at 500GB or caching every data type signals inexperience. The benchmark numbers are your anchors: single Postgres handles ~50K TPS and TBs of data; Redis handles ~100K ops/sec; Kafka handles ~1M msgs/sec per broker. Drive architectural decisions with math ("we're at X TPS, which means Y"), and treat complexity escalation (sharding, distributed caching, geographic replication) as a last resort after simpler measures (indexes, read replicas, single-node tuning) have been exhausted.
 
+A key Hello Interview insight reinforces practical CAP application: real products typically need *both* consistency and availability for *different features*. TicketMaster must guarantee seat exclusivity (CP) but can serve event information with eventual consistency (AP). Tinder must atomically record a mutual match (CP) but can show profile cards with slight staleness (AP). The consistency model is a *per-feature* decision, not a *per-system* one. The full spectrum — strong consistency → causal consistency → read-your-own-writes → eventual consistency — gives you four levels to calibrate precisely to each use case, minimizing the latency and coordination cost you incur.
+
 The Chinese internet engineering tradition provides a useful mental model: the **三高** framework (高性能、高可用、可扩展) defines the three goals of any high-concurrency system. All architectural decisions — scale-up vs scale-out, sync vs async, monolith vs services — are evaluated against these three axes. Async processing via message queues is particularly powerful for absorbing burst traffic: the web tier queues work immediately and returns, decoupling request acceptance from request processing. This is how 12306 survived peak booking windows and how Taobao processes Double 11 orders. Finally, the most important meta-principle is evolutionary architecture: start simple, let actual load and pain points drive complexity. The graveyard of engineering is littered with systems that copied hyperscaler architecture before they had hyperscaler problems.
+
+## Key Terms
+
+**CAP Theorem**
+- `consistency` · `availability` · `partition tolerance` · `CP system` · `AP system` · `PACELC`
+
+**Consistency Spectrum**
+- `strong consistency` · `causal consistency` · `read-your-own-writes` · `eventual consistency`
+
+**CP Use Cases**
+- `ticket booking` · `e-commerce inventory` · `financial systems` · `Google Spanner` · `RDBMS`
+
+**AP Use Cases**
+- `social media` · `content platforms` · `Cassandra` · `DynamoDB (default)` · `Redis`
+
+**Mixed-Model Examples**
+- `TicketMaster: seat booking (CP) + event viewing (AP)` · `Tinder: match creation (CP) + profile view (AP)`
 
 ## Raw Material
 - [[raw_material/tech/system-design/Distributed Systems - resources]]
 - [[raw_material/tech/system-design/高并发系统]]
+- [[raw_material/tech/system-design/hello-interview/concept-cap-theorem.md]]

@@ -1,10 +1,10 @@
 ---
 title: Database Indexing
 category: tech/system-design
-tags: [database, indexing, b-plus-tree, composite-index, clustered-index, covering-index, mysql, postgresql, query-optimization]
-status: draft
+tags: [database, indexing, b-plus-tree, composite-index, clustered-index, covering-index, mysql, postgresql, query-optimization, hash-index, geospatial-index, inverted-index, full-text-search, geohash, r-tree, quadtree, elasticsearch, partial-index]
+status: in-progress
 priority: medium
-last_updated: 2026-04-06
+last_updated: 2026-05-14
 created_from_jd:
 ---
 
@@ -45,6 +45,36 @@ created_from_jd:
 5. Type mismatch (`WHERE age = '25'` when age is INT) — implicit conversion acts like a function
 6. OR with a non-indexed field — one side has no index → full table scan
 
+**Hash Indexes（哈希索引）**
+- HashMap: indexed value → row location; O(1) exact-match lookups
+- Hash collisions handled via chaining; **useless for range queries or sorting**
+- Used by: Redis (hash table as primary structure), MySQL memory storage engine
+- Rule: solves a specific problem (exact-match only) that rarely appears in practice; B+ tree handles exact-match too and also supports ranges
+
+**Geospatial Indexes（地理空间索引）**
+- Traditional B+ trees don't work for spatial data: they treat lat/lon as independent dimensions, ignoring spatial proximity
+- Three approaches:
+  - **Geohash**: converts 2D location to 1D base-32 string; prefix matching finds nearby cells; can use regular B-tree on the string. Limitation: nearby locations near grid boundaries may not share prefixes (edge case). Used in: Redis `GEOADD`/`GEORADIUS`
+  - **Quadtree**: recursively subdivides space into four quadrants; adaptive resolution (dense areas more finely subdivided); complex specialized tree structure
+  - **R-tree**: groups nearby objects into overlapping bounding boxes arranged hierarchically; handles spatial relationships well; default spatial index in PostgreSQL (PostGIS) and MySQL
+- Use cases: Uber (driver proximity), Yelp (nearby restaurants), Find My Friends
+
+**Inverted Indexes（倒排索引）**
+- Maps words → list of documents containing that word (the inverse of a forward index)
+- Processing pipeline: tokenize → lowercase → remove stop words ("the", "and") → stem (finding/find/finds → "find")
+- Powers Elasticsearch/Lucene: frequency scoring, relevance ranking, fuzzy matching, phrase queries
+- Use cases: GitHub repo search, Slack search, documentation search — anywhere you need full-text retrieval
+- Built asynchronously via CDC (change data capture) in many architectures → adds slight indexing latency
+
+**Index Optimization Patterns（索引优化模式）**
+- **Composite Indexes**: multi-column index transforms a multi-dimensional query into a 1D scan; column order matters: most selective (high cardinality) column first
+- **Covering Indexes**: include all queried columns in the index so the query can be satisfied entirely from the index without touching table rows → eliminates table lookup (回表); trades slower writes for faster reads
+- **Partial Indexes**: index only rows matching a WHERE condition → smaller index size, faster queries for targeted subsets (e.g., index only active records: `WHERE status = 'active'`)
+
+**When to Use Indexes vs Not（何时建索引）**
+- **Good candidate**: read-heavy queries filtering on high-cardinality columns; columns used in JOIN conditions; columns in ORDER BY/GROUP BY on large tables
+- **Bad candidate**: write-heavy tables with infrequent reads (e.g., log ingestion tables) — each write updates all index trees; columns with very low cardinality (boolean, status with 2–3 values)
+
 **Index Design in Practice（索引设计实战）**
 - Optimal index design order: **equality fields (high cardinality first) → equality fields (low cardinality) → range fields → covering index append fields**
 - Example: `WHERE city='Beijing' AND age BETWEEN 18-25 AND register_date > 30 days ago, SELECT user_id, name`
@@ -72,6 +102,18 @@ Answer framework: No. Each index is an independent B+ tree; every write updates 
 Answer framework: 6 invalidation scenarios (see above); root cause: **all of them break the B+ tree's ordering, preventing the database from locating contiguous data starting from the root**; proactively mention function application and type mismatch (often overlooked); fix: rewrite queries to avoid functions (e.g., `created_at >= '2024-01-01'` instead of `YEAR(created_at) = 2024`).
 > 中文提示：根本原因都是破坏了 B+树有序性；函数操作和类型不匹配是最容易被忽视的两个
 
+**Q: Design a "find nearby restaurants" feature — what index type do you use and why?**
+Answer framework: Traditional B+ tree indexes lat/lon as independent columns, so queries like "within 1 km radius" require a full table scan (the index can't reason about 2D proximity). Use a geospatial index. Three options: Geohash (prefix-matching on a B-tree, simple to implement, handles most cases — minor edge case at grid boundaries); R-tree (PostGIS default, best for spatial relationship queries); Quadtree (adaptive resolution, suitable for non-uniform density). For Redis-based solutions, `GEOADD`/`GEORADIUS` use Geohash internally. Default recommendation: PostGIS R-tree (PostgreSQL) or Redis Geohash for simpler needs.
+> 中文提示：B+树不理解二维空间关系；Geohash 简单（Redis 用它）；R-tree 是 PostGIS 默认（处理空间关系最好）
+
+**Q: When would you choose a hash index over a B+ tree index?**
+Answer framework: Hash indexes offer O(1) exact-match lookups but cannot support range queries, sorting, or prefix matching. Choose a hash index only when: (1) the workload is exclusively exact-match lookups (e.g., cache key lookup by ID), (2) you never need range queries on that column. In practice this is rare — B+ tree handles exact-match just as fast for most workloads and also supports ranges. Redis is the prominent hash-index-by-default system; relational databases almost always prefer B+ tree.
+> 中文提示：Hash O(1) 精确匹配但不支持范围查询；实践中 B+树够快且更通用；Redis 是哈希索引的代表
+
+**Q: How does an inverted index work, and when would you introduce Elasticsearch into a system design?**
+Answer framework: An inverted index maps each word to the list of documents containing it. The pipeline is: tokenize → lowercase → remove stop words → stem → store word-to-document-list mappings. This enables fast full-text search, fuzzy matching, and relevance scoring. Introduce Elasticsearch when: (1) users need full-text search (not just exact field matching), (2) relevance ranking is required, (3) fuzzy/typo-tolerant search is needed. Key tradeoff: Elasticsearch is typically built asynchronously via CDC — there is an indexing lag of seconds to minutes. The database remains the source of truth; Elasticsearch is a read-optimized search index, not a primary store.
+> 中文提示：倒排索引：词 → 文档列表；Elasticsearch 通过 CDC 异步构建（有延迟，DB 是 source of truth）；模糊搜索/全文检索时引入
+
 ## Summary
 
 Database indexing is fundamentally a trade of space (extra B+ trees) for time (fewer disk IOs). The B+ tree's short-wide structure (3–4 levels for billions of records) and leaf node linked list (native range query support) are the core reasons it is the standard choice for database indexes. Understanding "tree height = IO count" is the foundation for understanding every index design decision.
@@ -82,5 +124,25 @@ Index design engineering advice: start with the slow query log (find full table 
 
 > 面试重点：B+树为什么矮胖（树高=IO次数）→ 聚簇 vs 非聚簇（回表）→ 复合索引三规则（最左/等值在前/覆盖索引）→ 索引失效根本原因
 
+The Hello Interview perspective adds four critical index types beyond B+ tree that frequently appear in system design interviews. **Hash indexes** solve the exact-match case in O(1) but sacrifice all range/sort capabilities — useful mental context, but B+ tree is almost always the right default. **Geospatial indexes** (Geohash, Quadtree, R-tree) are required whenever a design involves proximity queries; B+ trees cannot reason about 2D spatial relationships. The canonical example is any Uber/Yelp/proximity service — state "PostGIS R-tree" or "Redis Geohash" as your answer and explain why a regular index fails. **Inverted indexes** (Elasticsearch/Lucene) are the standard answer for full-text search: tokenize → stem → map words to document lists; built asynchronously via CDC so the database remains the source of truth. The index optimization patterns — composite indexes (column order = selectivity order), covering indexes (eliminate table lookups), partial indexes (smaller, faster for targeted subsets) — apply on top of any index type and are high-value additions to any database design discussion.
+
+## Key Terms
+
+**B+ Tree (Standard)**
+- `leaf linked list` · `tree height = IO count` · `range scan` · `clustered index` · `non-clustered index` · `covering index` · `table lookup (回表)` · `leftmost prefix rule`
+
+**Hash Index**
+- `O(1) exact-match` · `no range support` · `hash chaining` · `Redis hash table`
+
+**Geospatial Index**
+- `Geohash` · `Quadtree` · `R-tree` · `PostGIS` · `prefix matching` · `bounding box` · `Redis GEOADD`
+
+**Inverted Index**
+- `tokenization` · `stemming` · `stop words` · `word-to-document mapping` · `Elasticsearch` · `Lucene` · `fuzzy search` · `CDC indexing lag`
+
+**Optimization Patterns**
+- `composite index` · `covering index` · `partial index` · `column order selectivity` · `write amplification`
+
 ## Raw Material
 - [[raw_material/tech/system-design/sd-db-index]]
+- [[raw_material/tech/system-design/hello-interview/concept-db-index.md]]

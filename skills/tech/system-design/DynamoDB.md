@@ -2,9 +2,9 @@
 title: DynamoDB
 category: tech/system-design
 tags: [dynamodb, aws, nosql, key-value, distributed-systems, database, caching]
-status: draft
+status: in-progress
 priority: high
-last_updated: 2026-04-20
+last_updated: 2026-05-14
 created_from_jd: ""
 ---
 
@@ -38,6 +38,12 @@ created_from_jd: ""
 - **DynamoDB Streams**: Change Data Capture (CDC); records insert/update/delete events in real-time; triggers Lambda, syncs Elasticsearch, feeds Kinesis for analytics
 - **When NOT to use**: complex joins/aggregations → use Aurora/PostgreSQL; extremely high write volume where cost is prohibitive; interviewer requires vendor-neutral solution
 
+**Hello Interview: Key Interview Framing（面试重点框架）**
+- **CAP position**: primarily AP (availability + partition tolerance) by default; strongly consistent reads (`ConsistentRead=true`) provide CP semantics for specific operations — not the whole table
+- **Pricing model decision**: on-demand for unpredictable/spiky workloads; provisioned capacity for predictable workloads with cost sensitivity (billed hourly, requires capacity planning)
+- **Transactions (often forgotten in interviews)**: DynamoDB supports full ACID transactions — `TransactWriteItems` / `TransactGetItems` for atomic multi-item operations across tables; mention this proactively if the problem involves booking, inventory, or financial updates
+- **DAX shortcut**: built-in in-memory cache with no application code changes needed; always uses both item cache (GetItem) and query cache (Query/Scan results); does NOT cache strongly consistent reads
+
 ## Key Questions
 
 **Q: How does DynamoDB partition and store data internally?**
@@ -69,6 +75,8 @@ Data modeling is DynamoDB's most critical discipline. The Partition Key choice d
 
 DynamoDB's main limitations are complex queries (no joins or ad-hoc aggregations — use Aurora/PostgreSQL instead), high-volume write cost at extreme scale, and AWS vendor lock-in. In system design interviews, it's a strong default choice for most persistence needs given its scalability, durability, transactions support, and ease of use — but the answer should always be grounded in access pattern analysis: show you chose the Partition Key to match the dominant query, and that you've thought about hot partition risk.
 
+From the Hello Interview perspective, the key interview differentiators for DynamoDB are: (1) it is primarily AP but supports per-operation CP via strongly consistent reads — a nuance interviewers test; (2) ACID transactions are available and often forgotten by candidates — proactively mention `TransactWriteItems` for booking/inventory scenarios; (3) DAX as zero-code-change caching layer; (4) pricing model choice (on-demand vs provisioned) maps directly to workload predictability. Use case sweet spot: serverless AWS-native apps with key-value access patterns, unpredictable traffic, and sub-millisecond latency requirements.
+
 ## Key Terms
 
 **Core Data Model**
@@ -94,3 +102,4 @@ DynamoDB's main limitations are complex queries (no joins or ad-hoc aggregations
 
 ## Raw Material
 - [[raw_material/tech/system-design/DynamoDB - Hello Interview]]
+- [[raw_material/tech/system-design/hello-interview/tech-dynamodb.md]]

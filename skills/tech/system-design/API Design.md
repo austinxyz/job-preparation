@@ -4,7 +4,7 @@ category: tech/system-design
 tags: [api, rest, graphql, grpc, http, protobuf, websocket, sse, api-design, microservices]
 status: in-progress
 priority: medium
-last_updated: 2026-04-14
+last_updated: 2026-05-14
 created_from_jd:
 ---
 
@@ -80,6 +80,18 @@ created_from_jd:
 - **JWT (JSON Web Tokens)**: encode user context (user_id, role, exp) in a signed token. Stateless — any service with the verification key can validate without a DB lookup. Ideal for user sessions in distributed systems. Use API keys for service-to-service; JWTs for user sessions.
 - **RBAC (Role-Based Access Control)**: assign roles to users, permissions to roles (e.g. `customer` can book; `venue_manager` can create events; `admin` can access everything). In interviews, briefly note which endpoints require which roles — don't over-engineer.
 - **Rate limiting**: restrict requests per time window. Common: per-user (1000 req/hr authenticated), per-IP (100 req/hr unauthenticated), per-endpoint (10 booking attempts/min to prevent scalping). Return `429 Too Many Requests`. Implement at API gateway or middleware.
+
+**API Gateway Architecture**
+
+- **Purpose**: single entry point for all client requests in a microservices architecture; manages routing, cross-cutting concerns (auth, rate limiting, caching), and protocol translation; adds value when multiple backend services need a unified interface; unnecessary overhead for monolithic or simple single-backend architectures
+- **Routing**: primary function; routes requests based on URL paths, HTTP methods, query parameters, and headers to the appropriate backend service; enables independent deployment of services behind a stable external API surface
+- **Authentication at the gateway**: verify identity before forwarding to backend services; offloads auth logic from every individual service; common patterns: JWT validation, API key lookup, OAuth token introspection; backend services can trust requests that passed the gateway
+- **Rate limiting**: throttle traffic per client/endpoint before requests reach backend services; per-user limits (e.g., 1000 req/hr), per-IP limits (e.g., 100 req/hr unauthenticated), per-endpoint limits (e.g., 10 attempts/min for sensitive operations); return `429 Too Many Requests`; protects backends from overload without burdening individual services
+- **Request handling**: validation (URL, headers, body format), size limits; SSL termination (decrypt HTTPS at the gateway — backends communicate over plain HTTP internally); compression; CORS headers; response timeouts; API versioning routing (`/v1/` → service-v1, `/v2/` → service-v2)
+- **Caching**: cache full responses or partial data for infrequently-changing data; TTL-based or event-based invalidation; reduces backend load for read-heavy endpoints; careful with personalized responses (don't cache per-user data globally)
+- **Horizontal scaling**: API gateways are stateless — scale by adding more instances behind a load balancer; global distribution via regional deployments + DNS-based routing (GeoDNS) routes users to nearest gateway; configuration (routing rules, auth policies) must be synchronized across regions
+- **Popular implementations**: AWS API Gateway (REST/WebSocket, deep AWS integration), Azure API Management (policy-based configuration), Google Cloud Endpoints (gRPC support), Kong (open-source, built on Nginx, plugin ecosystem), Tyk (GraphQL support, multi-data-center), Express Gateway (Node.js-based)
+- **Protocol translation**: gateway can accept REST externally and translate to gRPC internally — enables external stability (REST) with internal performance (gRPC); this is the standard hybrid architecture pattern at large companies
 
 **GraphQL: N+1 Problem and Field-Level Auth**
 
@@ -165,12 +177,21 @@ From an AI Infra perspective, gRPC is the common choice for model serving APIs: 
 - `N+1 problem` · `DataLoader` · `over-fetching` · `under-fetching`
 - `schema` · `resolver` · field-level authorization · `query` · `mutation`
 
+**API Gateway**
+- `API Gateway` · `reverse proxy` · `SSL termination` · `routing`
+- `rate limiting` · `authentication gateway` · `JWT validation`
+- `Kong` · `AWS API Gateway` · `Azure API Management` · `Google Cloud Endpoints` · `Tyk`
+- `GeoDNS` · `regional deployment` · `stateless gateway` · horizontal scaling
+- `protocol translation` · REST → gRPC translation · `middleware`
+
 **反模式 / 面试陷阱**
 - verb-based URLs (`/createBooking`) → use noun resources
 - POST without Idempotency Key for payment
 - GraphQL by default (adds complexity; use REST unless over/under-fetching is the explicit problem)
 - spending >5 min on API design in interviews
+- API Gateway for monolithic/single-backend architectures (unnecessary overhead)
 
 ## Raw Material
 - [[raw_material/tech/system-design/network-essential]]
 - [[raw_material/tech/system-design/API Design - Hello Interview]]
+- [[raw_material/tech/system-design/hello-interview/tech-api-gateway.md]]

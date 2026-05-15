@@ -2,9 +2,9 @@
 title: Cassandra
 category: tech/system-design
 tags: [cassandra, nosql, wide-column, distributed-database, lsm-tree, consistent-hashing, eventual-consistency, partitioning, replication, gossip]
-status: draft
+status: in-progress
 priority: high
-last_updated: 2026-04-09
+last_updated: 2026-05-14
 created_from_jd:
 ---
 
@@ -81,6 +81,22 @@ created_from_jd:
 - Key design decisions: partition key selection (controls co-location), partition size (avoid hotspots and unbounded growth), clustering key (controls sort order for range queries), denormalization (duplicate data to serve each access pattern efficiently)
 - **Classic pattern**: avoid scatter-gather by ensuring each query hits a single partition
 
+**Primary Key Syntax Reference（面试主键语法速查）**
+
+```sql
+-- Composite partition key (a+b), clustering key c
+CREATE TABLE t (a text, b text, c text, d text, PRIMARY KEY ((a, b), c));
+
+-- Partition key a, clustering keys b+c (range scan on b then c within partition)
+CREATE TABLE t (a text, b text, c text, d text, PRIMARY KEY ((a), b, c));
+```
+
+**Hello Interview: Interview Use Case Examples（面试场景速查）**
+- **Discord messages**: `channel_id` as partition key; `message_id` (time-sortable) as clustering key; hot channel fix: add 10-day time bucket as composite partition key → `PRIMARY KEY ((channel_id, bucket), message_id)`
+- **TicketMaster (Taylor Swift problem)**: `tickets` table — partition key `(event_id, section_id)` to distribute load; `event_sections` table — partition key `event_id` for section listing
+- **When to choose Cassandra**: availability > consistency; high write volume; flexible/sparse schema; horizontal scalability at scale
+- **When NOT to choose**: strict consistency required; complex queries (JOINs, aggregations); ACID transactions; small dataset where ops complexity isn't justified
+
 ## Key Questions
 
 **Q: What makes Cassandra a good fit for write-heavy workloads?**
@@ -112,5 +128,8 @@ Cassandra's distributed design is masterless: consistent hashing distributes dat
 
 The most important skill for using Cassandra effectively is **query-driven data modeling**: there are no JOINs, so access patterns must be defined up front and tables designed around them. Partition key selection determines data co-location and query efficiency; clustering keys control sort order for range scans; and denormalization across multiple tables is normal and expected. Classic pitfalls include unbounded partition growth (fix with time-bucketing composite partition keys, as Discord did) and hot partitions from low-cardinality partition keys. For AI Infra specifically, Cassandra is well-suited for storing large-scale training metadata, experiment logs, inference request traces, and time-series metrics where write throughput and horizontal scalability matter more than strict consistency.
 
+From the Hello Interview perspective, the key interview use cases for Cassandra are systems requiring availability over consistency at massive scale: chat message storage (Discord — channel_id partition key, message_id clustering key, time-bucket for hot channels), event ticketing (TicketMaster — composite partition key by event+section to distribute load), and any scenario with high write volume + flexible schema. The decision heuristic: reach for Cassandra when you can define your access patterns up front, need write throughput and horizontal scale, and can tolerate eventual consistency.
+
 ## Raw Material
 - [[raw_material/tech/system-design/Cassandra]]
+- [[raw_material/tech/system-design/hello-interview/tech-cassandra.md]]

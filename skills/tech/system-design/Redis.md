@@ -4,7 +4,7 @@ category: tech/system-design
 tags: [redis, cache, in-memory, rdb, aof, zset, skip-list, sentinel, redis-cluster, bloom-filter, hash-slot]
 status: in-progress
 priority: high
-last_updated: 2026-04-10
+last_updated: 2026-05-14
 created_from_jd:
 ---
 
@@ -161,6 +161,9 @@ From an AI Infra perspective, Redis is important for: ① training job schedulin
 
 > 面试重点：数据结构选型（四场景）→ RDB+AOF 持久化配置 → 单线程 SCAN vs KEYS* → Sentinel vs Cluster 互补 → Bloom Filter 原理
 
+From the Hello Interview perspective, the key interview use case patterns for Redis are: leaderboard (`ZADD` / `ZRANGEBYRANK` / `ZRANK` on Sorted Set), distributed lock (`SET key value NX EX ttl` or INCR-based with TTL), rate limiting (`INCR` + `EXPIRE` for fixed-window), proximity search (`GEOADD` / `GEOSEARCH BYRADIUS`), and durable queue (Streams with `XADD` / `XREADGROUP` / `XCLAIM`). The hot key remediation triad — local cache, key replication + randomization, read replicas — is a frequently tested operational question.
+
 ## Raw Material
 - [[raw_material/tech/system-design/sd-redis]]
 - [[raw_material/tech/system-design/Redis - Hello Interview]]
+- [[raw_material/tech/system-design/hello-interview/tech-redis.md]]

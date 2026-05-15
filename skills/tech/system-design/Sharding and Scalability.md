@@ -4,7 +4,7 @@ category: tech/system-design
 tags: [sharding, consistent-hashing, virtual-nodes, hot-key, read-replica, scale-out, cap-theorem, back-of-envelope, capacity-estimation, range-sharding, directory-sharding, saga-pattern, 2pc, cross-shard]
 status: in-progress
 priority: high
-last_updated: 2026-04-06
+last_updated: 2026-05-14
 created_from_jd:
 ---
 
@@ -89,6 +89,15 @@ created_from_jd:
 - **Best design: avoid cross-Shard transactions**: put all data belonging to the same user on the same Shard — transactions are naturally single-Shard
 - Rule of thumb: if distributed transactions are frequently needed, the Shard Key or Shard boundaries are wrong
 
+**Consistent Hashing Interview Decision Framework（Hello Interview 视角）**
+- Mental model: "Arrange everything in a circle and walk clockwise" — applies whenever mapping a large keyspace to a smaller set of servers with graceful add/remove
+- Key design scenarios where consistent hashing is the correct answer:
+  1. **Distributed database**: partition table rows across DB nodes
+  2. **Distributed cache**: find which cache node stores a given key (e.g., Redis Cluster's MOVED response)
+  3. **Distributed message broker**: route messages to partitions/brokers
+- When an interviewer asks "what happens when you add a server to your cache cluster?" → state: consistent hashing, only ~1/N keys need to move (not the ~(N-1)/N of modulo hashing)
+- Virtual nodes provide weighted capacity: a node with 2× the memory gets 2× the virtual nodes on the ring
+
 **Modern Database Sharding Support（现代数据库分片支持）**
 - **NoSQL**: Cassandra (Murmur3 Consistent Hash + virtual nodes), DynamoDB (partition key hash, auto-split/merge), MongoDB (range-based chunks + optional hash shard key + auto balancer)
 - **SQL**: Vitess (MySQL sharding layer, supports operator-driven online resharding), Citus (PostgreSQL extension), AWS Aurora, Cloud Spanner
@@ -150,6 +159,18 @@ Capacity estimation (Back-of-envelope) is the foundation of system design interv
 
 > 面试重点：容量估算驱动设计决策 → Shard Key 三个标准（高基数/均匀/匹配查询）→ 三种分片策略（默认 Hash）→ Hot Key 三方案 → 跨分片查询处理（缓存/反范式化）→ 避免而非解决跨分片事务
 
+## Key Terms
+
+**Consistent Hashing**
+- `hash ring` · `virtual nodes` · `clockwise walk` · `1/N key movement` · `modulo hash`
+
+**Distributed Systems using Consistent Hashing**
+- `Redis Cluster` · `Apache Cassandra` · `Amazon DynamoDB` · `CDN routing`
+
+**Sharding Scenarios**
+- `distributed database` · `distributed cache` · `distributed message broker`
+
 ## Raw Material
 - [[raw_material/tech/system-design/sd-sharding]]
 - [[raw_material/tech/system-design/sharding]]
+- [[raw_material/tech/system-design/hello-interview/concept-consistent-hashing.md]]
