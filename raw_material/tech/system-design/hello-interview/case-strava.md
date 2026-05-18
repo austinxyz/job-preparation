@@ -1,5 +1,5 @@
 ---
-title: Hello Interview — Case: Strava (Activity Tracking)
+title: "Hello Interview — Case: Strava (Activity Tracking)"
 source: "https://www.notion.so/1edafa27ec728029846fdbeeaffba8d2"
 date_saved: 2026-05-14
 processed: true

@@ -1,5 +1,5 @@
 ---
-title: Kubernetes GPU 调度手册 — 第四部分：工作负载实践
+title: "Kubernetes GPU 调度手册 — 第四部分：工作负载实践"
 source: https://jimmysong.io/zh/book/gpu-infra/workloads/
 date_saved: 2026-04-08
 processed: true

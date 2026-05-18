@@ -1,5 +1,5 @@
 ---
-title: Kubernetes GPU 调度手册 — 第六部分：生态与趋势
+title: "Kubernetes GPU 调度手册 — 第六部分：生态与趋势"
 source: https://jimmysong.io/zh/book/gpu-infra/landscape/
 date_saved: 2026-04-08
 processed: true

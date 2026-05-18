@@ -1,5 +1,5 @@
 ---
-title: Hello Interview — Case: Distributed Cache
+title: "Hello Interview — Case: Distributed Cache"
 source: "https://www.notion.so/1ecafa27ec728011ad85c3e6490c65bd"
 date_saved: 2026-05-14
 processed: true

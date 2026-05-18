@@ -1,5 +1,5 @@
 ---
-title: Hello Interview — Case: Tinder (Dating App)
+title: "Hello Interview — Case: Tinder (Dating App)"
 source: "https://www.notion.so/1f3afa27ec72801d98e0c668a6d681ec"
 date_saved: 2026-05-14
 processed: true

@@ -1,5 +1,5 @@
 ---
-title: AI Native Infrastructure (Systems Designed for Uncertainty) — Index
+title: "AI Native Infrastructure (Systems Designed for Uncertainty) — Index"
 book_url: https://jimmysong.io/book/ai-native-infra/
 date_read: 2026-04-09
 sections:

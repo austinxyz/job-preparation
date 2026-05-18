@@ -1,5 +1,5 @@
 ---
-title: Hello Interview — Core Concept: Database Indexes
+title: "Hello Interview — Core Concept: Database Indexes"
 source: "https://www.notion.so/1faafa27ec7280d2b03fd873bb6b0fd7"
 date_saved: 2026-05-14
 processed: true

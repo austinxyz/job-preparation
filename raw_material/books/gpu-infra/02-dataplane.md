@@ -1,5 +1,5 @@
 ---
-title: Kubernetes GPU 调度手册 — 第二部分：数据平面技术
+title: "Kubernetes GPU 调度手册 — 第二部分：数据平面技术"
 source: https://jimmysong.io/zh/book/gpu-infra/dataplane/
 date_saved: 2026-04-08
 processed: true

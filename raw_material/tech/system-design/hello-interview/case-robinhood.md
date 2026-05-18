@@ -1,5 +1,5 @@
 ---
-title: Hello Interview — Case: Robinhood (Stock Trading)
+title: "Hello Interview — Case: Robinhood (Stock Trading)"
 source: "https://www.notion.so/1efafa27ec7280a39805dea1dfe09c17"
 date_saved: 2026-05-14
 processed: true

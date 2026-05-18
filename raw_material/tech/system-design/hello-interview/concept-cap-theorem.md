@@ -1,5 +1,5 @@
 ---
-title: Hello Interview — Core Concept: CAP Theorem
+title: "Hello Interview — Core Concept: CAP Theorem"
 source: "https://www.notion.so/1f9afa27ec728079ae01e1068b143384"
 date_saved: 2026-05-14
 processed: true

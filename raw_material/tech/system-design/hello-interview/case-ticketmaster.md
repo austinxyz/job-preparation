@@ -1,5 +1,5 @@
 ---
-title: Hello Interview — Case: TicketMaster
+title: "Hello Interview — Case: TicketMaster"
 source: "https://www.notion.so/1e5afa27ec72806ea999f77715bd0831"
 date_saved: 2026-05-14
 processed: true

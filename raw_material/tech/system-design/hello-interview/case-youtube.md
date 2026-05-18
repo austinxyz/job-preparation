@@ -1,5 +1,5 @@
 ---
-title: Hello Interview — Case: YouTube
+title: "Hello Interview — Case: YouTube"
 source: "https://www.notion.so/1e4afa27ec7280f9a2e1d197e00a07a9"
 date_saved: 2026-05-14
 processed: true

@@ -1,5 +1,5 @@
 ---
-title: Kubernetes GPU 调度手册 — 第三部分：控制面治理
+title: "Kubernetes GPU 调度手册 — 第三部分：控制面治理"
 source: https://jimmysong.io/zh/book/gpu-infra/control-plane/
 date_saved: 2026-04-08
 processed: true

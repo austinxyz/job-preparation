@@ -1,5 +1,5 @@
 ---
-title: AI Native Infrastructure — Appendix
+title: "AI Native Infrastructure — Appendix"
 source: https://jimmysong.io/book/ai-native-infra/glossary/
 date_saved: 2026-04-09
 processed: true

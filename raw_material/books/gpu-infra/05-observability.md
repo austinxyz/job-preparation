@@ -1,5 +1,5 @@
 ---
-title: Kubernetes GPU 调度手册 — 第五部分：可观测与验收
+title: "Kubernetes GPU 调度手册 — 第五部分：可观测与验收"
 source: https://jimmysong.io/zh/book/gpu-infra/observability/
 date_saved: 2026-04-08
 processed: true

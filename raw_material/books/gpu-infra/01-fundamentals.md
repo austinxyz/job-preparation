@@ -1,5 +1,5 @@
 ---
-title: Kubernetes GPU 调度手册 — 第一部分：基础认知与问题定义
+title: "Kubernetes GPU 调度手册 — 第一部分：基础认知与问题定义"
 source: https://jimmysong.io/zh/book/gpu-infra/fundamentals/
 date_saved: 2026-04-08
 processed: true

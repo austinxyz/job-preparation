@@ -1,5 +1,5 @@
 ---
-title: Hello Interview — Case: Dropbox (File Sync)
+title: "Hello Interview — Case: Dropbox (File Sync)"
 source: "https://www.notion.so/1f8afa27ec728070b1a6f71fe9985170"
 date_saved: 2026-05-14
 processed: true

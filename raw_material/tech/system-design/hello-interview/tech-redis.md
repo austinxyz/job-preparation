@@ -1,5 +1,5 @@
 ---
-title: Hello Interview — Key Technology: Redis
+title: "Hello Interview — Key Technology: Redis"
 source: "https://www.notion.so/1faafa27ec7280ddbc4afac8827b565c"
 date_saved: 2026-05-14
 processed: true

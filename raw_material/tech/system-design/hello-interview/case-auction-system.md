@@ -1,5 +1,5 @@
 ---
-title: Hello Interview — Case: Auction System
+title: "Hello Interview — Case: Auction System"
 source: "https://www.notion.so/1efafa27ec728023878cfb7276cb9a30"
 date_saved: 2026-05-14
 processed: true

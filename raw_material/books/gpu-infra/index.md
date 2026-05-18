@@ -1,5 +1,5 @@
 ---
-title: Kubernetes 中的 GPU 调度与虚拟化手册 — Index
+title: "Kubernetes 中的 GPU 调度与虚拟化手册 — Index"
 book_url: https://jimmysong.io/zh/book/gpu-infra/
 author: Jimmy Song
 date_read: 2026-04-08

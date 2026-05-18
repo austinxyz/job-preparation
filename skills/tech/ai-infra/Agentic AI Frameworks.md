@@ -1,10 +1,10 @@
 ---
 title: Agentic AI Frameworks
 category: tech/ai-infra
-tags: [langchain, langgraph, crewai, autogen, rag, vector-db, agentic, multi-agent, tool-use, claude-sdk, dspy]
-status: draft
+tags: [langchain, langgraph, crewai, autogen, google-adk, llamaindex, semantic-kernel, rag, vector-db, agentic, multi-agent, tool-use, claude-sdk, dspy, signadot, openShell, mcp]
+status: in-progress
 priority: medium
-last_updated: 2026-04-12
+last_updated: 2026-05-17
 created_from_jd: "[[positions/Manager, DevOps, SRE & AI Infrastructure - AppZen]]"
 ---
 
@@ -63,6 +63,26 @@ created_from_jd: "[[positions/Manager, DevOps, SRE & AI Infrastructure - AppZen]
 - **Weaknesses**: Claude-only (vendor lock-in); newer/less battle-tested than LangGraph; less community ecosystem
 - **Production fit**: best choice for teams going all-in on Claude; reduces infra burden significantly for agent state management
 
+#### Google ADK (Agent Development Kit)
+- **What it is**: Google's open-source agent framework (announced at Google Cloud NEXT 2025); built on Google's internal tooling; targets production-ready, scalable agentic apps
+- **Key features**: multi-agent hierarchical composition (specialist agents), Gemini-native + 200+ models via LiteLLM (Anthropic, Meta, Mistral), built-in tools (search, code execution), bidirectional audio/video streaming, code-first (Python/Java), sequential/parallel/loop workflow support, built-in evaluation + debugging
+- **Integration with existing ecosystems**: LangChain, LlamaIndex as tools; LangGraph, CrewAI as agent tools; Vertex AI for managed enterprise runtime; Cloud Run for serverless deployment
+- **Production fit**: best for teams on GCP/Vertex AI building complex multi-agent systems; strong model diversity via LiteLLM; enterprise deployment path via Vertex
+
+#### LlamaIndex Agent
+- **What it is**: RAG-centric agent framework from LlamaIndex; extends the core LlamaIndex data indexing strength with agent and workflow capabilities
+- **Unique strength**: data indexing architecture — `SimpleDocumentStore` (raw docs + chunks as Nodes), `SimpleIndexStore` (index metadata), `SimpleVectorStore` (node ID → embedding dict); purpose-built for retrieval-heavy agentic workflows
+- **Workflow architecture**: `@step` decorators define event-driven pipeline steps; `Context` object provides cross-step state persistence; structured output + system prompt injection enable "agent memory" and explainability
+- **Design philosophy**: "AgentOS" vision — LLM + perception (file upload) + memory (context/vector store) + planning (multi-step flow) + action (tool calls); agents as embeddable service units
+- **Production fit**: best for knowledge-intensive applications (document QA, legal/medical research, multi-source retrieval); not ideal for code execution or action-heavy workflows
+
+#### Semantic Kernel (Microsoft)
+- **What it is**: Microsoft's lightweight open-source SDK (C#, Python, Java) for integrating LLMs into enterprise applications; targets enterprise developers with existing Microsoft/Azure stack
+- **Core architecture**: user code + plugins (tools) + hooks/filters → AI models; plugin system supports native code, prompt templates, OpenAPI specs, and **MCP** as extension mechanisms
+- **Enterprise differentiators**: 1.0+ with non-breaking update guarantees; Azure OpenAI first-class integration; multi-modal (text, vision, audio); built-in telemetry + filters for responsible AI; strong C# ecosystem for .NET shops
+- **Multi-agent**: coordinates complex workflows with specialized agents; agent framework with tools/memory/planning
+- **Production fit**: best for enterprise teams in the Microsoft/Azure ecosystem (.NET, Azure OpenAI); production maturity higher than many open-source alternatives
+
 #### Strands Agents SDK (AWS)
 - **What it is**: AWS's open-source agent SDK (mentioned in Anthropic's "Building Effective Agents"); model-agnostic but AWS-native; integrates with Bedrock for LLM access and AWS services for tools
 - **Strengths**: AWS ecosystem fit (IAM, S3, Lambda as tools); Bedrock access to multiple models; good for teams already on AWS
@@ -85,6 +105,9 @@ created_from_jd: "[[positions/Manager, DevOps, SRE & AI Infrastructure - AppZen]
 | Code execution / coding agent | AutoGen or LangGraph |
 | Claude-native managed agents | Claude Agent SDK |
 | AWS-native agents | Strands + Bedrock |
+| GCP / Vertex AI multi-agent | Google ADK |
+| Knowledge-intensive / retrieval-heavy | LlamaIndex Agent |
+| Enterprise .NET / Azure OpenAI | Semantic Kernel |
 | Structured pipeline with measurable quality | DSPy |
 | Prototype → understand → then simplify | Any framework → migrate to direct API |
 
@@ -112,6 +135,22 @@ created_from_jd: "[[positions/Manager, DevOps, SRE & AI Infrastructure - AppZen]
 - **What it is**: Anthropic's open standard for connecting LLMs to external tools and data sources via a standardized client-server protocol
 - **Why it matters**: replaces ad-hoc tool integrations with a unified interface; growing ecosystem of MCP servers (filesystem, GitHub, databases, web search); any MCP client (Claude, LangChain, etc.) can use any MCP server
 - **Production relevance**: reduces framework lock-in for tool integrations; invest in MCP-compatible tool servers rather than framework-specific plugins
+- **See also**: [[MCP and A2A Protocols]] for deep dive on protocol architecture, primitives, transport layers, and security
+
+#### Agent Sandboxing — Signadot
+
+- **Problem**: AI coding agents in enterprise K8s need access to real dependencies (Postgres, Kafka, Redis, downstream services) to validate changes, but can't touch production
+- **Signadot solution**: virtualize isolated sandboxes within the same K8s cluster; only deploy modified services; route test traffic via routing headers to sandbox, baseline traffic unchanged; database changes use copy-on-write branches (writes isolated)
+- **Relevance**: enables agents to go beyond read-only diagnosis → validate proposed fixes in an isolated environment before applying to production; integrates with Claude Code, Codex, Cursor
+- **Production implication**: agent-assisted incident triage can include "validate the fix in sandbox" as a step before human approves the real deployment
+
+#### Agent Runtime Security — NVIDIA OpenShell
+
+- **Problem**: prompt-level constraints ("don't delete files") can be jailbroken; security needs to be at the environment layer, not the prompt layer
+- **OpenShell approach**: out-of-process policy enforcement; agent *physically cannot* perform disallowed actions regardless of prompt content
+- **Control surface** (declarative YAML policy): filesystem access (allowed paths, read/write permissions), network communication (allowed outbound connections), process execution (allowed commands), inference calls (allowed model invocations)
+- **Adoption**: ServiceNow Project Arc (long-running desktop agents), Adobe, SAP, Salesforce; GTC 2026 release, open-source, Jensen Huang-backed
+- **Key insight**: the right mental model for enterprise agents — policy as infrastructure, not policy as prompt instruction
 
 ### Claude Code Skills as Lightweight Agents
 
@@ -178,5 +217,27 @@ The framework landscape has stratified by use case: LangGraph dominates for stat
 
 From a management perspective, the key decisions are: (1) which framework fits your team's mental model and production maturity requirements, (2) how to instrument it for observability (LangSmith or Phoenix), (3) how to enforce cost controls (model routing, loop limits, caching), and (4) how to sandbox dangerous tool execution. The build-vs-buy question applies here too: for teams with deep ML infra expertise, a thin direct-API control plane is often more maintainable long-term than a heavy framework dependency; for teams moving fast, frameworks provide real velocity — just plan the migration path before you're too entangled.
 
+## Key Terms
+
+**Core Frameworks**
+- `LangChain` · `LangGraph` · `CrewAI` · `AutoGen` · `AG2` · `Google ADK` · `LlamaIndex Agent` · `Semantic Kernel` · `Claude Agent SDK` · `Strands` · `DSPy`
+
+**LangGraph Concepts**
+- `DAG` · `state machine` · `checkpointing` · `human-in-the-loop` · `interrupt-before-node` · `LCEL` · `LangSmith` · `ReAct in LangGraph`
+
+**LlamaIndex Internals**
+- `SimpleDocumentStore` · `SimpleIndexStore` · `SimpleVectorStore` · `Node` · `Embedding` · `@step` · `Context` · `Workflow`
+
+**Production Infrastructure**
+- `Signadot` · `copy-on-write branch` · `K8s sandbox` · `NVIDIA OpenShell` · `V8 Isolates` · `out-of-process policy enforcement`
+
+**Observability**
+- `LangSmith` · `Phoenix / Arize` · `OpenTelemetry` · `token budget` · `loop limit` · `prompt caching`
+
+**Agent Security**
+- `tool whitelist` · `sandbox isolation` · `permission scoping` · `input validation` · `stopping conditions` · `audit log`
+
 ## Raw Material
 - [[raw_material/tech/ai-basics/AI Agents Architecture - resources]]
+- `jobs/Weekly/2026-W20 (May 12 - May 18)/MCP 学习笔记.md`
+- `jobs/Weekly/2026-W20 (May 12 - May 18)/Wenli 对话整理 — MCP, Agent, Spec-driven.md`

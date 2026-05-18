@@ -2,9 +2,9 @@
 title: AI Agents Architecture
 category: tech/ai-basics
 tags: [agents, agentic-ai, tool-use, planning, react, tool-calling, multi-agent, orchestration, memory, context-window]
-status: draft
+status: in-progress
 priority: high
-last_updated: 2026-04-12
+last_updated: 2026-05-17
 created_from_jd: [[positions/Tech Lead Manager - Agents - Perplexity]]
 ---
 
@@ -59,6 +59,40 @@ created_from_jd: [[positions/Tech Lead Manager - Agents - Perplexity]]
 2. **Transparency**: explicitly show planning steps in agent output; aids debugging and user trust
 3. **Tool documentation and testing**: treat ACI design as seriously as API design; test with adversarial inputs
 
+### Long-Running Agent Architecture (Anthropic Harness)
+
+Three-agent GAN-style architecture for multi-session complex tasks:
+
+| Agent | Role |
+|-------|------|
+| **Planner** | Expands brief user prompt into detailed spec; defines scope and technical design |
+| **Generator** | Iteratively implements based on spec |
+| **Evaluator** | Tests via real interaction (e.g., Playwright); gives pass/fail verdict — independent of Generator |
+
+**Key design decisions:**
+- **Evaluator independence**: avoids "model grading its own work" problem — independent eval is more reliable than self-critique
+- **Sprint Contracts**: Generator and Evaluator negotiate "definition of done" before implementation starts — converts abstract spec into testable deliverables
+- **Context Reset between sessions**: prevents "context anxiety" (agent truncates work prematurely because context window is filling); structured handoff artifacts carry state across sessions
+- **Evolve with model capability**: as models improve, strip away scaffolding that is no longer load-bearing (e.g., reduced from complex sprint decomposition at Opus 4.5 ($200+/run) to single-pass longer tasks at Opus 4.6 ($125/run))
+
+### Agent as First-Class Object
+
+Shift from "agent as function" to "agent as entity" — critical for enterprise and multi-agent production systems:
+
+- **Identity**: each agent has a unique, auditable identity (not just a prompt string); enables authorization and audit trails
+- **Lifecycle**: `start → pause → resume → terminate`; agents can be checkpointed, suspended, and resumed across sessions
+- **Declarative permissions**: agent capabilities declared in policy (e.g., NVIDIA OpenShell YAML), not embedded in prompts — prevents jailbreak-based permission escalation
+- **Black-box boundary**: in A2A protocol, agents don't expose internal plans or tools to each other; they only advertise capabilities via Agent Cards
+
+### Token Budget Management
+
+Token is a scarce resource in long agent tasks — must be actively managed:
+- **MCP schema overhead**: tool list + parameter schemas consume significant tokens on every call → consider Cloudflare Code Mode (write code to call MCP) for multi-tool workflows
+- **Skills lazy load**: skill content loads into context only on invocation → minimize baseline context footprint
+- **Context reset**: periodic reset with structured handoff artifacts prevents context window exhaustion and premature task termination
+- **Sub-task budget evaluation**: before each agent invocation, assess available context vs. sub-task complexity; split or defer if insufficient headroom
+- **Model routing**: route simple classification/routing sub-tasks to Haiku (cheap); reserve Sonnet/Opus for synthesis and complex reasoning
+
 ## Key Questions
 
 **Q: Walk me through the architecture of an LLM-powered agent. What are the core components?**
@@ -93,5 +127,27 @@ For an AI Infra or engineering manager, the critical design decisions are: where
 
 Technically, the key topics to know deeply are ReAct (thought-action-observation loop), Reflexion (self-reflection to recover from failures), HNSW/FAISS for vector retrieval, and the five Anthropic workflow patterns. The field is evolving rapidly — MCP (Model Context Protocol) is emerging as a standard for tool integration, and multi-agent frameworks (orchestrator + specialized workers) are becoming the dominant architecture for complex coding and research tasks.
 
+## Key Terms
+
+**Planning Patterns**
+- `CoT` · `Tree of Thoughts` · `ReAct` · `Reflexion` · `thought-action-observation loop`
+
+**Memory**
+- `short-term (in-context)` · `long-term (vector store)` · `HNSW` · `FAISS` · `ANN` · `LSH` · `ANNOY` · `ScaNN` · `memory stream` · `recency · importance · relevance scoring`
+
+**Workflow Patterns**
+- `prompt chaining` · `routing` · `parallelization` · `orchestrator-workers` · `evaluator-optimizer` · `Planner-Generator-Evaluator`
+
+**Tool Use**
+- `MRKL` · `function calling` · `tool schema` · `ACI (Agent-Computer Interface)` · `HuggingGPT` · `tool description quality`
+
+**Agent Identity**
+- `Agent Card` · `agent lifecycle` · `declarative permissions` · `black-box boundary` · `Sprint Contracts` · `context reset` · `handoff artifact`
+
+**Token Management**
+- `MCP schema overhead` · `lazy load` · `context anxiety` · `model routing` · `sub-task budget`
+
 ## Raw Material
 - [[raw_material/tech/ai-basics/AI Agents Architecture - resources]]
+- `jobs/Weekly/2026-W20 (May 12 - May 18)/MCP 学习笔记.md`
+- `jobs/Weekly/2026-W20 (May 12 - May 18)/Wenli 对话整理 — MCP, Agent, Spec-driven.md`

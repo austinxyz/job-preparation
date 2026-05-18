@@ -1,5 +1,5 @@
 ---
-title: Hello Interview — Case: Ads Click Aggregation
+title: "Hello Interview — Case: Ads Click Aggregation"
 source: "https://www.notion.so/1f7afa27ec728098a1f6f9c5dc482f9d"
 date_saved: 2026-05-14
 processed: true

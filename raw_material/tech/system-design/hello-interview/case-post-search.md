@@ -1,5 +1,5 @@
 ---
-title: Hello Interview — Case: Post Search (Inverted Index)
+title: "Hello Interview — Case: Post Search (Inverted Index)"
 source: "https://www.notion.so/1f4afa27ec7280e8b996e4f553347aed"
 date_saved: 2026-05-14
 processed: true
