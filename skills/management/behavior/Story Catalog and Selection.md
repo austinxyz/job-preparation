@@ -47,6 +47,20 @@ created_from_jd:
 
 - **Hypotheticals get clarifying questions + pattern-matching.** Ask 1–2 *meaningful* clarifying questions — ones that would genuinely change your approach ("B2B or B2C?" "Do I have hiring authority?" "Who are the key decision-makers?"). Poor clarifying questions: too basic, too numerous, or deflecting. Then pattern-match: abstract the core tension (e.g., "project behind schedule" = resource/time/scope tension), scan experience for similar tensions, extract transferable principles, and ground the answer with a related real story from your catalog.
 
+### Workbook Foundation Exercises (One-Time, 4-6 Hours)
+
+**Identity OS Builder — develop before any interview loop.** Six exercises: (1) *Leadership Thesis* — complete "I am a leader who..." with something specific to you, not generic platitudes; a colleague who knows you should recognize it as accurate. (2) *Career Through-Line* — list last 3-4 roles + key choice or theme in each, then complete "the thread connecting my career is..." (3) *Signature Strengths* — 2-3 things you're genuinely differentiated at (not just competent), with specific evidence for each. (4) *Growth Edges* — 1-2 areas actively developing, framed as current focus areas not weaknesses; note what you're doing to develop each. (5) *Emotional Stance* — complete "I want people to experience me as..." with 3 specific behaviors that support that stance. (6) *Executive Narrative* — write and time a 75-90 second leadership story: [Identity Statement] → [Scope Marker] → [Operating Principles] → [Signature Lesson] → [Current Focus + Connection to role]. Read aloud; target 75-90 seconds.
+
+**Story Library Builder — Decision-First Schema.** The workbook schema prioritizes decision-articulation over narrative structure. For each of 10-15 stories across the 10 story categories, capture: **(1) One-Sentence Summary** (the whole story in one line), **(2) The Decision I Made** (stated clearly — not "what happened" but "what I chose"), **(3) Tradeoffs I Navigated** (the explicit A-vs-B tension), **(4) Principle That Guided Me** (the underlying value or heuristic), **(5) Business Impact** (the outcome in terms that matter to the business), **(6) Key Learning** (what you'd take into the next similar situation). Fields 2 and 3 force executive-level thinking before the interview room — most IC-to-manager candidates can describe context and results; articulating the decision made and the tradeoff navigated is what differentiates senior candidates. Ten story categories: major decisions with incomplete info, cross-functional conflict, significant failures, organizational change, technical leadership, team building, influencing without authority, managing up, crisis/high-pressure delivery, strategic tradeoffs.
+
+**Language Pattern Analyzer — self-recording exercise.** Record yourself answering 3 questions: "Tell me about your biggest accomplishment," "Describe a difficult decision you made," "Tell me about a conflict you navigated." For each, tally: (1) times said "we" instead of "I"; (2) times described tasks/activities; (3) times articulated a decision; (4) times named a tradeoff explicitly; (5) times connected to business impact; (6) times articulated a principle. Target ratios: "I" >> "we"; decisions >> tasks; tradeoffs ≥ 1 per answer; business impact ≥ 1 per answer. Then practice before/after upgrades on your actual recordings: "We decided to..." → "I made the call to..." | "We had to fix..." → "I determined that the core issue was..." | "My team delivered..." → "I was accountable for..."
+
+**Culture Calibration Worksheet — complete per target company, 1-2 weeks before the loop.** Research five dimensions and note what you've learned + how you'll adapt: *Decision Velocity* (fast startup vs. deliberate enterprise), *Conflict Norms* (direct debate vs. consensus-seeking), *Ownership* (high autonomy vs. collaborative), *Accountability* (personal blame-accepting vs. systemic framing), *Communication* (polished/structured vs. casual/direct). Sources: Glassdoor patterns, LinkedIn executive backgrounds, company engineering blog, news, network contacts. Then do story-to-culture matching: select 5 stories from your library that will resonate most based on the culture research, and note why each fits. Culture calibration doesn't change your experience — it determines which stories to lead with.
+
+**Scope Ladder Climber — write every major accomplishment at all four levels.** Target scope by role: *Staff/Principal IC or Senior Manager*: Project + System level. *Director*: System level primarily, with Organization-level examples. *VP*: System + Organization level. *SVP/CXO*: Organization level primarily. For each of 4-5 major accomplishments, write four versions: **Task** (what I personally did), **Project** (what my team delivered), **System** (what capability I built), **Organization** (how I changed the company). Practice the version appropriate for your target role until it's fluent. Key insight: the same work can legitimately be described at any scope level — the question is which is *appropriate*. VP-candidate delivering Project-scope answers signals Director-level thinking.
+
+---
+
 ### Failure Modes by Level (from Hiring Physics research)
 
 - **Staff/Principal → Director: Three failure modes.** (1) *Technical Identity Lock* — "my biggest accomplishment was designing our event-driven architecture at 99.99% uptime." Fix: "the strategic question was whether our architecture could support 10x growth without 10x infrastructure cost." Reframe technical work as business decisions. (2) *Missing Influence Evidence* — "I influenced the team to adopt TypeScript by building a proof of concept." Fix: prepare explicit influence stories with a business case, org alignment, and multi-team execution thread. (3) *Scope Ceiling* — stories describe team/project-level impact. Fix: use the Scope Ladder; upgrade key stories to system-level before the loop.
@@ -101,6 +115,21 @@ Two question types break the "pick a story" pattern and need their own handling.
 
 ## Key Terms
 
+**Workbook foundation exercises**
+- `Identity OS Builder` · `Leadership Thesis` · `Career Through-Line` · `Signature Strengths` · `Growth Edges` · `Emotional Stance` · `Executive Narrative` (75-90 sec)
+
+**Decision-First Story Schema**
+- `One-Sentence Summary` · `The Decision I Made` · `Tradeoffs I Navigated` · `Principle That Guided Me` · `Business Impact` · `Key Learning`
+
+**Language Pattern Analyzer**
+- `we vs. I tally` · `tasks vs. decisions tally` · `tradeoff count` · `business impact count` · `before/after upgrade`
+
+**Culture Calibration Worksheet**
+- `Decision Velocity` · `Conflict Norms` · `Ownership` · `Accountability` · `Communication` · `story-to-culture matching`
+
+**Scope Ladder**
+- `Task scope` · `Project scope` · `System scope` · `Organization scope` · `scope-appropriate framing`
+
 **Failure modes by level**
 - `Technical Identity Lock` · `Missing Influence Evidence` · `Scope Ceiling` (Staff→Director)
 - `Team-Centric Framing` · `Process Over Judgment` · `Missing Strategic Connection` (Sr Mgr→Director)
@@ -152,3 +181,4 @@ Two question types break the "pick a story" pattern and need their own handling.
 ## Raw Material
 - [[raw_material/management/behavior/Select - Choosing Responses]]
 - [[raw_material/books/senior-hiring-playbook/part6-failure-modes-templates]]
+- [[raw_material/books/senior-hiring-playbook/workbook-part1-identity-story-language-culture-scope]]

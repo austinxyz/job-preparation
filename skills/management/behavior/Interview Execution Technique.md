@@ -65,6 +65,18 @@ created_from_jd:
 
 ---
 
+### Workbook Practice Tools
+
+**30-Question Stress Test Bank — organized by stress test category.** 5 questions per category × 6 categories. *Decision-Making:* controversial decision others disagreed with; chose speed over quality; decided with incomplete data; decision you later realized was wrong; how do you decide what NOT to do. *Judgment & Tradeoff:* tech debt vs. feature development; two equally good options; prioritize when everything is important; said no to something valuable; build vs. buy. *Narrative Compression:* career in 90 seconds; biggest accomplishment in 60 seconds; #1 leadership lesson; leadership philosophy in three sentences; why looking for new role. *Cross-Functional:* hardest cross-organizational conflict; aligned leaders who disagreed on priorities; influenced without authority; peer not meeting commitments; disagreed with manager. *Scope & Strategic:* biggest accomplishment; impact in current role; made organization better; approach to platform investment; building high-performing teams. *Emotional Regulation:* biggest failure; received critical feedback; missed a major deadline; handle underperformance on your team; delivered bad news to leadership. Use this bank to ensure coverage across all 7 stress test categories, not just the areas where you feel comfortable.
+
+**8-Criteria Self-Scoring Checklist — use after every practice answer.** For each answer, score 1 point per criterion met: (1) Did I lead with a decision or conclusion? (2) Did I articulate at least one tradeoff? (3) Did I state a principle that guided me? (4) Did I connect to business impact? (5) Was my answer under 90 seconds? (6) Did I avoid "we" when I should have said "I"? (7) Did I maintain emotional neutrality? (8) Did I frame at appropriate scope for the target role? **Scoring:** 7-8 = Strong | 5-6 = Adequate | <5 = Needs work. Log scores across practice sessions to identify criteria that consistently fall short — those become the specific focus for the next week.
+
+**Per-Loop Interview Prep Toolkit — complete 1-2 weeks before each loop.** Four components: (1) *Interviewer Profiles* — for each interviewer: Name/Role | Background | Likely Focus | Stories to Use. Research via LinkedIn, company engineering blog, public talks. (2) *Anticipated Challenges Table* — map likely concerns (experience gaps, short tenure, visible failures) to RAPID responses: Recognize the concern ("that's a fair question") → Anchor to a principle → Provide a specific example or data point → state Implications → Direct to where you can go deeper or pivot. (3) *Strategic Questions* — prepare 3-5 tailored questions showing genuine engagement: for hiring manager: "What does success look like at 6 and 18 months?" / "What's the hardest part of this role not obvious from the JD?"; for executive: "What's the biggest strategic challenge facing engineering right now?"; for peer: "How do decisions get made when your function and this one disagree?" (4) *48-72 Hour Pre-Interview Checklist:* Preparation: full mock completed, active story rotation (5-7 stories) reviewed, RAPID responses reviewed, Executive Narrative timed (75-90 sec), culture calibration notes reviewed. Logistics: times/format confirmed, technology tested, quiet environment prepared, outfit selected. Physical/Mental: good sleep planned, exercise scheduled, stopped active preparation — confidence comes from work already done, over-cramming creates anxiety not readiness.
+
+**Mock Debrief Format — use after every mock AND every real interview.** Rate yourself across all 7 stress tests — Decision-Making, Judgment/Tradeoffs, Narrative Compression, Cross-Functional, Scope Signaling, Strategic/Tactical, Emotional Regulation — each as Strong / OK / Weak, with notes. Then capture specifically: (a) what went well — be concrete, not "it felt good"; (b) what needs improvement — name the specific pattern, not "I stumbled"; (c) questions you struggled with — list them for targeted practice. Close with 3 specific action items for the next interview. The debrief closes the feedback loop that makes pressure inoculation effective — without it, reps accumulate without correction.
+
+---
+
 ## Key Questions
 
 **Q: How do you open a technical interview to create a positive dynamic?**
@@ -144,9 +156,21 @@ For senior engineering manager roles specifically, the closing question is under
 **Anti-patterns**
 - `generic closing question` · `resume recitation` · `coding in silence` · `faking domain knowledge` · `pushing through interruption`
 
+**Practice tools**
+- `30-question stress test bank` · `8-criteria self-scoring checklist` · `40-question drill`
+- `7-8 Strong` · `5-6 Adequate` · `<5 Needs work`
+
+**Per-loop prep toolkit**
+- `Interviewer Profiles` · `Anticipated Challenges` · `48-72h pre-interview checklist`
+- `active story rotation (5-7)` · `RAPID responses`
+
+**Mock debrief**
+- `Mock Debrief Format` · `7 stress test self-assessment` · `Strong/OK/Weak` · `3 action items`
+
 ---
 
 ## Raw Material
 - [[raw_material/methodology/Interview Guide - Lisa Li]]
 - [[raw_material/books/senior-hiring-playbook/part2-four-physics-forces]]
 - [[raw_material/books/senior-hiring-playbook/part5-operating-system-toolkit]]
+- [[raw_material/books/senior-hiring-playbook/workbook-part2-simulator-pressure-ipos-toolkit-assessment]]
