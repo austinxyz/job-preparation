@@ -2,9 +2,9 @@
 title: Behavioral Interview Framework (Decode, Select, Deliver)
 category: management/behavior
 tags: [behavioral-interview, signal-areas, company-values, cultural-assessment, decode-select-deliver, scope, ownership, ambiguity, perseverance, conflict-resolution, growth, communication, leadership]
-status: draft
+status: in-progress
 priority: high
-last_updated: 2026-04-17
+last_updated: 2026-05-23
 created_from_jd:
 ---
 
@@ -45,6 +45,29 @@ created_from_jd:
 
 - **Cultural Assessment is the silent killer for cross-company moves.** Moving from enterprise → Big Tech (or Big Tech → startup) creates cultural gap risk that can cause "confusing" rejections or down-leveling. Proactively translate your experience into the target culture's dialect — especially around authority/hierarchy, speed-vs-quality, and failure sensitivity.
 
+- **Hiring Physics: the invisible forces that govern senior outcomes.** "Hiring physics" = the evaluation criteria that panels use but never articulate. These forces — Identity, Language, Culture, Pressure — operate regardless of your preparation. Polishing STAR stories is preparing for the *visible* test. Most senior candidates fail the *invisible* test.
+
+- **Three Truths of Senior Hiring.** (1) Accomplishments are table stakes — panels evaluate judgment, maturity, pressure stability, and leadership identity. (2) The gap between competence and communication *creates the illusion of unpreparedness* — most seniors have done the work, but haven't practiced articulating it at executive level. (3) You're competing against the panel's *mental model* of a senior leader, not the other candidates — if your communication patterns don't match, experience doesn't save you.
+
+- **Five Failure Patterns (from Hiring Physics research across hundreds of senior failures).**
+  1. **Tactical Language Dominance** — using implementation verbs ("I built," "I configured") even when describing leadership decisions. Signals IC identity regardless of actual scope.
+  2. **Missing Tradeoff Articulation** — describing decisions as obvious or inevitable instead of as choices between competing priorities. Panels infer you don't see tradeoffs if you don't name them.
+  3. **Scope Confusion** — describing output instead of impact, ownership instead of accountability, tasks instead of systems. "We shipped the feature in eight weeks" vs. "I owned user activation as a business metric; the combined impact was 25% improvement in day-7 retention."
+  4. **Reactive Narrative Structure** — stories structured as things that happened *to* you rather than decisions you *drove*. "When the acquisition happened, there was uncertainty..." vs. "I recognized the acquisition would create six months of uncertainty that could cause key engineers to leave. Before integration planning started, I proposed and led a retention strategy..."
+  5. **Emotional Leakage** — revealing frustration, blame, or anxiety. "It was frustrating because product kept changing requirements" vs. neutral framing: "We were operating in an environment where requirements evolved weekly. I recognized it as discovery mode and restructured planning to assume 30% scope change per sprint."
+
+- **The translation principle.** Senior failure is usually not about lacking accomplishments — it's about not translating real experience into the language patterns that signal seniority. The same experience can signal completely different levels based solely on framing choices.
+
+- **The 7 Stress Tests — what every senior interview loop actually evaluates.** Every behavioral question maps to one or more of: (1) *Decision-Making Under Pressure* — do you have decision principles, can you calibrate speed vs. diligence, do you accept risk explicitly? (2) *Judgment & Tradeoff Clarity* — do you see tradeoffs, articulate them, and reason through why you chose your side? (3) *Narrative Compression* — can you tell a 2-year story in 90 seconds with high insight density? (4) *Cross-Functional Maturity* — can you represent others' legitimate concerns fairly and navigate conflict without positional authority? (5) *Scope Signaling* — does your description of work reflect organizational-level impact or task/project level? (6) *Strategic vs. Tactical Fluency* — can you zoom between business strategy and implementation details without losing coherence? (7) *Emotional Regulation* — steady delivery, no blame, no defensiveness, neutral failure description.
+
+- **Decision-Making key signals.** Weak: "I gathered all the data and made the best decision." Strong: "My principle is to optimize for reversibility. I asked: if this decision is wrong, how expensive is it to correct?" Distinguish two-way-door decisions (optimize for speed, learn from acting) vs. one-way-door decisions (optimize for reversibility and diligence). Explicitly name risk accepted: "I accepted the risk of X because the cost of inaction exceeded the cost of a potential failure."
+
+- **Tradeoff articulation.** The core tradeoffs every senior leader navigates: Speed vs. Quality, Autonomy vs. Alignment, Innovation vs. Stability, Short-term vs. Long-term, Business vs. Engineering. Panels want *tradeoff visibility* (did you see options?), *articulation* (can you explain the tension?), and *reasoning* (why did you choose your side?). A policy answer ("we set aside 20% per sprint for tech debt") is not a judgment answer — panels want the framework behind the policy.
+
+- **Cross-functional maturity has three levels.** Level 1 (Manager): collaboration — meet commitments, good relationships. Level 2 (Director): influence — change minds and shift priorities outside your authority. Level 3 (VP+): alignment — create organizational alignment on complex cross-functional initiatives, resolve conflicts with no clear owner. What signal level do your cross-functional stories show?
+
+- **Emotional regulation under the microscope.** Specific signs of poor regulation: voice pitch rises when challenged, speaking faster under stress, defensive openers ("Well, you have to understand…"), over-justifying when a short answer would suffice, blame-shifting in failure stories. Signs of strong regulation: steady pace, responding to challenge with curiosity ("that's an interesting perspective — can you say more?"), comfortable with silence after answering, proportional response when challenged.
+
 ## Key Questions
 
 **Q: What is the Behavioral Interview Cycle and why does "decoding" matter?**
@@ -71,6 +94,15 @@ Answer framework: The Cultural Assessment lens is where cross-company moves get 
 **Q: How do you make leadership visible in stories as an IC?**
 Answer framework: Leadership for ICs = influencing without authority, mentoring, driving cross-team initiatives, representing the team to stakeholders. Go back through your project stories and *surface* the leadership moments already there: the conversation where you convinced a skeptical manager, the design review you facilitated, the mentoring you did that unstuck a junior engineer. Senior candidates routinely bury these under technical narrative — naming them explicitly is the move.
 
+**Q: What are the 7 stress tests and how should you prepare for them?**
+Answer framework: Name the seven (Decision-Making, Judgment/Tradeoffs, Narrative Compression, Cross-Functional Maturity, Scope Signaling, Strategic/Tactical Fluency, Emotional Regulation). The key insight: instead of memorizing answers to hundreds of potential questions, you prepare for seven evaluation dimensions. Every behavioral question maps to one or more stress tests. Preparation becomes: (1) ensure your stories demonstrate each of the 7, (2) practice compression (90-second cap), (3) practice under challenge pressure to build emotional regulation.
+
+**Q: What is the "Competence-Communication Gap" and why does it cause senior interview failures?**
+Answer framework: Most senior leaders have genuinely done everything being tested — made difficult tradeoffs, navigated complexity, influenced without authority. But they've never practiced articulating those experiences in a way that matches how executive panels pattern-match. The gap isn't about experience; it's about translation. The fix isn't fabrication — it's learning to frame the same real experience using decision-first language, explicit tradeoff articulation, and business-level impact framing.
+
+**Q: How do you spot and fix "reactive narrative structure" in a story?**
+Answer framework: Reactive framing = the story happened to you. Proactive framing = you drove it. Test: does your story start with "When X happened..." or "I recognized that..." or "I decided..."? Reactive stories signal responder identity; proactive stories signal shaper identity. To fix: identify the first decision you made in the situation and start there. Replace "we had to deal with" with "I determined that" and "when the acquisition happened" with "I recognized the acquisition would create..."
+
 ## Summary
 
 The "Decode" step of behavioral interview prep is about understanding what interviewers are *actually* measuring, so you can calibrate stories correctly before you select or deliver them. Interviewers evaluate through three lenses: **Signal Areas** (universal behavioral competencies), **Company Values** (company-specific repackaging of those competencies), and **Cultural Assessment** (unconscious pattern-matching against successful employees). The eight Signal Areas — Scope, Ownership, Ambiguity, Perseverance, Conflict Resolution, Growth, Communication, Leadership — are the scaffold under almost every behavioral question; strong stories hit several of them at once. Company values are usually just different vocabulary for the same signals, with Amazon's 16 Leadership Principles being the notable exception where internal dialect actually matters. Cultural Assessment is the quietest and highest-risk lens, especially when moving between company types (enterprise ↔ Big Tech, startup ↔ incumbent), because you can score correctly on Signals and Values and still get a "wrong fit" result.
@@ -80,6 +112,21 @@ Three question formats require different calibration: **"Tell me about a time…
 For an AI Infra Manager / senior leadership interview, the most load-bearing signals are usually Scope (cross-team programs, platform-scale initiatives), Leadership (influencing without authority, mentoring, driving cross-team delivery), Conflict Resolution (cross-org disagreements with real stakes), and Ambiguity (complex problems without clear requirements). This is the framework that anchors the companion notes [[STAR Method]] (the delivery structure), [[experience/big3question|The Big Three Questions]] (prepared TMAY + favorite project + conflict), and the raw experience catalog in `experience/` which should be classified by signal area before any given interview loop.
 
 ## Key Terms
+
+**Hiring Physics**
+- `hiring physics` · `invisible forces` · `competence-communication gap` · `translation principle` · `mental model of a senior leader`
+
+**Seven Stress Tests**
+- `Decision-Making Under Pressure` · `Judgment & Tradeoff Clarity` · `Narrative Compression` · `Cross-Functional Maturity` · `Scope Signaling` · `Strategic vs. Tactical Fluency` · `Emotional Regulation`
+
+**Decision-Making signals**
+- `decision principles` · `optimize for reversibility` · `two-way-door` · `one-way-door` · `explicitly named risk` · `speed vs. diligence calibration`
+
+**Cross-functional maturity levels**
+- `collaboration` (manager) · `influence` (director) · `alignment` (VP+)
+
+**Five Failure Patterns**
+- `tactical language dominance` · `missing tradeoff articulation` · `scope confusion` · `reactive narrative structure` · `emotional leakage`
 
 **The cycle**
 - `Decode` · `Select` · `Deliver` · `Behavioral Interview Cycle`
@@ -111,3 +158,5 @@ For an AI Infra Manager / senior leadership interview, the most load-bearing sig
 ## Raw Material
 - [[raw_material/management/behavior/Decode - How Interviews Work]]
 - [[Project Worksheet]]
+- [[raw_material/books/senior-hiring-playbook/part1-invisible-forces]]
+- [[raw_material/books/senior-hiring-playbook/part3-seven-stress-tests]]

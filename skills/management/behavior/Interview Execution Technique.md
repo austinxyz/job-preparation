@@ -2,9 +2,9 @@
 title: Interview Execution Technique
 category: management/behavior
 tags: [interview-execution, warm-up, self-introduction, closing-questions, domain-knowledge, coding-interview, team-fit]
-status: draft
+status: in-progress
 priority: high
-last_updated: 2026-05-05
+last_updated: 2026-05-23
 created_from_jd:
 ---
 
@@ -39,6 +39,32 @@ created_from_jd:
 
 ---
 
+### The Four Hiring Physics Forces (Senior-Level Layer)
+
+- **Force 1: Identity Physics — WHO you project as a leader.** Five identity signals panels unconsciously read: (1) *Ownership Identity* — "my role was to..." (task) vs. "I owned the outcome of..." (accountability); (2) *Strategic Identity* — string of accomplishments vs. "the principle I was operating from was..."; (3) *System-Level Identity* — "we fixed the problem" (point solution) vs. "I built a system that prevents this class of problems"; (4) *Emotional Identity* — neutral description of conflict vs. emotional leakage ("it was frustrating"); (5) *Maturity Identity* — "the decision was obvious" vs. "there was genuine tension between X and Y."
+
+- **Force 2: Language Physics — WHAT your word choices signal.** Language reveals thinking in the first 30 seconds of each answer. Three levels: *Tactical* (action verbs: built, deployed, configured — signals IC identity); *Responsibility* (scope markers: I managed, my team, we improved X by Y% — signals mid-level manager); *Decision + Principle* (I decided, the strategic question was, the tension was between X and Y, this enabled — signals executive). The same experience signals completely different seniority based solely on language.
+
+- **Force 3: Culture Physics — WHETHER your style matches this org.** Five cultural dimensions to research and calibrate: *Decision Velocity* (fast startup vs. deliberate enterprise), *Conflict Norms* (direct debate vs. consensus-building), *Ownership Expectations* (high autonomy vs. collaborative), *Accountability Style* (personal blame-accepting vs. systemic-framing), *Communication Maturity* (polished/structured vs. casual/direct). Culture mismatch causes "great background but wrong fit" rejections that feel inexplicable.
+
+- **Force 4: Pressure Physics — HOW you perform under stress.** Four components: (1) *Emotional Regulation* — no voice pitch changes, no defensive language, no over-justification; (2) *Cognitive Compression* — answers get shorter and crisper under time pressure, not longer; (3) *Clarity Maintenance* — structure doesn't collapse when challenged; (4) *Executive Tone* — language stays at decision/principle level even when tired. If strategic language requires effort rather than being your default, panels notice under pressure.
+
+- **Building pressure stability.** Practice under realistic pressure conditions: timed answers, interruptions, deliberate pushback, skeptical follow-ups. It's a trainable skill. The biggest gap for candidates with strong experience is that they haven't practiced articulating under pressure.
+
+---
+
+### IPOS: Interview Physics Operating System
+
+- **IPOS preparation checklist — use before every interview loop.** Identity OS: clear leadership thesis, through-line across career, 2-3 signature strengths with evidence, growth edges framed constructively, Executive Narrative memorized. Language OS: tactical patterns identified and replaced with decision language, tradeoffs articulate naturally, business impact connection habitual. Culture OS: target company's decision velocity researched, conflict norms researched, story selection calibrated to culture. Pressure OS: challenging questions anticipated, RAPID responses prepared, practiced under realistic pressure (timed, interrupted, challenged).
+
+- **Pressure Inoculation Protocol (8-week build).** Week 1-2: Foundation — 1 answer/day from the 40-question drill, 90-second max, focus on decision-first framing. Week 3-4: Time Pressure — 60-second limit, random question selection. Week 5-6: Challenge Pressure — practice with a partner who interrupts and expresses skepticism. Week 7-8: Full Simulation — 45-60 min video mock, no notes, business attire, specific debrief on all 7 stress tests. *Signs you're ready:* can answer any question in 90 seconds without feeling rushed; pushback makes you curious, not defensive; language stays at decision level even under pressure.
+
+- **The 40-question drill.** Organized into 4 categories of 10: Decision-Making, Cross-Functional Leadership, Narrative Compression, Execution & Accountability. See `raw_material/books/senior-hiring-playbook/part5-operating-system-toolkit.md` for the full list. Target: 90-second answer for each, recorded and self-reviewed.
+
+- **In-the-moment pressure techniques.** *The pause:* take a breath before answering a challenging question — silence beats filler. *The reframe:* if you feel defensive, ask "what's the legitimate concern behind this question?" *The reset:* if an answer isn't going well, stop and say "let me approach this differently." *The ground:* feel your feet on the floor — reduces anxiety through proprioceptive awareness.
+
+---
+
 ## Key Questions
 
 **Q: How do you open a technical interview to create a positive dynamic?**
@@ -59,6 +85,15 @@ Answer framework: Do research first — know the team's charter, recent eng blog
 **Q: How do you communicate "team fit" beyond technical answers?**
 Answer framework: Fit is communicated through behavior, not declarations. Specifically: actively acknowledge good pushback from the interviewer (don't defend every answer), ask follow-up questions on the interviewer's points, narrate trade-offs instead of presenting single answers, and show comfort with "I'm not sure — let me think through this." These behaviors signal collaboration, not just competence.
 
+**Q: What is Identity Physics and how do you project ownership identity?**
+Answer framework: Identity Physics = the leadership character you project through tone, framing, and narrative, independent of your actual content. Ownership identity shows up in how you frame responsibility: "my role was to deploy X" (task ownership) vs. "I owned platform reliability for the organization" (outcome ownership). Check your language: are you describing what you were asked to do, or what you chose to own? "I made the decision to take responsibility for..." projects ownership; "I was assigned to..." projects execution.
+
+**Q: How do you detect and fix tactical language in your own answers?**
+Answer framework: Record yourself answering any question. Flag every action verb (built, configured, deployed, set up) and every "we" in a leadership context. These are tactical language patterns. Upgrade: replace implementation verbs with judgment verbs ("I determined," "I made the call to," "I established"), replace "we had to" with "I decided to," and connect every action to a business outcome ("this enabled," "the organizational impact was"). The fix isn't about lying — it's about the same facts framed at a higher altitude.
+
+**Q: How do you calibrate your presentation to Culture Physics before a senior interview?**
+Answer framework: Research five dimensions before the loop: (1) Decision velocity — startup/high-growth rewards "I made the call quickly with imperfect information"; enterprise rewards "I built consensus." (2) Conflict norms — debate-driven cultures reward direct pushback stories; harmony cultures reward behind-the-scenes influence. (3) Ownership — high-autonomy cultures reward independent bold calls; collaborative cultures reward coalition-building. Match story emphasis to which examples will resonate in this culture. Don't change your experience; change which examples you lead with.
+
 ---
 
 ## Summary
@@ -72,6 +107,24 @@ For senior engineering manager roles specifically, the closing question is under
 ---
 
 ## Key Terms
+
+**Four Hiring Physics Forces**
+- `Identity Physics` · `Language Physics` · `Culture Physics` · `Pressure Physics`
+
+**Identity signals**
+- `Ownership Identity` · `Strategic Identity` · `System-Level Identity` · `Emotional Identity` · `Maturity Identity`
+- `outcome ownership` · `task ownership` · `point solution` · `scalable system`
+
+**Language levels**
+- `Tactical Language` · `Responsibility Language` · `Decision + Principle Language`
+- `judgment verbs` · `decision-first framing` · `principle articulation` · `business connection`
+
+**Culture Physics dimensions**
+- `Decision Velocity` · `Conflict Norms` · `Ownership Expectations` · `Accountability Style` · `Communication Maturity`
+
+**Pressure stability components**
+- `Emotional Regulation` · `Cognitive Compression` · `Clarity Maintenance` · `Executive Tone`
+- `pressure inoculation` · `challenge pressure` · `time pressure`
 
 **Execution phases**
 - `warm-up` · `self-introduction` · `coding session` · `domain knowledge` · `closing`
@@ -95,3 +148,5 @@ For senior engineering manager roles specifically, the closing question is under
 
 ## Raw Material
 - [[raw_material/methodology/Interview Guide - Lisa Li]]
+- [[raw_material/books/senior-hiring-playbook/part2-four-physics-forces]]
+- [[raw_material/books/senior-hiring-playbook/part5-operating-system-toolkit]]

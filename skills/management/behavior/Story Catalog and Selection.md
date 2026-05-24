@@ -2,9 +2,9 @@
 title: Story Catalog and Selection
 category: management/behavior
 tags: [behavioral-interview, story-catalog, core-story, selection-criteria, scope, relevance, uniqueness, recency, menu-technique, values-questions, hypothetical-questions]
-status: draft
+status: in-progress
 priority: high
-last_updated: 2026-04-17
+last_updated: 2026-05-23
 created_from_jd:
 ---
 
@@ -47,6 +47,18 @@ created_from_jd:
 
 - **Hypotheticals get clarifying questions + pattern-matching.** Ask 1–2 *meaningful* clarifying questions — ones that would genuinely change your approach ("B2B or B2C?" "Do I have hiring authority?" "Who are the key decision-makers?"). Poor clarifying questions: too basic, too numerous, or deflecting. Then pattern-match: abstract the core tension (e.g., "project behind schedule" = resource/time/scope tension), scan experience for similar tensions, extract transferable principles, and ground the answer with a related real story from your catalog.
 
+### Failure Modes by Level (from Hiring Physics research)
+
+- **Staff/Principal → Director: Three failure modes.** (1) *Technical Identity Lock* — "my biggest accomplishment was designing our event-driven architecture at 99.99% uptime." Fix: "the strategic question was whether our architecture could support 10x growth without 10x infrastructure cost." Reframe technical work as business decisions. (2) *Missing Influence Evidence* — "I influenced the team to adopt TypeScript by building a proof of concept." Fix: prepare explicit influence stories with a business case, org alignment, and multi-team execution thread. (3) *Scope Ceiling* — stories describe team/project-level impact. Fix: use the Scope Ladder; upgrade key stories to system-level before the loop.
+
+- **Senior Manager → Director: Three failure modes.** (1) *Team-Centric Framing* — "I'm proud of the team culture I've built." Fix: reframe around org contribution — "I identified that engineering culture variance across teams was creating cross-team friction. I established practices adopted across three teams by demonstrating results, not mandating." (2) *Process Over Judgment* — "we have a quarterly review process for technical debt." Fix: show the judgment behind the process — "the process surfaces candidates; my judgment determines priority based on three criteria: velocity impact, risk concentration, and optionality cost." (3) *Missing Strategic Connection* — every accomplishment story needs a sentence connecting to business strategy ("this project mattered because...").
+
+- **Director → VP: Three failure modes.** (1) *Functional Silo* — "I've built a strong platform org — 50 engineers, clear roadmap." Fix: "I transformed platform from a cost center to a strategic capability. Revenue-per-engineer increased 30% over two years." (2) *Manager of Managers Identity* — "I oversee four teams with six managers; I develop my managers." Fix: "I'm accountable for platform reliability and developer productivity — the managers and teams are how I deliver on that accountability." (3) *Insufficient Executive Presence* — communication style of a Senior Manager in a VP interview. Fix: practice, not awareness. Record and compare to executives you admire. Work with a coach or mentor.
+
+- **Pre-interview preparation: three phases.** *Phase 1 (Foundation, ongoing):* Build story library (10-15 stories), develop Executive Narrative, identify your failure modes, start pressure inoculation. *Phase 2 (Company-specific, 1-2 weeks before):* Culture research on five dimensions, interviewer research per person, story selection (5-7 active rotation), anticipate challenges with RAPID responses. *Phase 3 (Final, 48-72 hours before):* Full mock interview, prepare 3-5 tailored questions, logistics, then *stop preparing* — over-preparation creates anxiety.
+
+- **Strategic questions to ask interviewers (senior-level).** For hiring managers: "What does success look like at 6 months? At 18 months?" / "What's the hardest part of this role not obvious from the JD?" / "What's the most important decision this role will make in the next year?" For executive interviewers: "What's the biggest strategic challenge facing engineering right now?" / "What do you wish engineering did differently?" For peer interviewers: "How do decisions get made when your function and this one disagree?" Avoid generic questions ("what does a typical day look like?") — they signal preparation laziness.
+
 ## Key Questions
 
 **Q: How did you prepare your story catalog for this interview loop?**
@@ -73,6 +85,12 @@ Answer framework: Ask 1–2 clarifying questions that would actually change the 
 **Q: You've been asked about a major leadership initiative but you've only contributed to large projects, not led them. How do you respond?**
 Answer framework: Reframe, don't fabricate. Pick the largest initiative you contributed to and be explicit about your actual role — "The senior engineer led the migration; I owned the proof-of-concept on the communication pattern that the team ultimately adopted." Explain what you *did* lead even inside the bigger initiative. If genuinely nothing fits, pivot to hypothetical framing: "I haven't led at that scale yet, but here's how I'd approach it based on [nearest experience]." Never lie.
 
+**Q: What are the failure modes for a Director → VP interview and how do you guard against them?**
+Answer framework: Three specific failure modes: (1) Functional Silo — describing your org as strong (50 engineers, clear roadmap) rather than framing your contribution as business impact ("transformed platform from cost center to strategic capability; revenue-per-engineer up 30%"). (2) Manager of Managers Identity — describing who you oversee rather than what you're accountable for ("I'm accountable for platform reliability and developer productivity — the org structure is how I deliver that"). (3) Insufficient Executive Presence — communication style doesn't match VP register under pressure. This requires practice, not just awareness.
+
+**Q: How should you structure your preparation in the 72 hours before a senior interview loop?**
+Answer framework: Phase 3 is three steps + one stop. Step 1: full mock interview under realistic conditions (video, business attire, no notes, 45-60 min, specific debrief). Step 2: prepare 3-5 tailored questions for each interviewer that show strategic thinking and genuine research — not generic questions. Step 3: confirm logistics, test technology. Then: *stop preparing*. Review your Executive Narrative, active story rotation, and RAPID responses for likely challenges, then close the notes. Confidence comes from preparation already done; over-preparation at the end creates anxiety, not readiness.
+
 ## Summary
 
 The Story Catalog is the second step of the Decode → Select → Deliver cycle — it exists so that in-interview recall is a pointer lookup, not a search through your career, freeing working memory for the parts of the interview that actually need it (reading the interviewer, structuring responses, managing impression). A well-built catalog has two layers: 3–5 **Core stories** representing peak, multi-signal capability (the stories you'd lead with if you had 5 minutes with the hiring manager), and 5–7 **Additional stories** filling coverage gaps and providing rotation variety. Journaling is the surfacing technique — writing through five memory-trigger categories (high-impact projects, challenging situations, leadership moments, learning experiences, career transitions) reveals which projects keep reappearing, which are your cores. Gaps are then filled by walking the eight signal areas (Scope, Ownership, Ambiguity, Perseverance, Conflict Resolution, Growth, Communication, Leadership) with discovery questions per area. When stories are hard to recall, memory-trigger tactics include digging through career artifacts (self-reviews, calendars, PRDs, commit messages), interviewing former coworkers, and sensory triggers (work locations, music, photos from the period).
@@ -82,6 +100,18 @@ In-interview selection runs a deliberate priority: **Scope → Relevance → Uni
 Two question types break the "pick a story" pattern and need their own handling. **Values questions** ("What's your approach to X?") require a generalized framework — 2–3 named variations with a one-line rationale for each — anchored immediately afterward with a concrete example from your catalog. Frameworks can be constructed on the fly: ask "what varies?" (stakeholders, time, resources, risk), pick 2–3 variations, name each, add one insight. **Hypotheticals** ("What would you do if…") get 1–2 *meaningful* clarifying questions (ones that would actually change the approach, not deflection), followed by pattern-matching — abstract the core tension, scan past experience for similar tensions, extract transferable principles, and ground with a real story from the same tension category. For an AI Infra Manager loop, this catalog-selection discipline pairs with [[CARL Framework and Story Delivery]] for the delivery step and [[Big Three Questions — My Prepared Answers]] for the three pre-prepared flagship responses (TMAY, favorite project, conflict).
 
 ## Key Terms
+
+**Failure modes by level**
+- `Technical Identity Lock` · `Missing Influence Evidence` · `Scope Ceiling` (Staff→Director)
+- `Team-Centric Framing` · `Process Over Judgment` · `Missing Strategic Connection` (Sr Mgr→Director)
+- `Functional Silo` · `Manager of Managers Identity` · `Insufficient Executive Presence` (Director→VP)
+
+**Preparation phases**
+- `Phase 1: Foundation` · `Phase 2: Company-specific` · `Phase 3: Final`
+- `story library (10-15)` · `active rotation (5-7)` · `full mock simulation`
+
+**Strategic questions by audience**
+- `hiring manager questions` · `executive interviewer questions` · `peer interviewer questions`
 
 **Catalog structure**
 - `Core stories` · `Additional stories` · `3–5 cores` · `5–7 additional` · `multi-signal story` · `coverage gaps`
@@ -121,3 +151,4 @@ Two question types break the "pick a story" pattern and need their own handling.
 
 ## Raw Material
 - [[raw_material/management/behavior/Select - Choosing Responses]]
+- [[raw_material/books/senior-hiring-playbook/part6-failure-modes-templates]]
