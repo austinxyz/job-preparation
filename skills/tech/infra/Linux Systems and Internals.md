@@ -21,7 +21,7 @@ tags:
   - triage
 status: draft
 priority: high
-last_updated: 2026-05-24
+last_updated: 2026-05-25
 created_from_jd: "[[jobs/Cloud Leader - RD & SRE - TikTok]]"
 ---
 
@@ -242,6 +242,189 @@ ls -la /var/log/pods/<pod-uid>/
 | `net.ipv4.ip_local_port_range` | 临时端口范围 |
 | `net.ipv4.tcp_tw_reuse` | 复用TIME_WAIT socket |
 
+---
+
+### CPU Performance Debugging
+
+**CPU使用率分类（`vmstat 1` / `top` 核心字段）**
+
+| 字段 | 含义 | 高→说明 |
+|------|------|---------|
+| `us` | 用户态CPU | 应用代码热点，找函数 |
+| `sy` | 内核态CPU | 大量syscall（I/O、锁、fork） |
+| `wa` | I/O wait | 不是CPU问题，是磁盘/网络瓶颈 |
+| `st` | stolen（云VM） | 宿主机资源竞争，换机型或实例类型 |
+
+**工具链（由粗到精）**
+
+```bash
+# 1. 系统级定位
+top -d 1              # 找高CPU进程（P键排序）
+htop                  # 多核视图，更直观
+mpstat -P ALL 1       # 每个CPU核独立使用率（找热点核）
+vmstat 1              # us/sy/wa/st整体分布
+
+# 2. 进程级定位
+pidstat -u 1 -p <pid>     # 进程的us/sy分解，1秒采样
+strace -p <pid> -c        # 统计syscall分布和耗时（-c汇总）
+strace -p <pid> -T -e trace=file  # 实时看文件相关syscall耗时
+
+# 3. 函数级定位（perf）
+perf top -p <pid>                         # 实时热点函数
+perf record -g -p <pid> sleep 30          # 采样30秒带调用栈
+perf report --stdio                        # 分析热点函数树
+# 火焰图：perf record → perf script → flamegraph.pl → svg
+```
+
+**K8s CPU Throttling（最容易被忽视的陷阱）**
+
+- 症状：`kubectl top pod` CPU < limit，但P99延迟很高，P50正常
+- 原因：cgroup CPU quota周期性耗尽 → 进程在该周期内完全停止运行
+- 诊断：
+
+```bash
+# 在节点上找pod的cgroup路径
+cat /sys/fs/cgroup/cpu/kubepods/burstable/<pod-uid>/<container-id>/cpu.stat
+# 看 nr_throttled（throttle次数）和 throttled_time（纳秒）
+# nr_throttled 非0 = 存在throttling
+```
+
+- 处理：提高CPU limit；或对latency-sensitive服务**不设CPU limit**（throttling比无limit更伤延迟）
+
+---
+
+### Memory Debugging
+
+**内存概念辨析**
+
+| 指标 | 含义 | 看哪里 |
+|------|------|--------|
+| `VSZ` | 虚拟内存大小（含mmap、未分配） | 通常虚高，无意义 |
+| `RSS` | 实际占用物理内存（含共享库） | `/proc/PID/status` VmRSS |
+| `PSS` | RSS按比例分摊共享内存 | `smem` 命令 |
+| `USS` | 进程独占的物理内存 | 内存泄露追踪最准确的指标 |
+
+**工具链**
+
+```bash
+# 系统级
+free -h                          # total/used/available
+# MemAvailable比MemFree更准：包含可回收的page cache
+cat /proc/meminfo | grep -E "MemAvailable|Slab|SwapUsed"
+vmstat 1                         # si/so: swap in/out，非0就是问题
+
+# 进程级
+cat /proc/<pid>/status | grep -i vm    # VmRSS, VmSize, VmPeak
+pmap -x <pid>                          # 内存映射详情（每个段RSS）
+smem -s uss -r | head -20              # 按USS排序，找内存大户
+
+# 内存泄露检测
+watch -n 10 'ps -p <pid> -o rss='     # 观察RSS是否持续增长（10秒采样）
+```
+
+**OOMKill排查**
+
+```bash
+# 系统层面
+dmesg | grep -E "oom|Out of memory|Killed"
+journalctl -k --since "1 hour ago" | grep -i oom
+
+# K8s层面
+kubectl describe pod <pod> | grep -A5 "Last State"   # OOMKilled + exit code 137
+kubectl get events --field-selector reason=OOMKilling
+
+# oom_score：越高越先被杀（0~1000）
+cat /proc/<pid>/oom_score
+# K8s QoS对应的oom_score_adj：
+# Guaranteed = -997（最不容易被杀）
+# Burstable   = 2~999（按内存使用比例）
+# BestEffort  = 1000（最先被杀）
+```
+
+**K8s内存保障机制**
+
+- **memory.limit** → 触发OOMKill（cgroup级别，容器内的进程被SIGKILL）
+- **Node内存压力** → kubelet Eviction（驱逐顺序：BestEffort → Burstable → Guaranteed）
+- **防御**：request设合理值（调度依据）；limit不要设太低（会频繁OOMKill）；监控`container_memory_working_set_bytes` vs limit的比值
+
+---
+
+### Network Performance Debugging
+
+**连接状态分析（`ss` 命令）**
+
+```bash
+ss -s                    # 连接数汇总（各状态总数）
+ss -tunap                # 所有连接详情（-t tcp -u udp -n numeric -a all -p pid）
+ss -tan | awk '{print $1}' | sort | uniq -c | sort -rn
+# TIME_WAIT多：高并发短连接 → 考虑长连接或tcp_tw_reuse
+# CLOSE_WAIT多：应用bug，对端关闭后本端未调用close()，连接泄露
+```
+
+**延迟分析**
+
+```bash
+# HTTP请求各阶段耗时
+curl -w "\ndns:%{time_namelookup}s  connect:%{time_connect}s  ttfb:%{time_starttransfer}s  total:%{time_total}s\n" \
+     -o /dev/null -s https://api.example.com
+# dns: DNS解析时间（高→ndots:5或DNS服务慢）
+# connect: TCP三次握手时间（高→网络延迟）
+# ttfb: Time to First Byte（高→服务端处理慢）
+
+# 路径追踪
+mtr --report <host>          # 逐跳延迟+丢包（比traceroute实时）
+traceroute -n <host>         # 路径跳数
+```
+
+**流量分析**
+
+```bash
+iftop -i eth0 -n             # 实时流量by连接（-n不反解DNS）
+nethogs eth0                 # 实时流量by进程（找流量大户）
+sar -n DEV 1                 # 网络接口收发统计（rxkB/s, txkB/s）
+```
+
+**抓包**
+
+```bash
+tcpdump -i eth0 -n port 8080                  # 抓指定端口
+tcpdump -i any host <ip> -w /tmp/cap.pcap     # 抓所有接口，保存文件
+tcpdump -i any 'tcp port 53'                  # 抓DNS
+# 过滤SYN重传（找连接建立问题）
+tcpdump -i eth0 'tcp[tcpflags] & tcp-syn != 0'
+```
+
+**带宽测试**
+
+```bash
+# 服务端
+iperf3 -s -p 5201
+# 客户端
+iperf3 -c <server-ip> -p 5201 -t 30 -P 4    # -P 4: 4条并行流
+# 结果看 sender/receiver Gbits/sec
+```
+
+**K8s网络场景排查**
+
+```bash
+# Pod能否到外网
+kubectl exec <pod> -- ping -c3 8.8.8.8
+kubectl exec <pod> -- curl -I --max-time 5 http://google.com
+
+# Service访问不通的排查顺序
+kubectl get endpoints <svc>                           # Pod Ready?
+kubectl exec <pod> -- curl <pod-ip>:<port>            # 绕过Service直连Pod
+kubectl exec <pod> -- curl <cluster-ip>:<port>        # 通过ClusterIP
+iptables -t nat -L -n | grep <cluster-ip>             # kube-proxy规则存在?
+kubectl logs -n kube-system -l k8s-app=kube-dns       # CoreDNS日志
+
+# 节点间网络（CNI问题）
+# 在pod里ping另一个节点上的pod
+kubectl exec <pod-a> -- ping <pod-b-ip>
+# 如果不通：检查CNI插件状态
+kubectl get pods -n kube-system | grep -E "calico|cilium|flannel"
+```
+
 ## Key Questions
 
 **Q: "No space left on device"但磁盘空间没满，怎么排查？**
@@ -267,6 +450,21 @@ Answer framework: 默认emptyDir = 节点磁盘上的目录，受`ephemeral-stor
 
 **Q: 如何诊断K8s容器的I/O问题？**
 Answer framework: (1) `kubectl top pod`看CPU/内存，但I/O不直接显示 → (2) `kubectl exec`进容器用`iostat -xz 1`看I/O wait和await → (3) 在节点上`iotop -o`找高I/O进程，定位到容器 → (4) 检查是overlayFS upper层写放大（CoW开销）、日志写入过频、还是PV挂载的后端慢 → (5) 如果是overlayFS CoW问题：把频繁写的目录挂载为emptyDir或PV，绕开overlayFS。
+
+**Q: 线上服务CPU使用率突然飙高，怎么排查？**
+Answer framework: (1) `top` 先看是us还是sy高 — us高说明应用代码热点，sy高说明syscall密集 → (2) `pidstat -u 1 -p <pid>` 确认是哪个进程 → (3) us高：`perf top -p <pid>` 看热点函数，或 `perf record -g` 生成火焰图，定位热点 → (4) sy高：`strace -p <pid> -c` 看哪个syscall最耗时，通常是频繁write小buffer（可以合并）或大量fork/clone → (5) 如果wa高（I/O wait）：不是CPU问题，转向磁盘I/O排查。K8s里还要检查是否CPU throttling（`cpu.stat`里`nr_throttled`非0）。
+> 中文提示：us高找函数（perf），sy高找syscall（strace），wa高不是CPU问题，st高换宿主机
+
+**Q: 容器内存持续增长，怎么判断是内存泄露还是正常缓存？**
+Answer framework: 关键区分指标是`working_set_bytes`（不含可回收page cache）vs `rss`（含共享内存）→ 用`watch -n 10 'ps -p <pid> -o rss='`观察RSS是否单调递增且不回落 → 如果RSS持续增长且进程没有主动缓存数据，是内存泄露 → 工具：`smem`看USS（进程独占内存），`pmap -x <pid>`看各段的RSS，比对多个时间点的smaps文件 → K8s里看`container_memory_working_set_bytes`指标vs memory limit的比值，超过80%是警戒线。
+> 中文提示：RSS单调递增且不回落 = 泄露嫌疑；USS = 独占物理内存（最准）；page cache会在内存压力下自动回收不算泄露
+
+**Q: 生产环境TCP连接建立失败，怎么排查？**
+Answer framework: (1) `ss -s` 看连接数总量，`ss -tan | grep SYN_RECV`看半连接队列积压 → (2) `netstat -s | grep "SYN to LISTEN"` 看SYN丢包统计 → (3) 半连接（SYN）队列满：调`net.ipv4.tcp_max_syn_backlog`；全连接（accept）队列满：调`net.core.somaxconn`并同时修改应用listen backlog → (4) 用`tcpdump`抓SYN包验证是否到达服务端 → (5) K8s里还要检查Service的endpoint是否ready，以及iptables/IPVS规则是否正确。
+> 中文提示：SYN_RECV积压 = 半连接队列满；TIME_WAIT多 = 短连接高并发；CLOSE_WAIT多 = 应用bug
+
+**Q: 两个Pod之间网络不通，排查步骤？**
+Answer framework: (1) 先排除DNS：`kubectl exec <pod> -- nslookup <svc>` → (2) 用ClusterIP直接curl：`kubectl exec <pod> -- curl <cluster-ip>:<port>` → (3) 用Pod IP直接curl（绕过Service）：`kubectl exec <pod> -- curl <pod-ip>:<port>` → (4) 如果ClusterIP不通但PodIP通：kube-proxy问题，检查iptables规则 → (5) 如果PodIP也不通：CNI问题，检查CNI组件状态（`kubectl get pods -n kube-system`）、两节点间网络路由、NetworkPolicy是否误封 → (6) 抓包：`tcpdump -i any host <pod-ip>`在源节点和目标节点同时抓包对比。
 
 ## Summary
 
@@ -307,6 +505,26 @@ Linux文件系统和内核机制是K8s infra面试的核心基础，面试官通
 **K8s FS integration**
 - `emptyDir` · `medium: Memory` · `hostPath` · `ephemeral-storage limit`
 - `CSI driver` · `PersistentVolume` · `bind mount` · `inotify`
+
+**CPU debugging**
+- `us / sy / wa / st` · `vmstat` · `mpstat -P ALL` · `pidstat -u`
+- `perf top` · `perf record -g` · `perf report` · `flame graph`
+- `strace -c` · `strace -T` · `cpu.stat` · `nr_throttled` · `throttled_time`
+- `CPU limit throttling` · `leave CPU limit unset for latency-sensitive`
+
+**Memory debugging**
+- `VSZ` · `RSS` · `PSS` · `USS` · `VmRSS` · `smem` · `pmap -x`
+- `MemAvailable` · `Slab` · `working_set_bytes`
+- `OOMKill` · `exit code 137` · `oom_score` · `oom_score_adj`
+- `memory.limit` · `BestEffort(1000)` · `Guaranteed(-997)`
+- `dmesg | grep oom` · `watch rss`
+
+**Network debugging**
+- `ss -tunap` · `ss -s` · `TIME_WAIT` · `CLOSE_WAIT` · `SYN_RECV`
+- `mtr` · `traceroute` · `tcpdump` · `iperf3` · `nethogs` · `iftop`
+- `curl -w time_namelookup/time_connect/time_starttransfer`
+- `net.ipv4.tcp_max_syn_backlog` · `net.core.somaxconn`
+- `listen backlog` · `accept queue` · `SYN queue`
 
 **Kernel params**
 - `vm.swappiness` · `vm.dirty_ratio` · `fs.file-max` · `net.core.somaxconn` · `net.ipv4.tcp_tw_reuse`
