@@ -4,7 +4,7 @@ category: tech/infra
 tags: [k8s, container-orchestration, scheduling, pods, deployments, statefulset, rbac, hpa, pv, pvc]
 status: in-progress
 priority: high
-last_updated: 2026-04-10
+last_updated: 2026-05-24
 created_from_jd:
 ---
 
@@ -117,6 +117,62 @@ created_from_jd:
 - Control plane isolation: without APF, a noisy tenant's workload can degrade the API Server for all tenants. APF FlowSchemas per namespace/tenant are the mitigation.
 - NetworkPolicy is mandatory for namespace-level multi-tenancy: without it, Pods in one namespace can reach Pods in any other by default.
 
+**Kubernetes Networking — CNI, Services, DNS**
+
+- **Flat network model**: every Pod gets a unique cluster-wide routable IP; no NAT between Pods. CNI plugins implement this model by wiring up Pod network namespaces on each node.
+
+- **CNI plugins — comparison**:
+
+  | Plugin | Mechanism | NetworkPolicy | Notes |
+  |--------|-----------|--------------|-------|
+  | **Flannel** | VXLAN overlay | No | Simplest; no policy support; good for dev |
+  | **Calico** | BGP (no overlay by default) | Yes | Best performance; widely used in prod |
+  | **Cilium** | eBPF (replaces kube-proxy) | Yes | Best observability + performance; eliminates iptables entirely |
+  | **Weave** | Mesh overlay | Yes | Simple setup; lower throughput |
+
+- **Pod-to-Pod packet path**:
+  - Same node: Pod → veth pair → Linux bridge (`cbr0`) → destination Pod veth → Pod
+  - Cross-node: Pod → veth → bridge → CNI plugin (VXLAN encapsulation or BGP route advertisement) → destination node bridge → destination Pod veth → Pod
+
+- **Service types**:
+
+  | Type | Reachable From | Use Case |
+  |------|---------------|----------|
+  | **ClusterIP** | Cluster-internal only | Default; Pod-to-Service within cluster |
+  | **NodePort** | NodeIP:Port from outside | Dev/test; port exposed on every node |
+  | **LoadBalancer** | Cloud LB with external IP | Production external traffic (cloud only) |
+  | **ExternalName** | DNS CNAME alias | Route to external service by DNS name |
+
+- **kube-proxy — iptables vs IPVS**:
+  - iptables: sequential rule traversal — O(n) per packet. Degrades beyond ~1000 Services. Simple to debug with `iptables -t nat -L`.
+  - IPVS: hash table lookup — O(1) regardless of Service count. Required at scale (1000+ Services). Supports multiple LB algorithms (round-robin, least-conn, etc.). Enable with `--proxy-mode=ipvs`.
+
+- **CoreDNS and the ndots:5 problem**:
+  - Every Pod's `/etc/resolv.conf` has `ndots:5`. Any hostname with fewer than 5 dots triggers the search list — K8s tries `<name>.default.svc.cluster.local`, `<name>.svc.cluster.local`, `<name>.cluster.local`, etc., before resolving the bare name.
+  - Impact: a query to `api.example.com` (3 dots) generates 4–5 DNS lookups before resolving, adding ~5–20ms per external call.
+  - Fixes: use fully-qualified names with a trailing dot (`api.example.com.`), reduce `ndots` per pod via `dnsConfig.options`, or deploy NodeLocal DNSCache as a DaemonSet to cache on each node.
+  - Headless Services (`clusterIP: None`): DNS returns the Pod IPs directly instead of a VIP; used by StatefulSets so each Pod is individually addressable (`pod-0.svc.ns.svc.cluster.local`).
+
+- **NetworkPolicy**: L3/L4 firewall between Pods. Default behavior is allow-all until a NetworkPolicy selects a Pod. Best practice: deploy a default-deny-all ingress policy per namespace, then add explicit allow rules. Enforcement is CNI-dependent — Flannel does not enforce NetworkPolicy; Calico and Cilium do.
+
+- **Network troubleshooting commands**:
+  ```bash
+  # Pod can't reach external internet
+  kubectl exec <pod> -- nslookup google.com         # DNS resolution
+  kubectl exec <pod> -- ip route                     # routing table
+  iptables -t nat -L POSTROUTING -n -v               # MASQUERADE rule for pod CIDR
+  
+  # Service intermittently unreachable
+  kubectl get endpoints <svc>                        # confirm ready pods behind service
+  iptables -t nat -L -n | grep <cluster-ip>          # kube-proxy rules present?
+  kubectl logs -n kube-system -l k8s-app=kube-dns    # CoreDNS errors
+  
+  # High latency between services
+  time nslookup <service>                            # DNS time — ndots:5 culprit?
+  cat /etc/resolv.conf                               # check ndots setting
+  curl http://svc.namespace.svc.cluster.local        # FQDN bypasses search list
+  ```
+
 ## Key Questions
 
 **Q: What is the difference between a Pod and a container? Why does K8s schedule Pods rather than containers directly?**
@@ -197,6 +253,14 @@ Answer framework: An Operator = CRD (custom object type) + custom Controller (re
 **Q: How would you design multi-tenancy for a shared Kubernetes cluster serving 20 engineering teams?**
 Answer framework: Namespace per team as the baseline (RBAC, ResourceQuota, LimitRange, NetworkPolicy per namespace). APF FlowSchemas per namespace to prevent any team's workload from starving the API Server. NetworkPolicy default-deny within and between namespaces, with explicit allow rules for shared services. For teams with strict isolation requirements (different compliance posture): dedicated node pools via Taint/Toleration. Centralized admission webhooks (OPA/Gatekeeper) enforce org-wide policies (image registry allowlist, required labels, security contexts). Escalation path: namespace-level for most teams, node-level for regulated teams, separate cluster only for highest-sensitivity workloads.
 
+**Q: A cross-service call has intermittent latency spikes of 5 seconds. How do you diagnose it?**
+Answer framework: First suspect DNS — the ndots:5 default causes 4–5 DNS searches before resolving a name with fewer than 5 dots; a timed-out DNS query takes exactly 5 seconds. Check with `time nslookup <service>` and inspect `/etc/resolv.conf`. Fix: use FQDN with trailing dot, reduce `ndots`, or deploy NodeLocal DNSCache. If DNS is clean, check kube-proxy (`kubectl get endpoints` — are pods Ready? `iptables -t nat -L` for stale rules), then CNI overlay overhead (VXLAN adds encapsulation cost vs Calico BGP), then CPU throttling at limits (throttled containers stall for the entire scheduler tick, causing 100ms+ spikes).
+> 中文提示：5秒超时 = DNS timeout，先查 ndots:5；再查 endpoint readiness；再查 CNI overhead；最后查 CPU throttling
+
+**Q: Explain the difference between iptables and IPVS mode for kube-proxy. When must you switch?**
+Answer framework: iptables traverses rules sequentially — O(n) per packet; creating/deleting rules also locks the kernel iptables lock, causing brief stalls during updates. IPVS uses kernel hash tables — O(1) lookup, faster rule updates, and supports multiple LB algorithms (round-robin, least-conn, source-hash). Switch to IPVS when the cluster has 1000+ Services, when iptables programming lag is causing Service endpoint delays during deployments, or when you need non-round-robin LB. Verify with `ipvsadm -Ln` after enabling.
+> 中文提示：iptables O(n) 在 1000+ Service 时规则编程变慢；IPVS hash table O(1) + 更多 LB 算法；ipvsadm -Ln 验证
+
 ## Summary
 
 Kubernetes is the industry standard for container orchestration, and its core value is **declarative infrastructure**: you describe the desired state, K8s converges to it and maintains it continuously. The key to understanding K8s is the **control loop** (observe → diff → act) — this pattern runs through the Scheduler, kubelet, Deployment Controller, HPA, and every other core component.
@@ -207,5 +271,48 @@ From a storage perspective, PV/PVC decouples storage resources from Pod lifecycl
 
 > 面试重点：控制循环思想（observe → diff → act）贯穿所有组件；Readiness Probe 是零停机发布的安全阀；etcd 高可用是集群可靠性上限
 
+## Key Terms
+
+**Core Workload Objects**
+- `Pod` · `Deployment` · `ReplicaSet` · `StatefulSet` · `DaemonSet` · `Job` · `CronJob`
+
+**Scheduling**
+- `Taint` · `Toleration` · `NodeSelector` · `NodeAffinity` · `Filter phase` · `Score phase`
+- `gang scheduling` · `device plugin` · `GPU isolation`
+
+**Availability & Scaling**
+- `HPA` · `VPA` · `Cluster Autoscaler` · `PodDisruptionBudget`
+- `maxSurge` · `maxUnavailable` · `Readiness Probe` · `Liveness Probe` · `initialDelaySeconds`
+- `QoS Guaranteed` · `QoS Burstable` · `QoS BestEffort` · `OOMKill` · `CPU throttling`
+
+**Storage**
+- `PV` · `PVC` · `StorageClass` · `dynamic provisioning` · `LimitRange` · `ResourceQuota`
+
+**Control Plane**
+- `API Server` · `etcd` · `Controller Manager` · `Scheduler` · `kubelet` · `kube-proxy`
+- `Raft quorum` · `read-only degraded mode` · `pod-eviction-timeout`
+- `APF` · `PriorityLevelConfiguration` · `FlowSchema`
+
+**Security & Policy**
+- `RBAC` · `Role` · `ClusterRole` · `RoleBinding` · `ServiceAccount`
+- `MutatingAdmissionWebhook` · `ValidatingAdmissionWebhook` · `OPA/Gatekeeper` · `PodSecurityStandards`
+- `NetworkPolicy` · `default-deny` · `etcd AES encryption`
+
+**Networking**
+- `CNI` · `Flannel` · `Calico` · `Cilium` · `Weave`
+- `veth pair` · `Linux bridge` · `VXLAN overlay` · `BGP route` · `eBPF`
+- `ClusterIP` · `NodePort` · `LoadBalancer` · `ExternalName` · `Headless Service`
+- `kube-proxy` · `iptables mode` · `IPVS mode` · `O(n) vs O(1)`
+- `CoreDNS` · `ndots:5` · `search list` · `FQDN` · `NodeLocal DNSCache`
+- `flat network model` · `no NAT between pods` · `pod-to-pod path`
+
+**Extensibility**
+- `CRD` · `Operator pattern` · `Kubebuilder` · `Operator SDK` · `reconciliation loop`
+
+**Multi-Tenancy**
+- `namespace isolation` · `node pool isolation` · `cluster isolation`
+- `FlowSchema per namespace` · `image registry allowlist`
+
 ## Raw Material
 - [[raw_material/tech/infra/k8s-core]]
+- [[jobs/TikTok/prep/2026-05-29-round1-linux-network-prep]]
