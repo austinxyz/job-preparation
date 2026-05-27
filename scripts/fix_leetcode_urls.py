@@ -105,7 +105,7 @@ for line in lines:
         num = m.group(2)
         current_slug = m.group(3)
         if num in correct_slugs and correct_slugs[num] != current_slug:
-            new_line = m.group(1) + correct_slugs[num] + m.group(4) + '\n' if not line.endswith('\n') else m.group(1) + correct_slugs[num] + m.group(4)
+            new_line = m.group(1) + correct_slugs[num] + m.group(4).rstrip('\n') + '\n'
             new_lines.append(new_line)
             fixed += 1
             print(f"  #{num}: {current_slug} -> {correct_slugs[num]}")
