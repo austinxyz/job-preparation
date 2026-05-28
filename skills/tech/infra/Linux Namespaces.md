@@ -24,14 +24,14 @@ created_from_jd:
 
 **Six Namespace Types（六大类型）**
 
-| Namespace | What It Isolates | Role in Containers |
-|-----------|-----------------|-------------------|
-| **PID** | Process ID space | Container processes start with PID 1; cannot see host processes |
-| **Network** | Network stack (NIC, IP, routing, ports) | Each container has its own IP and network stack, no conflicts |
-| **Mount** | Filesystem mount points | Container sees a filesystem isolated from the host (rootfs) |
-| **UTS** | Hostname and domain name | Container can have its own hostname |
-| **IPC** | Inter-process communication resources (shared memory, semaphores) | IPC is isolated between containers |
-| **User** | User and group IDs | Container root mapped to unprivileged host user (security enhancement) |
+| Namespace   | What It Isolates                                                  | Role in Containers                                                     |
+| ----------- | ----------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| **PID**     | Process ID space                                                  | Container processes start with PID 1; cannot see host processes        |
+| **Network** | Network stack (NIC, IP, routing, ports)                           | Each container has its own IP and network stack, no conflicts          |
+| **Mount**   | Filesystem mount points                                           | Container sees a filesystem isolated from the host (rootfs)            |
+| **UTS**     | Hostname and domain name                                          | Container can have its own hostname                                    |
+| **IPC**     | Inter-process communication resources (shared memory, semaphores) | IPC is isolated between containers                                     |
+| **User**    | User and group IDs                                                | Container root mapped to unprivileged host user (security enhancement) |
 
 **Pod Shares a Network Namespace（Pod 共享 Network Namespace）**
 - All containers in a K8s Pod share the same **Network Namespace**: they share one IP address, ports must not conflict, containers communicate via localhost

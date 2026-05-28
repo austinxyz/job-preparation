@@ -269,40 +269,40 @@ created_from_jd: false
 
 ### Backtracking
 
-| Problem | Key Approach |
-|---------|-------------|
-| [17. Letter Combinations of Phone Number](https://leetcode.com/problems/letter-combinations-of-a-phone-number/) | Backtracking; iterate all letters mapped to each digit （回溯，遍历每个数字映射的所有字母） |
-| [37. Sudoku Solver](https://leetcode.com/problems/sudoku-solver/) | 1D array (i=index/9, j=index%9); try digits, validate row/col/box, recurse （一维数组(i=index/9,j=index%9)，尝试数字，验证行/列/宫，递归） |
-| [39. Combination Sum](https://leetcode.com/problems/combination-sum/) | Backtracking allowing reuse (recurse with same start) （允许复用的回溯（用相同start递归）） |
-| [40. Combination Sum II](https://leetcode.com/problems/combination-sum-ii/) | Sort + skip `nums[i] == nums[i-1]`; each element used once （排序+跳过nums[i]==nums[i-1]，每元素仅用一次） |
-| [46. Permutations](https://leetcode.com/problems/permutations/) | Backtracking with `used` boolean array （回溯+used布尔数组） |
-| [47. Permutations II](https://leetcode.com/problems/permutations-ii/) | Sort + skip `nums[i] == nums[i-1] && !used[i-1]` （排序+跳过nums[i]==nums[i-1]&&!used[i-1]） |
-| [51. N-Queens](https://leetcode.com/problems/n-queens/) | Track column, main diagonal, anti-diagonal sets; place queen per row （追踪列、主对角线、反对角线集合，每行放一个皇后） |
-| [52. N-Queens II](https://leetcode.com/problems/n-queens-ii/) | Same as #51 but count solutions only （同第51题，仅统计方案数） |
-| [77. Combinations](https://leetcode.com/problems/combinations/) | Backtracking with start index ensuring no repeats （回溯+起始下标，避免重复） |
-| [78. Subsets](https://leetcode.com/problems/subsets/) | Backtracking with start index; record every prefix （回溯+起始下标，记录所有前缀） |
-| [79. Word Search](https://leetcode.com/problems/word-search/) | Backtracking on grid; track visited; check boundaries （网格回溯+visited追踪，检查边界） |
-| [89. Gray Code](https://leetcode.com/problems/gray-code/) | Backtracking from 0; change one bit at a time; check if visited （从0回溯，每次变一位，检查是否已访问） |
-| [90. Subsets II](https://leetcode.com/problems/subsets-ii/) | Sort + skip duplicate elements at same recursion depth （排序+同层跳过重复元素） |
-| [93. Restore IP Addresses](https://leetcode.com/problems/restore-ip-addresses/) | Pick 1–3 chars, validate, collect exactly 4 valid segments （选1-3个字符，验证后精确收集4段） |
-| [131. Palindrome Partitioning](https://leetcode.com/problems/palindrome-partitioning/) | Try all substrings from start; add to list if palindrome （尝试从start出发的所有子串，是回文则加入） |
-| [216. Combination Sum III](https://leetcode.com/problems/combination-sum-iii/) | Backtracking with start; exactly k numbers summing to n （回溯+起始；恰好k个数字之和为n） |
-| [301. Remove Invalid Parentheses](https://leetcode.com/problems/remove-invalid-parentheses/) | Try keeping or removing each bracket; prune when leftCount < 0 （尝试保留或删除每个括号，leftCount<0时剪枝） |
-| [473. Matchsticks to Square](https://leetcode.com/problems/matchsticks-to-square/) | Backtracking into 4 equal-sum buckets; bitmask memoization （回溯分配到4个等和桶，超出最优或与前桶相同时剪枝） |
-| [491. Non-Decreasing Subsequences](https://leetcode.com/problems/non-decreasing-subsequences/) | Prune if value < last or already used at this depth （剪枝：值<上一个或本层已用则跳过） |
-| [526. Beautiful Arrangement](https://leetcode.com/problems/beautiful-arrangement/) | Backtracking 1–n; check `start % i == 0 || i % start == 0` （回溯1到n，任一整除条件满足则合法） |
-| [638. Shopping Offers](https://leetcode.com/problems/shopping-offers/) | Backtracking through special offers; compare with non-offer buying （回溯遍历特惠组合，与不用特惠对比） |
-| [784. Letter Case Permutation](https://leetcode.com/problems/letter-case-permutation/) | Branch on uppercase and lowercase for each character （对每个字符分支大小写两种情况） |
-| [967. Numbers With Same Consecutive Differences](https://leetcode.com/problems/numbers-with-same-consecutive-differences/) | Backtracking digit by digit; branch by ±k from last digit （逐位回溯，从末位+/-k分支） |
-| [980. Unique Paths III](https://leetcode.com/problems/unique-paths-iii/) | DFS with `used` grid; count paths visiting all non-obstacle cells （DFS+used网格，统计访问所有非障碍格的路径数） |
-| [996. Number of Squareful Arrays](https://leetcode.com/problems/number-of-squareful-arrays/) | Sort + permutation backtracking; prune if adjacent sum not perfect square （排序+全排列回溯，相邻和非完全平方则剪枝） |
-| [1079. Letter Tile Possibilities](https://leetcode.com/problems/letter-tile-possibilities/) | Sort tiles; backtracking with `used`; prune duplicate tiles （排序拼字块，回溯+used，重复拼块时剪枝） |
-| [1219. Path with Maximum Gold](https://leetcode.com/problems/path-with-maximum-gold/) | DFS with visited set; try all starting cells （DFS+visited集合，尝试所有起点） |
-| [1593. Split String Into Max Unique Substrings](https://leetcode.com/problems/split-a-string-into-the-max-number-of-unique-substrings/) | Backtracking; skip if substring already used; maximize unique count （回溯，子串已出现则跳过，最大化唯一子串数） |
-| [1723. Find Minimum Time to Finish All Jobs](https://leetcode.com/problems/find-minimum-time-to-finish-all-jobs/) | Backtracking k workers; prune if exceeding best or worker load matches previous （回溯k个工人，超最优或工人负载与前相同时剪枝） |
-| [1849. Splitting Into Descending Consecutive Values](https://leetcode.com/problems/splitting-a-string-into-descending-consecutive-values/) | Backtracking; prune if not strictly decreasing by 1 （回溯，不严格递减1时剪枝） |
-| [2305. Fair Distribution of Cookies](https://leetcode.com/problems/fair-distribution-of-cookies/) | Distribute to k children minimizing maximum （分配给k个小朋友，最小化最大值） |
-| [2850. Minimum Moves to Spread Stones](https://leetcode.com/problems/minimum-moves-to-spread-stones-over-grid/) | Backtracking from cells with >1 stone to empty cells; track total steps （从石头>1的格回溯到空格，追踪总步数） |
+| Problem                                                                                                                                    | Key Approach                                                                                                           |
+| ------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------- |
+| [17. Letter Combinations of Phone Number](https://leetcode.com/problems/letter-combinations-of-a-phone-number/)                            | Backtracking; iterate all letters mapped to each digit （回溯，遍历每个数字映射的所有字母）                                              |
+| [37. Sudoku Solver](https://leetcode.com/problems/sudoku-solver/)                                                                          | 1D array (i=index/9, j=index%9); try digits, validate row/col/box, recurse （一维数组(i=index/9,j=index%9)，尝试数字，验证行/列/宫，递归） |
+| [39. Combination Sum](https://leetcode.com/problems/combination-sum/)                                                                      | Backtracking allowing reuse (recurse with same start) （允许复用的回溯（用相同start递归））                                            |
+| [40. Combination Sum II](https://leetcode.com/problems/combination-sum-ii/)                                                                | Sort + skip `nums[i] == nums[i-1]`; each element used once （排序+跳过nums[i]==nums[i-1]，每元素仅用一次）                           |
+| [46. Permutations](https://leetcode.com/problems/permutations/)                                                                            | Backtracking with `used` boolean array （回溯+used布尔数组）                                                                   |
+| [47. Permutations II](https://leetcode.com/problems/permutations-ii/)                                                                      | Sort + skip `nums[i] == nums[i-1] && !used[i-1]` （排序+跳过nums[i]==nums[i-1]&&!used[i-1]）                                 |
+| [51. N-Queens](https://leetcode.com/problems/n-queens/)                                                                                    | Track column, main diagonal, anti-diagonal sets; place queen per row （追踪列、主对角线、反对角线集合，每行放一个皇后）                         |
+| [52. N-Queens II](https://leetcode.com/problems/n-queens-ii/)                                                                              | Same as #51 but count solutions only （同第51题，仅统计方案数）                                                                    |
+| [77. Combinations](https://leetcode.com/problems/combinations/)                                                                            | Backtracking with start index ensuring no repeats （回溯+起始下标，避免重复）                                                       |
+| [78. Subsets](https://leetcode.com/problems/subsets/)                                                                                      | Backtracking with start index; record every prefix （回溯+起始下标，记录所有前缀）                                                    |
+| [79. Word Search](https://leetcode.com/problems/word-search/)                                                                              | Backtracking on grid; track visited; check boundaries （网格回溯+visited追踪，检查边界）                                            |
+| [89. Gray Code](https://leetcode.com/problems/gray-code/)                                                                                  | Backtracking from 0; change one bit at a time; check if visited （从0回溯，每次变一位，检查是否已访问）                                   |
+| [90. Subsets II](https://leetcode.com/problems/subsets-ii/)                                                                                | Sort + skip duplicate elements at same recursion depth （排序+同层跳过重复元素）                                                   |
+| [93. Restore IP Addresses](https://leetcode.com/problems/restore-ip-addresses/)                                                            | Pick 1–3 chars, validate, collect exactly 4 valid segments （选1-3个字符，验证后精确收集4段）                                         |
+| [131. Palindrome Partitioning](https://leetcode.com/problems/palindrome-partitioning/)                                                     | Try all substrings from start; add to list if palindrome （尝试从start出发的所有子串，是回文则加入）                                      |
+| [216. Combination Sum III](https://leetcode.com/problems/combination-sum-iii/)                                                             | Backtracking with start; exactly k numbers summing to n （回溯+起始；恰好k个数字之和为n）                                             |
+| [301. Remove Invalid Parentheses](https://leetcode.com/problems/remove-invalid-parentheses/)                                               | Try keeping or removing each bracket; prune when leftCount < 0 （尝试保留或删除每个括号，leftCount<0时剪枝）                            |
+| [473. Matchsticks to Square](https://leetcode.com/problems/matchsticks-to-square/)                                                         | Backtracking into 4 equal-sum buckets; bitmask memoization （回溯分配到4个等和桶，超出最优或与前桶相同时剪枝）                                  |
+| [491. Non-Decreasing Subsequences](https://leetcode.com/problems/non-decreasing-subsequences/)                                             | Prune if value < last or already used at this depth （剪枝：值<上一个或本层已用则跳过）                                                 |
+| [526. Beautiful Arrangement](https://leetcode.com/problems/beautiful-arrangement/)                                                         | Backtracking 1–n; check `start % i == 0, i % start == 0` （回溯1到n，任一整除条件满足则合法）                                           |
+| [638. Shopping Offers](https://leetcode.com/problems/shopping-offers/)                                                                     | Backtracking through special offers; compare with non-offer buying （回溯遍历特惠组合，与不用特惠对比）                                  |
+| [784. Letter Case Permutation](https://leetcode.com/problems/letter-case-permutation/)                                                     | Branch on uppercase and lowercase for each character （对每个字符分支大小写两种情况）                                                  |
+| [967. Numbers With Same Consecutive Differences](https://leetcode.com/problems/numbers-with-same-consecutive-differences/)                 | Backtracking digit by digit; branch by ±k from last digit （逐位回溯，从末位+/-k分支）                                             |
+| [980. Unique Paths III](https://leetcode.com/problems/unique-paths-iii/)                                                                   | DFS with `used` grid; count paths visiting all non-obstacle cells （DFS+used网格，统计访问所有非障碍格的路径数）                          |
+| [996. Number of Squareful Arrays](https://leetcode.com/problems/number-of-squareful-arrays/)                                               | Sort + permutation backtracking; prune if adjacent sum not perfect square （排序+全排列回溯，相邻和非完全平方则剪枝）                       |
+| [1079. Letter Tile Possibilities](https://leetcode.com/problems/letter-tile-possibilities/)                                                | Sort tiles; backtracking with `used`; prune duplicate tiles （排序拼字块，回溯+used，重复拼块时剪枝）                                    |
+| [1219. Path with Maximum Gold](https://leetcode.com/problems/path-with-maximum-gold/)                                                      | DFS with visited set; try all starting cells （DFS+visited集合，尝试所有起点）                                                    |
+| [1593. Split String Into Max Unique Substrings](https://leetcode.com/problems/split-a-string-into-the-max-number-of-unique-substrings/)    | Backtracking; skip if substring already used; maximize unique count （回溯，子串已出现则跳过，最大化唯一子串数）                             |
+| [1723. Find Minimum Time to Finish All Jobs](https://leetcode.com/problems/find-minimum-time-to-finish-all-jobs/)                          | Backtracking k workers; prune if exceeding best or worker load matches previous （回溯k个工人，超最优或工人负载与前相同时剪枝）               |
+| [1849. Splitting Into Descending Consecutive Values](https://leetcode.com/problems/splitting-a-string-into-descending-consecutive-values/) | Backtracking; prune if not strictly decreasing by 1 （回溯，不严格递减1时剪枝）                                                     |
+| [2305. Fair Distribution of Cookies](https://leetcode.com/problems/fair-distribution-of-cookies/)                                          | Distribute to k children minimizing maximum （分配给k个小朋友，最小化最大值）                                                          |
+| [2850. Minimum Moves to Spread Stones](https://leetcode.com/problems/minimum-moves-to-spread-stones-over-grid/)                            | Backtracking from cells with >1 stone to empty cells; track total steps （从石头>1的格回溯到空格，追踪总步数）                           |
 
 ---
 
