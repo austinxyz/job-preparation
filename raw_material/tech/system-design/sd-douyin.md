@@ -609,4 +609,4 @@ User → API Gateway → Recommendation (Recall + Ranking, Top K)
 
 2. **Cover non-functional requirements at close.** Summarize how 99.99% availability is achieved: multi-AZ, DB replicas, CDN redundancy.
 
-3. **Give the full Cache Stampede answer.** If you mention Circuit Breaker, also mention Request Coalescing (singleflight) — one goroutine/thread hits DB, rest wait — lighter weight and more direct.
+3. **Give the full Cache Stampede answer.** If you mention Circuit Breaker, also mention Request Coalescing (singleflight) — one goroutine/thread hits DB, rest wait — lighter weight and more direct
