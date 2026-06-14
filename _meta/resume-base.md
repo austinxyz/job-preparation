@@ -2,131 +2,133 @@
 title: Resume Base
 last_updated: 2026-05-05
 ---
+**
 
-# Resume Base
+PROFESSIONAL SUMMARY
 
-> This is the full, unabridged version of your resume content.
-> The jd-analyzer skill uses this file to generate tailored resume suggestions for specific JDs.
-> Keep this file up to date as your experience evolves.
-> Source of truth: https://docs.google.com/document/d/1RukDjAcOnAYLTiWEPgROGNgx3OfqUiWY_E0BOpCaf3I/edit
+  
 
----
+Engineering leader with 20+ years building Platform-as-a-Product systems at hyperscale. Led eBay's private cloud platform, building and operating the infrastructure layer that AWS EKS, GCP GKE, and Azure AKS deliver as managed cloud services at 200+ cluster, 50K node, 2M+ pod scale across 3 regions. Pioneer in AI-augmented engineering: introduced agentic workflows, Design as Code (spec-driven development), and Claude-based tooling that doubled team output and automated 70% of support operations. Proven record building global engineering teams from zero, driving DORA elite-tier performance across 200+ teams, and establishing Platform-as-a-Product culture that eliminates toil and empowers developers to ship with confidence.  
 
-## Austin (Yanzhao) Xu
+PROFESSIONAL EXPERIENCE
 
-*Platform Engineering Leader | Cloud Infrastructure | AI-Native Operations*
+eBay Inc. San Jose, CA
 
-San Jose, CA • (408) 797-7545 • austin.xyz@gmail.com • [LinkedIn](https://www.linkedin.com/in/austin-xyz/) • [Github](https://github.com/austinxyz) • [Blog](https://austinxyz.github.io/blogs/blog) • [Medium](https://medium.com/@austin.xyz)
+Software Development Manager - Cloud Fleet Management, Core Services Sep 2023 - Present
 
----
+  
 
-## Executive Summary
+Led eBay's private cloud platform building and operating what AWS EKS, GCP GKE, and Azure AKS deliver as managed cloud services at scale across 3 regions, serving 200+ internal engineering teams and the infrastructure behind eBay's $74B annual GMV.
 
-Engineering leader with 20+ years of experience building large-scale cloud infrastructure, developer platforms, and global engineering organizations. Most recently led eBay's Cloud Fleet and Application Lifecycle platforms supporting 100+ Kubernetes clusters, 2M+ pods, and 5K+ applications across 3 regions. Proven track record in platform modernization, AI-driven productivity transformation, organizational scaling, and developing senior engineers into technical leaders. Seeking senior engineering leadership roles in platform engineering, infrastructure, cloud, AI infrastructure, or DevOps/SRE.
+  
 
----
+- Pioneered AI-augmented engineering culture at eBay; became top Claude Code adopter across the org. Introduced Design as Code methodology (spec-driven development), validated on real projects before scaling, and deployed MCP-based agentic workflows for incident triage and customer support which doubled team PR throughput and cut production incidents 50%+.
+    
+- Built MCP server enabling autonomous Cloud API calls for incident triage; deployed customer support agent handling 70% of cases autonomously, reducing release failure triage from 1–2 hours to 5 minutes and storage remediation effort by 80%.
+    
+- Architected declarative fleet lifecycle platform using CRD/Controller model (IaC mindset): engineers specify desired state, platform reconciles automatically. Converted bi-annual Kubernetes version upgrades and monthly OS patching from high-risk operations into routine, non-incident events.
+    
+- Led cloud infrastructure workstream for eBay's Engineering Velocity Program, spanning 200+ engineering teams and 5,000+ applications. Established DORA metrics framework company-wide; 65% of applications reached elite-tier deployment targets (on-demand deployment, lead time <1 day, MTTR <1 hour) by 2025.
+    
+- Maintained 99.9%+ API availability across 100+ Kubernetes clusters; reduced monthly incidents from 3–4 to 1–2 through systematic elimination of failure classes, not reactive firefighting.
+    
+- Applied SRE best practices (SLO/SLI, MTTD/MTTR, capacity planning, AZ/region auto-scaling) at managed Kubernetes fleet scale; MTTD ~20 min, MTTR 1–2 hours at steady state.
+    
+- Built engineering teams from zero in Europe and India within 3-month hiring windows per region. Designed AI-assisted hiring workflow (JD templates, structured question banks, debrief rubrics) running consistently across 10+ simultaneous open roles; hired 8+ engineers from a ~200 candidate pipeline.
+    
+- Developed engineers to Staff level through structured ramp programs with explicit success criteria and runbooks. Coached managers and established cross-region alignment processes across US, Shanghai, India, and Europe.  
+      
+    
 
-## Core Strengths
+Software Development Manager - Cloud App Lifecycle Management Feb 2017 - Aug 2023
 
-Platform Engineering • Kubernetes • Cloud Infrastructure • DevOps • SRE • Developer Platforms • AI Productivity • Engineering Management • Organizational Scaling • Hiring • Technical Strategy • Cross-Functional Leadership
+Led global US and Shanghai teams delivering eBay's Kubernetes migration and CI/CD platform,  the largest application migration in eBay's history.
 
----
+  
 
-## Professional Experience
+- Led 10+ person global team (US and Shanghai) to migrate all 5,000+ eBay applications and 1M+ instances from OpenStack to Kubernetes within one year, with zero major service disruptions. Migration approach adopted as eBay's reference model for large-scale platform transitions.
+    
+- Owned CI/CD platform powering 35,000+ deployments/week across 20,000+ application pools; reduced 95th-percentile deployment duration from 4 hours to under 60 minutes for large application pools.
+    
+- Built Federated Deployment Controller supporting AI-based canary rollouts and blue/green deployments with incremental traffic switching; adopted as eBay's standard multi-cluster CD mechanism company-wide.
+    
+- Broke cross-team organizational deadlock between the CD pipeline and cloud security teams using data: 5% of applications had complex security policies blocking velocity for the remaining 95%. Designed a phased resolution proposal; both teams reached consensus within weeks.
+    
+- Built self-healing remediation system leveraging observability signals for automated recovery; led PHX datacenter migration with zero downtime through automated provisioning and progressive rollout.
+    
 
-### eBay Inc. — San Jose, California
+  
 
-**Software Development Manager — Cloud Fleet & Application Lifecycle** | Sep 2023 – Mar 2026
+eBay Inc. (China Centre of Excellence) Shanghai, CN
 
-- Led Cloud Platform organization managing **100+ Kubernetes clusters** and **2M+ pods** across 3 regions, supporting infrastructure behind eBay's **$74B annual GMV** and serving **200+ internal engineering teams** with **99.9%+ API availability**.
-- Delivered AZ and region-aware auto-scaling architecture, maintaining cluster utilization between **40–80%**, significantly reducing resource waste and preventing capacity-driven production incidents.
-- Pioneered AI-native engineering workflows using Claude-based agents and MCP servers; **doubled PR throughput**, reduced production incidents by **50%+**, and automated **70%+ support workflows**.
-- Reduced release triage from **1–2 hours to ~5 minutes** and decreased storage remediation effort by **80%** through AI-assisted diagnostics.
-- Automated cluster provisioning from **1 month to 1 week** for 20+ clusters annually, saving **12+ engineering months per year**.
-- Delivered critical infrastructure for enterprise compliance programs under aggressive legal deadlines, completing multi-thousand namespace migration in under 3 months.
-- Built engineering teams in Europe and India, hired **8+ engineers** from a **200–300 candidate pipeline**, and developed senior engineers to Staff level.
+Software Development Manager - Cloud Feb 2012 - Feb 2017
 
-**Software Development Manager — Cloud Application Lifecycle Management** | Feb 2017 – Sep 2023
+  
 
-- Led global teams across San Jose and Shanghai to migrate **5,000+ applications** and **1M+ instances** from OpenStack to Kubernetes.
-- Architected CI/CD platform supporting **35,000+ deployments per week** across **20,000+ application pools**.
-- Designed multi-cluster deployment orchestration, dependency-aware rolling upgrades, and metrics-driven canary release capabilities.
-- Led zero-downtime regional datacenter migration and built self-healing operational remediation systems.
-- Managed multi-site teams for 6+ years, driving platform roadmap, operational excellence, and leadership development.
+Led 20+ engineers building eBay's internal cloud platforms across three technology generations: VMware (V1), OpenStack (V2), and Docker + Kubernetes (V3).
 
----
+- Built Zebra, eBay's fully automated provisioning system, reducing developer provisioning time from days to under 10 minutes across multi-region, multi-environment deployments for 2,000+ engineers.
+    
+- Designed MongoDB-based Configuration Management System migrating 30+ critical systems; drove eBay China Innovation Program incubating open-source projects that won multiple Skunkworks innovation awards.  
+      
+    
 
-### eBay China Center of Excellence — Shanghai, China
+Technical Lead - Platform & DevEx Tools Jun 2007 - Feb 2012
 
-**Software Development Manager — Cloud Platform** | Feb 2012 – Feb 2017
+  
 
-- Led organization of approximately **20 engineers** building eBay's internal cloud platforms across VMware, OpenStack, Docker, and Kubernetes generations.
-- Built **Zebra**, eBay's fully automated provisioning platform, reducing provisioning time from days to under **10 minutes** for **2,000+ engineers**.
-- Designed MongoDB-based configuration management platform supporting **30+ critical systems**.
-- Led innovation initiatives, open-source incubation, and multiple internal award-winning engineering programs.
+- Built eBay Shanghai's platform developer tools team from zero to 8 engineers in 6 months; delivered IDE tooling, APIs, and SDK platforms improving productivity for 2,000+ engineers.  
+      
+    
 
-**Team Lead — Developer Experience Platform** | Jun 2007 – Feb 2012
+EARLY EXPERIENCE
 
-- Built Shanghai platform developer tools team from **0 to 8 engineers** in 6 months.
-- Delivered internal IDE tooling, APIs, and SDK platforms improving productivity for **2,000+ engineers**.
+Mainet System Inc Shanghai, CN
 
----
+Project Manager & Cloud Architect
 
-### Mainet System Inc. — Shanghai, China
+- Built and led R&D organizations of 50+ engineers; delivered enterprise ERP platforms (CRM, HRM, CMS) for 40+ customers across China, Japan, and Korea.
+    
 
-**Project Manager / Architect** | Apr 2000 – Mar 2007
+  
 
-- Built and led R&D organizations of **50+ engineers** across multiple cities.
-- Delivered enterprise ERP platforms including CRM, HRM, and CMS solutions for **40+ enterprise customers** across China, Japan, and Korea.
-- Established engineering processes, reusable component frameworks, and architecture governance.
+EDUCATION
 
----
+Zhejiang University (ZJU)                                                                                                                              
 
-## Technical Expertise
+Master of Science (MS) in Electrical Engineering & Automation
 
-**Cloud & Infrastructure:** Kubernetes, Docker, OpenStack, GKE, AWS, Service Mesh, Istio, Envoy
+- Top 5% excellence thesis and distinction awards  
+      
+    
 
-**SRE & Operations:** SLO/SLI, Incident Management, Capacity Planning, Auto Scaling/Rebalance
+Zhejiang University (ZJU)                                                                                                                              
 
-**DevOps & CI/CD:** Jenkins, Tekton, GitOps, Deployment Automation
+Bachelor of Science (BS) in Electrical Engineering & Automation   
 
-**Programming:** Go, Java, Python, JavaScript
+  
 
-**Observability:** Prometheus, Grafana, Kibana
+LEADERSHIP & PERSONAL PROJECTS
 
-**Data Platforms:** MySQL, PostgreSQL, MongoDB, Cassandra, Elasticsearch
+- Sports: USTA National Champion & Team Captain, eBay 2023/2024 Pickleball Champion
+    
+- Projects: 10+ side projects with Claude Code including P[ersonal Finance Management System](https://github.com/austinxyz/finance), P[ersonal Growth System](https://github.com/austinxyz/growing), I[nvestment System](https://github.com/austinxyz/rwh-overlay), & M[atch Analysis System](https://github.com/austinxyz/MatchApp)
+    
+- Writing: Engineering blog [https://austinxyz.github.io/blogs/blog](https://austinxyz.github.io/blogs/blog)  | [https://medium.com/@austin.xyz](https://medium.com/@austin.xyz)  
+      
+    
 
-**AI Engineering:** Claude Code, MCP Servers, Spec-Driven Development
+SKILLS & TECHNOLOGIES
 
-**Leadership:** Hiring, Coaching, Performance Management, Global Team Building
+  
 
----
+- Languages & Platforms: Java · Go · Python · JavaScript · Kubernetes · Docker · MySQL · MongoDB · PostgreSQL
+    
+- Cloud & Architecture: GCP / GKE · OpenStack · Hybrid cloud · Microservices · Service Mesh (Istio · Envoy) · Custom K8s extensions (CRDs · Controllers · Operators · Webhooks) · GitOps · ArgoCD · Distributed systems
+    
+- AI & Agentic Workflows: Claude Code · MCP servers · Spec-driven development · LLM integration · Agentic incident triage · AI-augmented engineering
+    
+- Delivery & Operations: CI/CD (Tekton · Jenkins · ArgoCD) · SRE (SLO/SLI · MTTD/MTTR) · DORA metrics · Observability (Prometheus · Grafana · PagerDuty) · Zero-downtime migrations · Agile · Stakeholder management
+    
 
-## Education
-
-**Zhejiang University**, Hangzhou, China
-
-- Master of Science, Electrical Automation — Top 5%; Excellence Thesis Award
-- Bachelor of Science, Electrical Automation — Top 5%; Excellence Distinction
-
----
-
-## Certifications
-
-PMP (Project Management Professional) • Certified ScrumMaster
-
----
-
-## Leadership & Personal Projects
-
-- **Tennis:** USTA national champion, team captain/organizer
-- **Pickleball:** eBay 2023/2024 champion
-- **Side Projects (10+):** [Match analysis](https://github.com/austinxyz/MatchApp), [personal finance](https://github.com/austinxyz/finance), [growing system](https://github.com/austinxyz/growing), [investment system](https://github.com/austinxyz/rwh-overlay) — all built with Claude Code
-- **Writing:** AI-assisted engineering blog at [austinxyz.github.io](https://austinxyz.github.io/blogs/blog) | [medium.com/@austin.xyz](https://medium.com/@austin.xyz)
-- Organizer of tech/career/finance seminar series
-
----
-
-## Languages
-
-English • Mandarin Chinese
+**
