@@ -16,3 +16,7 @@ jobs/
 
 # MCP server config — contains bearer tokens, do not commit
 .mcp.json
+
+# Skill asset trees — large binary/generated content, not for repo
+.agents/
+.claude/skills/ppt-master/
